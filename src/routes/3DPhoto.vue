@@ -3,6 +3,7 @@ import { ref } from "vue";
 import Display from "../components/3d-photo/Display.vue";
 import Home from "../components/3d-photo/Home.vue";
 import Preview from "../components/3d-photo/Preview.vue";
+import PreviewQ from "../components/3d-photo/PreviewQ.vue";
 import PageFooter from "../components/PageFooter.vue";
 import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
@@ -23,8 +24,21 @@ function handleBack(newStep: number) {
   <main-layout>
     <div class="three-d-photo">
       <home v-if="step === 1" @next="handleNext" />
-      <preview
+      <preview-q
         v-else-if="step === 2"
+        title="/images/q-photo/title.png"
+        @next="handleNext"
+      >
+        <template #generate-tip>
+          <img
+            src="/images/q-photo/generate-tip.png"
+            alt="生成最终Q版照片"
+            class="generate-tip"
+          />
+        </template>
+      </preview-q>
+      <preview
+        v-else-if="step === 3"
         title="/images/3d-photo/title.png"
         @next="handleNext"
       >
@@ -43,15 +57,15 @@ function handleBack(newStep: number) {
           />
         </template>
       </preview>
-      <display v-else-if="step === 3" @next="handleNext" />
+      <display v-else-if="step === 4" @next="handleNext" />
       <payment
-        v-else-if="step === 4"
+        v-else-if="step === 5"
         src="/images/payment/3d-photo.png"
         :width="347"
         qrcode=""
       />
       <page-footer v-show="step === 1" />
-      <pagination :step="step" :total="3" @click="handleBack" />
+      <pagination :step="step" :total="4" @click="handleBack" />
     </div>
   </main-layout>
 </template>

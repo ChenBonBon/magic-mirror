@@ -1,13 +1,13 @@
 <script setup lang="ts">
+import ThreeDModel from "../3DModel.vue";
 defineProps<{
   onNext: () => void;
 }>();
 </script>
 
 <template>
-  <img src="/images/display/dot-1.png" alt="dot-1" class="dot-1" />
   <img src="/images/display/dot-2.png" alt="dot-2" class="dot-2" />
-  <div class="effect-display-photo-wrapper"></div>
+  <div class="effect-display-photo-wrapper"><three-d-model /></div>
   <div class="effect-display-wrapper">
     <img
       src="/images/display/effect-display-en.png"
@@ -21,33 +21,16 @@ defineProps<{
     />
   </div>
   <img
-    src="/images/display/display-top-left.png"
-    alt="display-top-left"
-    class="top-left"
-  />
-  <img
     src="/images/display/display-right.png"
     alt="display-right"
     class="right"
   />
-  <img src="/images/display/star-1.png" alt="star-1" class="star-1" />
   <img src="/images/display/dot-3.png" alt="dot-3" class="dot-3" />
   <img src="/images/display/dot-4.png" alt="dot-4" class="dot-4" />
-  <img src="/images/display/dot-5.png" alt="dot-5" class="dot-5" />
   <img
     src="/images/display/display-bottom-left.png"
     alt="display-bottom-left"
     class="bottom-left"
-  />
-  <img
-    src="/images/display/display-title-en.png"
-    alt="display-title-en"
-    class="title-en"
-  />
-  <img
-    src="/images/display/display-title-cn.png"
-    alt="display-title-cn"
-    class="title-cn"
   />
   <div class="print-wrapper" @click="onNext">
     <img src="/images/display/print.png" alt="打印" class="print" />
@@ -106,20 +89,14 @@ defineProps<{
   left: 161px;
 }
 .effect-display-photo-wrapper {
-  width: 736px;
-  height: 994px;
+  width: 749px;
+  height: 750px;
   position: absolute;
-  top: 488px;
-  left: 127px;
-  background-image: url("/images/display/effect-display-photo-wrapper.png");
+  top: 695px;
+  left: 170px;
+  background-image: url("/images/3d-photo/display-wrapper.png");
   background-size: cover;
   background-repeat: no-repeat;
-  .effect-display-photo {
-    position: absolute;
-    top: 43px;
-    left: 39px;
-    width: 726px;
-  }
 }
 .effect-display-wrapper {
   width: 330px;

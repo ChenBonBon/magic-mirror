@@ -1,159 +1,175 @@
 <script setup lang="ts">
-import * as THREE from "three";
-import { TrackballControls } from "three/addons/controls/TrackballControls.js";
-import { MTLLoader } from "three/addons/loaders/MTLLoader.js";
-import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
-import { onMounted, ref } from "vue";
+import {
+  AmbientLight,
+  Clock,
+  MeshLambertMaterial,
+  PerspectiveCamera,
+  PlaneGeometry,
+  PointLight,
+  PointLightHelper,
+  Scene,
+  SpotLight,
+  SpotLightHelper,
+  WebGLRenderer,
+} from "three";
+import {
+  MTLLoader,
+  OBJLoader,
+  TrackballControls,
+} from "three/examples/jsm/Addons.js";
+import { onMounted, ref, useTemplateRef } from "vue";
 
-const scene = ref<THREE.Scene>();
-const camera = ref<THREE.PerspectiveCamera>();
-const renderer = ref<THREE.WebGLRenderer>();
-const trackballControls = ref<TrackballControls>();
+let scene: Scene | null = null;
+let camera: PerspectiveCamera | null = null;
+let renderer: WebGLRenderer | null = null;
+let trackballControls: TrackballControls | null = null;
+
+const container = useTemplateRef("container");
+
 const percent = ref(0);
 
-function init() {
-  createScene();
-  const newCamera = createCamera();
-  createRenderer();
-  createTrackballControls(newCamera);
-  addLight();
-}
-
-function createScene() {
-  //场景构建
-  const _scene = new THREE.Scene();
-
-  scene.value = _scene;
-
-  return _scene;
-}
-
-function createCamera() {
-  //相机构建
-  const _camera = new THREE.PerspectiveCamera(
-    45,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
-
-  camera.value = _camera;
-
-  return _camera;
-}
-
-function createRenderer() {
-  //创建一个webgl对象
-  const _renderer = new THREE.WebGLRenderer({
+async function init() {
+  scene = new Scene(); //场景构建
+  camera = new PerspectiveCamera(45, 749 / 750, 0.1, 1000); //相机构建
+  renderer = new WebGLRenderer({
     antialias: false,
     alpha: true, // 设置透明
   });
 
-  _renderer.setSize(window.innerWidth, window.innerHeight);
-  _renderer.setClearColor(0xeeeeee);
-  _renderer.shadowMap.enabled = true; //激活阴影
+  renderer.setClearColor(0xeeeeee);
+  renderer.setSize(749, 750);
+  renderer.shadowMap.enabled = true; //激活阴影
 
-  renderer.value = _renderer;
-
-  return _renderer;
-}
-
-function createTrackballControls(camera: THREE.PerspectiveCamera) {
-  const _trackballControls = new TrackballControls(camera);
-
-  // 设置旋转速度
-  _trackballControls.rotateSpeed = 5;
-  // 设置缩放速度
-  _trackballControls.zoomSpeed = 1.0;
-  // 设置平移速度
-  _trackballControls.panSpeed = 1.0;
-  // 是否有惯性
-  _trackballControls.staticMoving = true;
-  // 惯性的阻尼
-  _trackballControls.dynamicDampingFactor = 0.3;
+  trackballControls = new TrackballControls(camera);
+  trackballControls.zoomSpeed = 1.0;
+  trackballControls.panSpeed = 1.0;
+  trackballControls.noZoom = false;
+  trackballControls.noPan = false;
+  trackballControls.staticMoving = true;
+  trackballControls.dynamicDampingFactor = 0.3;
+  //设置旋转速度
+  trackballControls.rotateSpeed = 5;
   //设置相机距离原点的最远距离
-  _trackballControls.minDistance = 10;
+  trackballControls.minDistance = 10;
   //设置相机距离原点的最远距离
-  _trackballControls.maxDistance = 50;
+  trackballControls.maxDistance = 50;
 
-  trackballControls.value = _trackballControls;
+  const planeGeometry = new PlaneGeometry(40, 20);
+  //const planeMaterial = new MeshBasicMaterial({color:0xcccccc});
+  const planeMaterial = new MeshLambertMaterial({
+    color: 0xffffff,
+  });
 
-  return _trackballControls;
-}
-
-function _createSpotLight() {
   //添加材质灯光阴影
-  const _spotLight = new THREE.SpotLight(0xffffff);
-  _spotLight.position.set(-10, 20, 10);
-  _spotLight.castShadow = true;
+  const spotLight = new SpotLight(0xffffff);
+  spotLight.position.set(-10, 20, 10);
+  spotLight.castShadow = true;
 
-  return _spotLight;
-}
-
-function _createAmbientLight() {
   //创建一个环境灯光
-  const _ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  const ambientLight = new AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
 
-  return _ambientLight;
-}
+  //创建一个点灯光
+  const pointLight = new PointLight(0xffffff, 0.9);
 
-function _createPointLight() {
-  const _pointLight = new THREE.PointLight(0xffffff, 0.9);
+  //给模型添加灯光
+  camera.add(pointLight);
 
-  return _pointLight;
-}
+  scene.add(spotLight);
 
-function addLight() {
-  const spotLight = _createSpotLight();
-  const ambientLight = _createAmbientLight();
-  const pointLight = _createPointLight();
+  const sphereSize = 1;
+  const pointLightHelper = new PointLightHelper(pointLight, sphereSize);
+  scene.add(pointLightHelper);
 
-  if (scene.value) {
-    scene.value.add(spotLight);
-    scene.value.add(ambientLight);
-  }
+  const spotLightHelper = new SpotLightHelper(spotLight);
+  scene.add(spotLightHelper);
 
-  if (camera.value) {
-    camera.value.add(pointLight);
-  }
-}
-
-function loadModel() {
   const onProgress = function (event: ProgressEvent) {
     if (event.lengthComputable) {
       percent.value = (event.loaded / event.total) * 100;
     }
   };
-  const onError = function (err: any) {
-    console.error(err);
-  };
 
   const mtlLoader = new MTLLoader();
+  const materials = await mtlLoader.loadAsync("/models/SanCaiMa.mtl");
 
-  mtlLoader.load("/models/SanCaiMa.mtl", function (materials) {
+  if (materials) {
     materials.preload();
-
-    var objLoader = new OBJLoader();
+    const objLoader = new OBJLoader();
     objLoader.setMaterials(materials);
-    objLoader.load(
-      "/models/SanCaiMa.obj",
-      function (object) {
-        // 设置旋转中心点
-        object.children[0].geometry.computeBoundingBox();
-        object.children[0].geometry.center();
 
-        object.position.y = 1;
-        object.rotation.y = 0.2;
-        object.scale.set(2, 2, 2);
-        // 将模型加入到场景
-        if (scene.value) {
-          scene.value.add(object);
-        }
-      },
-      onProgress,
-      onError
-    );
-  });
+    const obj = await objLoader.loadAsync("/models/SanCaiMa.obj", onProgress);
+
+    if (obj) {
+      // 设置旋转中心点
+      obj.children[0].geometry.computeBoundingBox();
+      obj.children[0].geometry.center();
+
+      obj.position.y = 1;
+      obj.rotation.y = 0.2;
+      obj.scale.set(2, 2, 2);
+      // 将模型加入到场景
+      scene.add(obj);
+    }
+  }
+
+  camera.position.x = -30;
+  camera.position.y = 0;
+  camera.position.z = 10;
+  camera.lookAt(scene.position);
+
+  renderScene();
+
+  // 设置颜色
+  renderer.setClearColor(0xffffff, 0);
+  // 设置分辨率
+  renderer.setPixelRatio(window.devicePixelRatio);
+  // 设置渲染尺寸
+  renderer.setSize(749, 750);
+
+  if (container.value) {
+    container.value.appendChild(renderer.domElement);
+  }
+  // 自适应监听
+  window.addEventListener("resize", resize, false);
+
+  animate();
+}
+
+function renderScene() {
+  var clock = new Clock();
+  var delta = clock.getDelta();
+  if (trackballControls) {
+    trackballControls.update(delta);
+  }
+  requestAnimationFrame(renderScene);
+  if (renderer && scene && camera) {
+    renderer.render(scene, camera);
+  }
+}
+
+function resize() {
+  if (camera) {
+    camera.aspect = 749 / 750;
+    camera.updateProjectionMatrix();
+  }
+
+  if (renderer) {
+    renderer.setSize(749, 750);
+  }
+}
+
+// 时刻渲染
+function animate() {
+  if (trackballControls) {
+    trackballControls.update();
+  }
+
+  if (renderer && scene && camera) {
+    renderer.render(scene, camera);
+  }
+
+  requestAnimationFrame(animate);
 }
 
 onMounted(() => {
@@ -162,7 +178,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="percent">{{ percent.toFixed(2) }}<span>% 已经加载</span></div>
+  <div ref="container"></div>
   <div class="progress" :style="{ display: percent < 100 ? 'block' : 'none' }">
     <div class="mask"></div>
     <div class="loading">
