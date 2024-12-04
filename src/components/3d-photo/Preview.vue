@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { generate3D } from "../../services/photo";
+import { onMounted } from "vue";
+import { generate3D, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 
 const props = defineProps<{
@@ -10,22 +11,41 @@ const props = defineProps<{
 const store = useAppStore();
 
 async function generate() {
-  const res = await generate3D(store.photo);
+  if (store.hasPhoto) {
+    store.startLoading();
 
-  if (res && res.status === "success") {
-    store.setDisplayImage(res.imageUrl);
+    const res = await generate3D(store.cuteImage);
+
+    if (res && res.status === "completed") {
+      const webpUrl = res.modelUrls.find((item) => item.endsWith(".webp"));
+      if (webpUrl) {
+        store.set3DImage(webpUrl);
+      }
+    }
+
+    store.stopLoading();
+  }
+}
+
+async function getHistoryRecords() {
+  const res = await getImageRecords();
+
+  if (res) {
+    store.set3DRecords(res.map((item) => item.imageUrl));
   }
 }
 
 function handleClick(record: string) {
   if (record) {
-    store.setDisplayImage(record);
+    store.set3DImage(record);
 
-    props.onNext();
-  } else {
     props.onNext();
   }
 }
+
+onMounted(() => {
+  getHistoryRecords();
+});
 </script>
 
 <template>
@@ -33,7 +53,7 @@ function handleClick(record: string) {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
-    <img src="" alt="" />
+    <img :src="store.threeDImage" alt="3D模型" />
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">
@@ -49,46 +69,49 @@ function handleClick(record: string) {
       src="/images/q-photo/record.png"
       alt="first"
       class="first-record"
-      @click="handleClick(store.records[0])"
+      @click="handleClick(store.threeDRecords[0])"
     />
     <img
       src="/images/q-photo/record.png"
       alt="second"
       class="second-record"
-      @click="handleClick(store.records[1])"
+      @click="handleClick(store.threeDRecords[1])"
     />
     <img
       src="/images/q-photo/record.png"
       alt="third"
       class="third-record"
-      @click="handleClick(store.records[2])"
+      @click="handleClick(store.threeDRecords[2])"
     />
     <img
       src="/images/q-photo/record.png"
       alt="forth"
       class="forth-record"
-      @click="handleClick(store.records[3])"
+      @click="handleClick(store.threeDRecords[3])"
     />
     <img
       src="/images/q-photo/record.png"
       alt="fifth"
       class="fifth-record"
-      @click="handleClick(store.records[4])"
+      @click="handleClick(store.threeDRecords[4])"
     />
     <img
       src="/images/q-photo/record.png"
       alt="sixth"
       class="sixth-record"
-      @click="handleClick(store.records[5])"
+      @click="handleClick(store.threeDRecords[5])"
     />
   </div>
-  <div class="generate-wrapper">
-    <img
-      src="/images/q-photo/generate.png"
-      alt="生成"
-      class="generate"
-      @click="generate"
-    />
+  <div
+    class="actions"
+    :style="{ justifyContent: store.has3DImage ? 'space-between' : 'center' }"
+  >
+    <div class="generate-wrapper" @click="generate">
+      <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
+    </div>
+    <div class="next-wrapper" v-show="store.has3DImage" @click="onNext">
+      <img src="/images/q-photo/next.png" alt="下一步" class="next" />
+    </div>
   </div>
   <slot name="generate-tip" />
 </template>
@@ -176,20 +199,39 @@ function handleClick(record: string) {
     right: 149px;
   }
 }
-.generate-wrapper {
+.actions {
   position: absolute;
-  left: 359px;
-  top: 1609px;
-  width: 363px;
-  height: 57px;
-  background-image: url("/images/q-photo/generate-wrapper.png");
-  background-size: cover;
-  background-repeat: no-repeat;
+  left: 132px;
+  bottom: 254px;
+  width: 816px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  .generate {
-    width: 279px;
+  .generate-wrapper {
+    width: 363px;
+    height: 57px;
+    background-image: url("/images/q-photo/generate-wrapper.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .generate {
+      width: 279px;
+    }
+  }
+  .next-wrapper {
+    width: 363px;
+    height: 57px;
+    background-image: url("/images/q-photo/next-wrapper.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .next {
+      width: 109px;
+    }
   }
 }
 </style>

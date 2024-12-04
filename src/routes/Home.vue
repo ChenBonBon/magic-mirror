@@ -1,16 +1,36 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import Marquee from "../components/Marquee.vue";
 import MainLayout from "../layout/MainLayout.vue";
+import { useAppStore } from "../useAppStore";
 
-const data = ref([
-  { src: "/images/home/test.png", alt: "/images/home/test.png" },
-  { src: "/images/home/test.png", alt: "/images/home/test.png" },
-  { src: "/images/home/test.png", alt: "/images/home/test.png" },
-  { src: "/images/home/test.png", alt: "/images/home/test.png" },
-  { src: "/images/home/test.png", alt: "/images/home/test.png" },
-  { src: "/images/home/test.png", alt: "/images/home/test.png" },
+const store = useAppStore();
+
+const qData = ref([
+  { src: "/images/home/q-1.png", alt: "/images/home/q-1.png" },
+  { src: "/images/home/q-2.png", alt: "/images/home/q-2.png" },
+  { src: "/images/home/q-3.png", alt: "/images/home/q-3.png" },
+  { src: "/images/home/q-4.png", alt: "/images/home/q-4.png" },
 ]);
+
+const aiData = ref([
+  { src: "/images/home/ai-1.png", alt: "/images/home/ai-1.png" },
+  { src: "/images/home/ai-2.png", alt: "/images/home/ai-2.png" },
+  { src: "/images/home/ai-3.png", alt: "/images/home/ai-3.png" },
+  { src: "/images/home/ai-4.png", alt: "/images/home/ai-4.png" },
+]);
+
+const threeDData = ref([
+  { src: "/images/home/3d-1.gif", alt: "/images/home/3d-1.gif" },
+  { src: "/images/home/3d-2.gif", alt: "/images/home/3d-2.gif" },
+  { src: "/images/home/3d-3.gif", alt: "/images/home/3d-3.gif" },
+  { src: "/images/home/3d-4.gif", alt: "/images/home/3d-4.gif" },
+]);
+
+onMounted(() => {
+  window.localStorage.removeItem("magic-mirror-sessionId");
+  store.clearPhoto();
+});
 </script>
 
 <template>
@@ -18,7 +38,7 @@ const data = ref([
     <div class="home">
       <div class="marquees">
         <div class="marquees-wrapper">
-          <Marquee :data="data" href="/q-photo">
+          <Marquee id="cute" :data="qData" href="/q-photo">
             <template #title>
               <img
                 src="/images/home/q-photo.png"
@@ -27,7 +47,7 @@ const data = ref([
               />
             </template>
           </Marquee>
-          <Marquee :data="data" :reverse="true" href="/ai-photo">
+          <Marquee id="aiPhoto" :data="aiData" :reverse="true" href="/ai-photo">
             <template #title>
               <img
                 src="/images/home/ai-photo.png"
@@ -36,7 +56,7 @@ const data = ref([
               />
             </template>
           </Marquee>
-          <Marquee :data="data" href="/3d-photo">
+          <Marquee id="threeDPhoto" :data="threeDData" href="/3d-photo">
             <template #title>
               <img
                 src="/images/home/3d-photo.png"
@@ -83,17 +103,17 @@ const data = ref([
       transform: rotate(-9deg);
       .q-photo {
         width: 199px;
-        margin-left: 125px;
+        margin-left: 135px;
         transform: rotate(9deg);
       }
       .ai-photo {
         width: 162px;
-        margin-left: calc(100% - 150px);
+        margin: 100px 0 25px calc(100% - 150px);
         transform: rotate(9deg);
       }
       .three-d-photo {
         width: 182px;
-        margin-left: -50px;
+        margin: 100px 0 25px -50px;
         transform: rotate(9deg);
       }
     }

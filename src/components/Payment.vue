@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import VueQrcode from "vue-qrcode";
+
 defineProps<{
   src: string;
   width: number;
@@ -24,7 +26,12 @@ defineProps<{
     <img src="/images/payment/payment-cn.png" alt="支付" class="payment-cn" />
     <div class="qrcode-wrapper">
       <img src="/images/payment/qrcode-top.png" alt="" class="qrcode-top" />
-      <img :src="qrcode" alt="qrcode" class="qrcode" />
+      <vue-qrcode
+        :value="qrcode"
+        class="qrcode"
+        :color="{ dark: '#000000ff', light: '#ffffffff' }"
+        type="image/png"
+      />
       <img
         src="/images/payment/qrcode-bottom.png"
         alt=""

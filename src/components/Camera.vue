@@ -15,14 +15,7 @@ defineExpose({
 
 <template>
   <div class="camera-wrapper">
-    <img
-      v-show="store.hasPhoto"
-      :src="store.photo"
-      alt="photo"
-      width="715"
-      height="715"
-      class="photo"
-    />
+    <img src="/images/camera-line.png" alt="line" class="line" />
     <video
       ref="video"
       width="715"
@@ -30,7 +23,13 @@ defineExpose({
       class="video"
       v-show="!store.hasPhoto"
     ></video>
-    <canvas ref="canvas" class="canvas" width="715" height="715"></canvas>
+    <canvas
+      v-show="store.hasPhoto"
+      ref="canvas"
+      class="canvas"
+      width="715"
+      height="715"
+    ></canvas>
   </div>
 </template>
 
@@ -47,13 +46,18 @@ defineExpose({
   display: flex;
   justify-content: center;
   align-items: center;
+  .line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -59%);
+  }
   .photo,
-  .video {
+  .video,
+  .canvas {
     border-radius: 50%;
     transform: rotateY(180deg);
-  }
-  .canvas {
-    display: none;
   }
 }
 </style>

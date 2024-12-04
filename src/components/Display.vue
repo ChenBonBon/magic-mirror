@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import { WorkflowType } from "../models/session";
 import { useAppStore } from "../useAppStore";
 
 defineProps<{
-  onNext: () => void;
+  workflowType: WorkflowType;
+  onPrint: () => void;
+  onGenerate3D?: () => void;
 }>();
 
 const store = useAppStore();
@@ -12,7 +15,11 @@ const store = useAppStore();
   <img src="/images/display/dot-1.png" alt="dot-1" class="dot-1" />
   <img src="/images/display/dot-2.png" alt="dot-2" class="dot-2" />
   <div class="effect-display-photo-wrapper">
-    <img :src="store.displayImage" alt="photo" class="effect-display-photo" />
+    <img
+      :src="workflowType === 'cute' ? store.cuteImage : store.aiImage"
+      alt="photo"
+      class="effect-display-photo"
+    />
   </div>
   <div class="effect-display-wrapper">
     <img
@@ -55,10 +62,14 @@ const store = useAppStore();
     alt="display-title-cn"
     class="title-cn"
   />
-  <div class="print-wrapper" @click="onNext">
+  <div class="print-wrapper" @click="onPrint">
     <img src="/images/display/print.png" alt="打印" class="print" />
   </div>
-  <div class="print-wrapper" @click="onNext">
+  <div
+    class="print-wrapper"
+    v-show="workflowType === 'cute'"
+    @click="onGenerate3D"
+  >
     <img src="/images/display/3d.png" alt="生成3D形象" class="threed" />
   </div>
   <img
@@ -123,8 +134,8 @@ const store = useAppStore();
   .effect-display-photo {
     position: absolute;
     top: 43px;
-    left: 39px;
-    width: 726px;
+    left: 42px;
+    width: 654px;
   }
 }
 .effect-display-wrapper {

@@ -7,9 +7,15 @@ import PreviewQ from "../components/3d-photo/PreviewQ.vue";
 import PageFooter from "../components/PageFooter.vue";
 import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
+import PaymentSuccessful from "../components/PaymentSuccessful.vue";
+import ScanSuccessful from "../components/ScanSuccessful.vue";
 import MainLayout from "../layout/MainLayout.vue";
+import { useAppStore } from "../useAppStore";
+
+const store = useAppStore();
 
 const step = ref(1);
+const qrcode = ref("");
 
 function handleNext() {
   step.value += 1;
@@ -17,6 +23,15 @@ function handleNext() {
 
 function handleBack(newStep: number) {
   step.value = newStep;
+}
+
+async function handleCreateOrder() {
+  // const res = await createOrder("To3d", store.displayImage);
+
+  // if (res) {
+  //   qrcode.value = res.qrCode;
+  handleNext();
+  // }
 }
 </script>
 
@@ -27,7 +42,7 @@ function handleBack(newStep: number) {
       <preview-q
         v-else-if="step === 2"
         title="/images/q-photo/title.png"
-        @next="handleNext"
+        @next="handleCreateOrder"
       >
         <template #generate-tip>
           <img
@@ -37,8 +52,16 @@ function handleBack(newStep: number) {
           />
         </template>
       </preview-q>
-      <preview
+      <payment
         v-else-if="step === 3"
+        src="/images/payment/3d-photo.png"
+        :width="347"
+        :qrcode="qrcode"
+      />
+      <scan-successful v-else-if="step === 4" />
+      <payment-successful v-else-if="step === 5" @next="handleNext" />
+      <preview
+        v-else-if="step === 6"
         title="/images/3d-photo/title.png"
         @next="handleNext"
       >
@@ -57,15 +80,9 @@ function handleBack(newStep: number) {
           />
         </template>
       </preview>
-      <display v-else-if="step === 4" @next="handleNext" />
-      <payment
-        v-else-if="step === 5"
-        src="/images/payment/3d-photo.png"
-        :width="347"
-        qrcode=""
-      />
+      <display v-else-if="step === 7" @next="handleNext" />
       <page-footer v-show="step === 1" />
-      <pagination :step="step" :total="4" @click="handleBack" />
+      <pagination :step="step" :total="2" @click="handleBack" />
     </div>
   </main-layout>
 </template>

@@ -4,11 +4,19 @@ import Display from "../components/Display.vue";
 import PageFooter from "../components/PageFooter.vue";
 import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
+import PaymentSuccessful from "../components/PaymentSuccessful.vue";
+import Print from "../components/Print.vue";
 import Home from "../components/q-photo/Home.vue";
 import Preview from "../components/q-photo/Preview.vue";
+import ScanSuccessful from "../components/ScanSuccessful.vue";
 import MainLayout from "../layout/MainLayout.vue";
+import { createOrder } from "../services/order";
+import { useAppStore } from "../useAppStore";
+
+const store = useAppStore();
 
 const step = ref(1);
+const qrcode = ref("");
 
 function handleNext() {
   step.value += 1;
@@ -16,6 +24,24 @@ function handleNext() {
 
 function handleBack(newStep: number) {
   step.value = newStep;
+}
+
+async function handlePrint() {
+  const res = await createOrder("cute", store.cuteImage);
+
+  if (res) {
+    qrcode.value = res.qrCode;
+    handleNext();
+  }
+}
+
+async function handleGenerate3D() {
+  const res = await createOrder("To3d", store.cuteImage);
+
+  if (res) {
+    qrcode.value = res.qrCode;
+    handleNext();
+  }
 }
 </script>
 
@@ -36,13 +62,21 @@ function handleBack(newStep: number) {
           />
         </template>
       </preview>
-      <display v-else-if="step === 3" @next="handleNext" />
+      <display
+        v-else-if="step === 3"
+        workflow-type="cute"
+        @print="handlePrint"
+        @generate3-d="handleGenerate3D"
+      />
       <payment
         v-else-if="step === 4"
         src="/images/payment/q-photo.png"
         :width="388"
-        qrcode=""
+        :qrcode="qrcode"
       />
+      <scan-successful v-else-if="step === 5" />
+      <payment-successful v-else-if="step === 6" @next="handleNext" />
+      <print v-else-if="step === 7" />
       <page-footer v-show="step === 1" />
       <pagination :step="step" :total="3" @click="handleBack" />
     </div>

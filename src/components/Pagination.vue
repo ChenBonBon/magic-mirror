@@ -28,28 +28,16 @@ defineProps<{
         v-else-if="step === 3 && total === 3"
       />
       <img
-        src="/images/pagination/step-4/1.png"
+        src="/images/pagination/step-2/1.png"
         alt="step-1"
         class="step-1"
-        v-if="step === 1 && total === 4"
+        v-if="step === 1 && total === 2"
       />
       <img
-        src="/images/pagination/step-4/2.png"
+        src="/images/pagination/step-2/2.png"
         alt="step-2"
         class="step-2"
-        v-else-if="step === 2 && total === 4"
-      />
-      <img
-        src="/images/pagination/step-4/3.png"
-        alt="step-3"
-        class="step-3"
-        v-else-if="step === 3 && total === 4"
-      />
-      <img
-        src="/images/pagination/step-4/4.png"
-        alt="step-4"
-        class="step-4"
-        v-else-if="step === 4 && total === 4"
+        v-else-if="step === 2 && total === 2"
       />
     </div>
     <div class="pagination-stars">

@@ -18,7 +18,7 @@ const store = useAppStore();
 const stream = ref();
 
 async function handleClickPhotograph() {
-  if (store.photo.length > 0) {
+  if (store.hasPhoto) {
     store.clearPhoto();
     if (cameraRef.value && cameraRef.value.video) {
       stream.value = await openCamera(cameraRef.value.video);
@@ -38,7 +38,13 @@ async function handleClickPhotograph() {
         cameraRef.value.video.height
       );
       const data = cameraRef.value.canvas.toDataURL("image/png");
-      store.setPhoto(data);
+      store.setAIImage(data);
+
+      cameraRef.value.canvas.toBlob((blob) => {
+        if (blob) {
+          store.setPhoto(blob);
+        }
+      });
     }
   }
 }
@@ -48,7 +54,12 @@ function handleClickPhotographConfirm() {
 }
 
 onMounted(async () => {
-  getSessionId("aiPhoto");
+  if (!window.localStorage.getItem("magic-mirror-sessionId")) {
+    getSessionId("aiPhoto");
+  }
+
+  store.clearPhoto();
+
   if (cameraRef.value && cameraRef.value.video) {
     stream.value = await openCamera(cameraRef.value.video);
   }
@@ -85,6 +96,7 @@ onBeforeUnmount(() => {
   />
   <camera ref="camera" />
   <photograph-group
+    :showConfirm="store.hasPhoto"
     @click-photograph="handleClickPhotograph"
     @click-photograph-confirm="handleClickPhotographConfirm"
   />

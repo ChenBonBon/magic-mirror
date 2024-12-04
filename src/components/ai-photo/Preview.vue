@@ -1,7 +1,54 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { generateAI, getImageRecords } from "../../services/photo";
+import { useAppStore } from "../../useAppStore";
+import Postures from "./Postures.vue";
+
 defineProps<{
   title: string;
+  onNext: () => void;
 }>();
+
+const store = useAppStore();
+
+const posture = ref(1);
+
+function setPosture(index: number) {
+  posture.value = index;
+}
+
+async function generate() {
+  if (store.hasPhoto) {
+    store.startLoading();
+
+    const res = await generateAI(store.photo!, posture.value);
+
+    if (res && res.status === "completed") {
+      store.setAIImage(res.imageUrl);
+      store.setAIRecords(res.history.map((item) => item.imageUrl));
+    }
+
+    store.stopLoading();
+  }
+}
+
+async function getHistoryRecords() {
+  const res = await getImageRecords();
+
+  if (res) {
+    store.setAIRecords(res.map((item) => item.imageUrl));
+  }
+}
+
+function handleClick(record: string) {
+  if (record) {
+    store.setAIImage(record);
+  }
+}
+
+onMounted(() => {
+  getHistoryRecords();
+});
 </script>
 
 <template>
@@ -9,7 +56,7 @@ defineProps<{
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
-    <img src="" alt="" />
+    <img :src="store.aiImage" alt="photo" class="photo" />
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">
@@ -21,13 +68,48 @@ defineProps<{
     />
   </div>
   <div class="records">
-    <img src="/images/q-photo/record.png" alt="first" class="first-record" />
-    <img src="/images/q-photo/record.png" alt="second" class="second-record" />
-    <img src="/images/q-photo/record.png" alt="third" class="third-record" />
+    <img
+      v-if="store.aiRecords[0]"
+      :src="store.aiRecords[0]"
+      alt="first"
+      class="first-record"
+      @click="handleClick(store.aiRecords[0])"
+    />
+    <div
+      v-else
+      class="first-record disabled"
+      @click="handleClick(store.aiRecords[0])"
+    >
+      1
+    </div>
+    <img
+      v-if="store.aiRecords[1]"
+      :src="store.aiRecords[1]"
+      alt="second"
+      class="second-record"
+      @click="handleClick(store.aiRecords[1])"
+    />
+    <div v-else class="second-record disabled">2</div>
+    <img
+      v-if="store.aiRecords[2]"
+      :src="store.aiRecords[2]"
+      alt="third"
+      class="third-record"
+      @click="handleClick(store.aiRecords[2])"
+    />
+    <div v-else class="third-record disabled">3</div>
   </div>
-  <slot name="postures" />
-  <div class="generate-wrapper">
-    <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
+  <postures @click="setPosture" />
+  <div
+    class="actions"
+    :style="{ justifyContent: store.hasAIImage ? 'space-between' : 'center' }"
+  >
+    <div class="generate-wrapper" @click="generate">
+      <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
+    </div>
+    <div class="next-wrapper" v-show="store.hasAIImage" @click="onNext">
+      <img src="/images/q-photo/next.png" alt="下一步" class="next" />
+    </div>
   </div>
   <slot name="generate-tip" />
 </template>
@@ -59,6 +141,12 @@ defineProps<{
   background-image: url("/images/q-photo/preview.png");
   background-size: cover;
   background-repeat: no-repeat;
+  .photo {
+    width: 640px;
+    height: 640px;
+    border-radius: 50%;
+    transform: rotateY(180deg);
+  }
 }
 .step-4-wrapper {
   position: absolute;
@@ -82,6 +170,17 @@ defineProps<{
     position: absolute;
     width: 240px;
     height: 240px;
+    border-radius: 50%;
+    &.disabled {
+      font-family: monospace;
+      font-size: 80px;
+      text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+        1px 1px 0 black;
+      background: #e6e6e6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
   .first-record {
     top: 990px;
@@ -96,20 +195,39 @@ defineProps<{
     right: 106px;
   }
 }
-.generate-wrapper {
+.actions {
   position: absolute;
-  left: 359px;
-  top: 1609px;
-  width: 363px;
-  height: 57px;
-  background-image: url("/images/q-photo/generate-wrapper.png");
-  background-size: cover;
-  background-repeat: no-repeat;
+  left: 132px;
+  bottom: 254px;
+  width: 816px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  .generate {
-    width: 279px;
+  .generate-wrapper {
+    width: 363px;
+    height: 57px;
+    background-image: url("/images/q-photo/generate-wrapper.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .generate {
+      width: 279px;
+    }
+  }
+  .next-wrapper {
+    width: 363px;
+    height: 57px;
+    background-image: url("/images/q-photo/next-wrapper.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .next {
+      width: 109px;
+    }
   }
 }
 </style>

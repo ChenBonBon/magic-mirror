@@ -10,6 +10,7 @@ defineProps<{
 const router = useRouter();
 
 function navigate(href?: string) {
+  window.localStorage.removeItem("magic-mirror-sessionId");
   if (href) {
     router.push(href);
   }

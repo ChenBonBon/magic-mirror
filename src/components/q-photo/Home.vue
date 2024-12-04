@@ -19,7 +19,7 @@ const store = useAppStore();
 const stream = ref();
 
 async function handleClickPhotograph() {
-  if (store.photo.length > 0) {
+  if (store.hasPhoto) {
     store.clearPhoto();
     if (cameraRef.value && cameraRef.value.video) {
       stream.value = await openCamera(cameraRef.value.video);
@@ -39,18 +39,28 @@ async function handleClickPhotograph() {
         cameraRef.value.video.height
       );
       const data = cameraRef.value.canvas.toDataURL("image/png");
-      store.setPhoto(data);
-      store.setDisplayImage(data);
+      store.setCuteImage(data);
+
+      cameraRef.value.canvas.toBlob((blob) => {
+        if (blob) {
+          store.setPhoto(blob);
+        }
+      });
     }
   }
 }
 
 function handleClickPhotographConfirm() {
-  props.onNext();
+  if (store.hasPhoto) {
+    props.onNext();
+  }
 }
 
 onMounted(async () => {
-  getSessionId("cute");
+  if (!window.localStorage.getItem("magic-mirror-sessionId")) {
+    getSessionId("cute");
+  }
+  store.clearPhoto();
   if (cameraRef.value && cameraRef.value.video) {
     stream.value = await openCamera(cameraRef.value.video);
   }
@@ -112,8 +122,9 @@ onBeforeUnmount(() => {
     alt="人像采集 FACE CAPTURE"
     class="sub-title"
   />
-  <enterprise-wechat qrcode="" />
+  <enterprise-wechat qrcode="/images/wechat.jpg" />
   <photograph-group
+    :showConfirm="store.hasPhoto"
     @click-photograph="handleClickPhotograph"
     @click-photograph-confirm="handleClickPhotographConfirm"
   />

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { generateImage } from "../../services/photo";
+import { onMounted, ref } from "vue";
+import { generateImage, getImageRecords } from "../../services/photo";
+import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
 import Postures from "./Postures.vue";
 
@@ -13,27 +14,47 @@ const store = useAppStore();
 
 const posture = ref(1);
 
+async function handleNext() {
+  await getSessionId("To3d");
+  props.onNext();
+}
+
 function setPosture(index: number) {
   posture.value = index;
 }
 
 async function generate() {
-  const res = await generateImage(store.photo, posture.value);
+  if (store.hasPhoto) {
+    store.startLoading();
 
-  if (res && res.status === "success") {
-    store.setDisplayImage(res.imageUrl);
+    const res = await generateImage(store.photo!, posture.value);
+
+    if (res && res.status === "completed") {
+      store.setCuteImage(res.imageUrl);
+      store.setCuteRecords(res.history.map((item) => item.imageUrl));
+    }
+
+    store.stopLoading();
   }
 }
 
 function handleClick(record: string) {
   if (record) {
-    store.setDisplayImage(record);
-
-    props.onNext();
-  } else {
-    props.onNext();
+    store.setCuteImage(record);
   }
 }
+
+async function getHistoryRecords() {
+  const res = await getImageRecords();
+
+  if (res) {
+    store.setCuteRecords(res.map((item) => item.imageUrl));
+  }
+}
+
+onMounted(() => {
+  getHistoryRecords();
+});
 </script>
 
 <template>
@@ -41,7 +62,7 @@ function handleClick(record: string) {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
-    <img :src="store.displayImage" alt="photo" class="photo" />
+    <img :src="store.cuteImage" alt="photo" class="photo" />
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">
@@ -54,39 +75,47 @@ function handleClick(record: string) {
   </div>
   <div class="records">
     <img
-      v-if="store.records[0]"
-      :src="store.records[0]"
+      v-if="store.cuteRecords[0]"
+      :src="store.cuteRecords[0]"
       alt="first"
       class="first-record"
-      @click="handleClick(store.records[0])"
+      @click="handleClick(store.cuteRecords[0])"
     />
     <div
       v-else
       class="first-record disabled"
-      @click="handleClick(store.records[0])"
+      @click="handleClick(store.cuteRecords[0])"
     >
       1
     </div>
     <img
-      v-if="store.records[1]"
-      :src="store.records[1]"
+      v-if="store.cuteRecords[1]"
+      :src="store.cuteRecords[1]"
       alt="second"
       class="second-record"
-      @click="handleClick(store.records[1])"
+      @click="handleClick(store.cuteRecords[1])"
     />
     <div v-else class="second-record disabled">2</div>
     <img
-      v-if="store.records[2]"
-      :src="store.records[2]"
+      v-if="store.cuteRecords[2]"
+      :src="store.cuteRecords[2]"
       alt="third"
       class="third-record"
-      @click="handleClick(store.records[2])"
+      @click="handleClick(store.cuteRecords[2])"
     />
     <div v-else class="third-record disabled">3</div>
   </div>
   <postures @click="setPosture" />
-  <div class="generate-wrapper" @click="generate">
-    <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
+  <div
+    class="actions"
+    :style="{ justifyContent: store.hasCuteImage ? 'space-between' : 'center' }"
+  >
+    <div class="generate-wrapper" @click="generate">
+      <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
+    </div>
+    <div class="next-wrapper" v-show="store.hasCuteImage" @click="handleNext">
+      <img src="/images/q-photo/next.png" alt="下一步" class="next" />
+    </div>
   </div>
   <img
     src="/images/q-photo/generate-tip.png"
@@ -127,6 +156,7 @@ function handleClick(record: string) {
     width: 640px;
     height: 640px;
     border-radius: 50%;
+    transform: rotateY(180deg);
   }
 }
 .step-4-wrapper {
@@ -151,13 +181,12 @@ function handleClick(record: string) {
     position: absolute;
     width: 240px;
     height: 240px;
+    border-radius: 50%;
     &.disabled {
       font-family: monospace;
       font-size: 80px;
       text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
         1px 1px 0 black;
-
-      border-radius: 50%;
       background: #e6e6e6;
       display: flex;
       justify-content: center;
@@ -177,20 +206,39 @@ function handleClick(record: string) {
     right: 106px;
   }
 }
-.generate-wrapper {
+.actions {
   position: absolute;
-  left: 359px;
+  left: 132px;
   bottom: 254px;
-  width: 363px;
-  height: 57px;
-  background-image: url("/images/q-photo/generate-wrapper.png");
-  background-size: cover;
-  background-repeat: no-repeat;
+  width: 816px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  .generate {
-    width: 279px;
+  .generate-wrapper {
+    width: 363px;
+    height: 57px;
+    background-image: url("/images/q-photo/generate-wrapper.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .generate {
+      width: 279px;
+    }
+  }
+  .next-wrapper {
+    width: 363px;
+    height: 57px;
+    background-image: url("/images/q-photo/next-wrapper.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .next {
+      width: 109px;
+    }
   }
 }
 .generate-tip {
