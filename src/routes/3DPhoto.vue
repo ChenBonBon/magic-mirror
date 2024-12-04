@@ -30,7 +30,8 @@ async function handleCreateOrder() {
 
   // if (res) {
   //   qrcode.value = res.qrCode;
-  handleNext();
+  // handleNext();
+  step.value = 6;
   // }
 }
 </script>
