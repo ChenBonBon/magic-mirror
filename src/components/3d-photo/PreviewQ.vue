@@ -4,7 +4,7 @@ import { generateImage, getImageRecords } from "../../services/photo";
 import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
 import Loading from "../Loading.vue";
-import Postures from "./Postures.vue";
+import Postures from "../q-photo/Postures.vue";
 
 const props = defineProps<{
   title: string;
@@ -122,7 +122,7 @@ onMounted(() => {
     />
     <div v-else class="third-record disabled">3</div>
   </div>
-  <postures @click="setPosture" />
+  <postures :disabled="store.cuteLoading" @click="setPosture" />
   <div
     class="actions"
     :style="{ justifyContent: store.hasCuteImage ? 'space-between' : 'center' }"
