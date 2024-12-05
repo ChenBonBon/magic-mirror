@@ -2,6 +2,8 @@
 import { onMounted } from "vue";
 import { generate3D, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
+import ThreeDModel from "../3DModel.vue";
+import Loading from "../Loading.vue";
 
 defineProps<{
   title: string;
@@ -11,17 +13,19 @@ defineProps<{
 const store = useAppStore();
 
 async function generate() {
+  if (store.threeDLoading) {
+    return;
+  }
+
   if (store.hasPhoto) {
     store.start3DLoading();
 
     const res = await generate3D(store.cuteImage);
 
     if (res && res.status === "completed") {
-      const webpUrl = res.modelUrls.find((item) => item.endsWith(".webp"));
-      if (webpUrl) {
-        store.set3DImage(webpUrl);
-      }
+      const modelUrls = res.modelUrls.filter((item) => !item.endsWith(".webp"));
 
+      store.set3DModel(modelUrls);
       store.set3DRecords(res.history);
     }
 
@@ -38,8 +42,14 @@ async function getHistoryRecords() {
 }
 
 function handleClick(index: number) {
-  store.set3DImage(
-    store.threeDRecords[index].modelUrls.find((item) => item.endsWith(".webp"))!
+  if (store.threeDLoading) {
+    return;
+  }
+
+  store.set3DModel(
+    store.threeDRecords[index].modelUrls.filter(
+      (item) => !item.endsWith(".webp")
+    )!
   );
 }
 
@@ -53,11 +63,22 @@ onMounted(() => {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
-    <img
-      :src="store.has3DImage ? store.threeDImage : store.cuteImage"
-      alt="3D模型"
-      class="preview-image"
+    <loading v-if="store.threeDLoading">
+      <template #loading-bar>
+        <img
+          src="/images/3d-photo/loading-bar.png"
+          alt="loading"
+          class="loading-bar"
+        />
+      </template>
+    </loading>
+    <three-d-model
+      v-if="store.has3DImage"
+      :path="store.threeDDirectory"
+      model="base.obj"
+      material="base.mtl"
     />
+    <img v-else :src="store.cuteImage" alt="3D模型" class="preview-image" />
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">
@@ -229,5 +250,9 @@ onMounted(() => {
       width: 109px;
     }
   }
+}
+.loading-bar {
+  width: 320px;
+  padding: 20px;
 }
 </style>

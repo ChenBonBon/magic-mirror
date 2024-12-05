@@ -1,13 +1,23 @@
 <script setup lang="ts">
+import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
 defineProps<{
   onNext: () => void;
 }>();
+
+const store = useAppStore();
 </script>
 
 <template>
   <img src="/images/display/dot-2.png" alt="dot-2" class="dot-2" />
-  <div class="effect-display-photo-wrapper"><three-d-model /></div>
+  <div class="effect-display-photo-wrapper">
+    <three-d-model
+      v-if="store.has3DImage"
+      :path="store.threeDDirectory"
+      model="base.obj"
+      material="base.mtl"
+    />
+  </div>
   <div class="effect-display-wrapper">
     <img
       src="/images/display/effect-display-en.png"
@@ -32,15 +42,9 @@ defineProps<{
     alt="display-bottom-left"
     class="bottom-left"
   />
-  <div class="print-wrapper" @click="onNext">
-    <img src="/images/display/print.png" alt="打印" class="print" />
-  </div>
-  <div class="print-wrapper" @click="onNext">
-    <img src="/images/display/3d.png" alt="生成3D形象" class="threed" />
-  </div>
   <img
-    src="/images/display/print-tip.png"
-    alt="生成最终Q版照片"
+    src="/images/3d-photo/print-tip.png"
+    alt="即刻拥有独属模型"
     class="print-tip"
   />
 </template>

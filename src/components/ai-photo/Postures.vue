@@ -3,23 +3,28 @@ import { ref } from "vue";
 
 const props = defineProps<{
   disabled: boolean;
-  onClick: (index: number) => void;
+  onClickTab: (key: string) => void;
+  onClickPosture: (index: number) => void;
 }>();
 
-const activeTab = ref(0);
+const activeTab = ref("Movies");
 const activeIndex = ref(0);
 
-const tabs = ["电影", "动漫", "游戏"];
+const tabs = [
+  { title: "电影", key: "Movies" },
+  { title: "动漫", key: "Cartoons" },
+  { title: "游戏", key: "Games" },
+];
 
-const postures = [
-  [
+const postures: Record<string, string[]> = {
+  Movies: [
     "/images/ai-photo/tab-1/1.png",
     "/images/ai-photo/tab-1/2.png",
     "/images/ai-photo/tab-1/3.png",
     "/images/ai-photo/tab-1/4.png",
     "/images/ai-photo/tab-1/5.png",
   ],
-  [
+  Cartoons: [
     "/images/ai-photo/tab-2/1.png",
     "/images/ai-photo/tab-2/2.png",
     "/images/ai-photo/tab-2/3.png",
@@ -27,7 +32,7 @@ const postures = [
     "/images/ai-photo/tab-2/5.png",
     "/images/ai-photo/tab-2/6.png",
   ],
-  [
+  Games: [
     "/images/ai-photo/tab-3/1.png",
     "/images/ai-photo/tab-3/2.png",
     "/images/ai-photo/tab-3/3.png",
@@ -36,15 +41,16 @@ const postures = [
     "/images/ai-photo/tab-3/6.png",
     "/images/ai-photo/tab-3/7.png",
   ],
-];
+};
 
-function handleClickTab(index: number) {
+function handleClickTab(key: string) {
   if (props.disabled) {
     return;
   }
 
   activeIndex.value = 0;
-  activeTab.value = index;
+  activeTab.value = key;
+  props.onClickTab(key);
 }
 
 function handleClickPosture(index: number) {
@@ -53,6 +59,7 @@ function handleClickPosture(index: number) {
   }
 
   activeIndex.value = index;
+  props.onClickPosture(index + 1);
 }
 </script>
 
@@ -65,12 +72,12 @@ function handleClickPosture(index: number) {
     />
     <div class="tabs">
       <div
-        :class="['tab', activeTab === index ? 'active' : '']"
+        :class="['tab', activeTab === tab.key ? 'active' : '']"
         v-for="(tab, index) in tabs"
         :key="'tab-' + index"
-        @click="handleClickTab(index)"
+        @click="handleClickTab(tab.key)"
       >
-        <span class="tab-text">{{ tab }}</span>
+        <span class="tab-text">{{ tab.title }}</span>
       </div>
     </div>
     <div class="postures">

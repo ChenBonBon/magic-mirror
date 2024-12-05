@@ -20,6 +20,16 @@ const store = useAppStore();
       alt="photo"
       class="effect-display-photo"
     />
+    <img
+      src="/images/display/display-title-en.png"
+      alt="display-title-en"
+      class="title-en"
+    />
+    <img
+      src="/images/display/display-title-cn.png"
+      alt="display-title-cn"
+      class="title-cn"
+    />
   </div>
   <div class="effect-display-wrapper">
     <img
@@ -51,16 +61,6 @@ const store = useAppStore();
     src="/images/display/display-bottom-left.png"
     alt="display-bottom-left"
     class="bottom-left"
-  />
-  <img
-    src="/images/display/display-title-en.png"
-    alt="display-title-en"
-    class="title-en"
-  />
-  <img
-    src="/images/display/display-title-cn.png"
-    alt="display-title-cn"
-    class="title-cn"
   />
   <div class="print-wrapper" @click="onPrint">
     <img src="/images/display/print.png" alt="打印" class="print" />
@@ -124,7 +124,7 @@ const store = useAppStore();
 }
 .effect-display-photo-wrapper {
   width: 736px;
-  height: 994px;
+  height: 1161px;
   position: absolute;
   top: 488px;
   left: 127px;
@@ -175,14 +175,14 @@ const store = useAppStore();
 .title-en {
   width: 132px;
   position: absolute;
-  left: 595px;
-  top: 1407px;
+  left: 211px;
+  bottom: 28px;
 }
 .title-cn {
   width: 144px;
   position: absolute;
-  left: 442px;
-  top: 1406px;
+  right: 239px;
+  bottom: 28px;
 }
 .print-wrapper {
   position: absolute;

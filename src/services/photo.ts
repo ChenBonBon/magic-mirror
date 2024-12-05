@@ -27,16 +27,14 @@ export async function generateImage(image: Blob, styleIndex: number) {
   }
 }
 
-export async function generateAI(image: Blob, styleIndex: number) {
+export async function generateAI(image: Blob, tab: string, styleIndex: number) {
   const res = await http.post<HTTPResponse<GenerateResponse>>(
     "/image/generate",
     {
       clientId: window.localStorage.getItem("magic-mirror-sessionId"),
       workflowType: "aiPhoto",
       image,
-      "params[STYLE]": "REALISTIC_1",
-      "params[ACTION]": "ACTION_1",
-      "params[POSE]": "POSE_1",
+      "params[STYLE]": tab + "_" + styleIndex,
     },
     {
       headers: {

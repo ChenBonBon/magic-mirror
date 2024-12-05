@@ -30,6 +30,8 @@ async function handleClickPhotograph() {
   if (cameraRef.value && cameraRef.value.canvas) {
     const context = cameraRef.value.canvas.getContext("2d");
     if (context && cameraRef.value.video) {
+      context.translate(cameraRef.value.video.width, 0);
+      context.scale(-1, 1);
       context.drawImage(
         cameraRef.value.video,
         0,
@@ -38,7 +40,7 @@ async function handleClickPhotograph() {
         cameraRef.value.video.height
       );
       const data = cameraRef.value.canvas.toDataURL("image/png");
-      store.setAIImage(data);
+      store.setOriginalImage(data);
 
       cameraRef.value.canvas.toBlob((blob) => {
         if (blob) {

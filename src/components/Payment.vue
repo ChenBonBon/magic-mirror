@@ -1,11 +1,43 @@
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted } from "vue";
 import VueQrcode from "vue-qrcode";
+import { getPaymentStatus as getPaymentStatusApi } from "../services/order";
 
-defineProps<{
+const props = defineProps<{
   src: string;
   width: number;
+  billNo: string;
   qrcode: string;
+  onPrev: () => void;
+  onNext: () => void;
 }>();
+
+const startTime = new Date().getTime();
+let intervalId: number;
+
+async function getPaymentStatus() {
+  if (new Date().getTime() - startTime > 60 * 1000) {
+    clearInterval(intervalId);
+    props.onPrev();
+  }
+
+  const res = await getPaymentStatusApi(props.billNo);
+
+  if (res && res.status) {
+    if (res.status === "success") {
+      clearInterval(intervalId);
+      props.onNext();
+    }
+  }
+}
+
+onMounted(() => {
+  intervalId = setInterval(getPaymentStatus, 1000);
+});
+
+onBeforeUnmount(() => {
+  clearInterval(intervalId);
+});
 </script>
 
 <template>

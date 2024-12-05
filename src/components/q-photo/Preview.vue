@@ -42,6 +42,9 @@ async function getHistoryRecords() {
 
   if (res) {
     store.setCuteRecords(res.map((item) => item.imageUrl));
+    if (res.length > 0) {
+      store.setCuteImage(res[0].imageUrl);
+    }
   }
 }
 
@@ -65,7 +68,7 @@ onMounted(() => {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
-    <loading v-show="store.cuteLoading">
+    <loading v-if="store.cuteLoading">
       <template #loading-bar>
         <img
           src="/images/q-photo/loading-bar.png"
@@ -74,7 +77,11 @@ onMounted(() => {
         />
       </template>
     </loading>
-    <img :src="store.cuteImage" alt="photo" class="photo" />
+    <img
+      :src="store.hasCuteImage ? store.cuteImage : store.originalImage"
+      alt="photo"
+      class="photo"
+    />
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">
@@ -168,7 +175,6 @@ onMounted(() => {
     width: 640px;
     height: 640px;
     border-radius: 50%;
-    transform: rotateY(180deg);
   }
 }
 .step-4-wrapper {

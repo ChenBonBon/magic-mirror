@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { useFadeProgressPercent } from "../hooks/useFadeProgressPercent";
-const DURATION = 10 * 1000;
+import { WorkflowType } from "../models/session";
+import Loading from "./Loading.vue";
 
-const { percent } = useFadeProgressPercent(DURATION);
+defineProps<{
+  workflowType: WorkflowType;
+}>();
 </script>
 
 <template>
@@ -18,10 +20,19 @@ const { percent } = useFadeProgressPercent(DURATION);
       class="printing-cn"
     />
     <div class="loading-wrapper">
-      <div class="loading"></div>
-      <div class="percent">
-        {{ percent }}<span style="margin-left: 8px">%</span>
-      </div>
+      <loading>
+        <template #loading-bar>
+          <img
+            :src="
+              workflowType === 'cute'
+                ? '/images/q-photo/loading-bar.png'
+                : '/images/ai-photo/loading-bar.png'
+            "
+            alt="loading"
+            class="loading-bar"
+          />
+        </template>
+      </loading>
     </div>
     <img src="/images/wechat.jpg" alt="qrcode" class="qrcode" />
   </div>
@@ -49,29 +60,6 @@ const { percent } = useFadeProgressPercent(DURATION);
     top: 297px;
     left: 420px;
   }
-  .loading-wrapper {
-    width: 382px;
-    height: 382px;
-    position: absolute;
-    top: 465px;
-    left: 308px;
-    .loading {
-      width: 340px;
-      height: 340px;
-      border: 20px solid #000;
-      border-top-color: transparent;
-      border-radius: 100%;
-      animation: circle-7fb57159 infinite 1.5s linear;
-    }
-    .percent {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 64px;
-      font-family: monospace;
-    }
-  }
   .qrcode {
     width: 186px;
     position: absolute;
@@ -79,13 +67,15 @@ const { percent } = useFadeProgressPercent(DURATION);
     left: 416px;
   }
 }
-// 转转转动画
-@keyframes circle {
-  0% {
-    transform: rotate(0);
-  }
-  100% {
-    transform: rotate(360deg);
+.loading-wrapper {
+  position: absolute;
+  top: 465px;
+  left: 338px;
+  width: 382px;
+  height: 382px;
+  .loading-bar {
+    width: 191px;
+    padding: 10px;
   }
 }
 </style>

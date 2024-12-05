@@ -4,9 +4,10 @@ import { Generate3DRecord } from "./models/photo";
 
 export const useAppStore = defineStore("app", () => {
   const photo = ref<Blob>();
+  const originalImage = ref("");
   const cuteImage = ref("");
   const aiImage = ref("");
-  const threeDImage = ref("");
+  const threeDModel = ref<string[]>();
   const cuteRecords = ref<string[]>([]);
   const aiRecords = ref<string[]>([]);
   const threeDRecords = ref<Generate3DRecord[]>([]);
@@ -30,12 +31,32 @@ export const useAppStore = defineStore("app", () => {
     return threeDRecords.value.length > 0;
   });
 
+  const threeDDirectory = computed(() => {
+    if (threeDRecords.value.length > 0) {
+      const paths = threeDRecords.value[0].modelUrls[0].split("/");
+
+      paths.pop();
+
+      return paths.join("/") + "/";
+    }
+
+    return "/";
+  });
+
   function setPhoto(data: Blob) {
     photo.value = data;
   }
 
+  function setOriginalImage(url: string) {
+    originalImage.value = url;
+  }
+
   function clearPhoto() {
     photo.value = undefined;
+  }
+
+  function clearOriginalImage() {
+    originalImage.value = "";
   }
 
   function setCuteImage(url: string) {
@@ -44,8 +65,8 @@ export const useAppStore = defineStore("app", () => {
   function setAIImage(url: string) {
     aiImage.value = url;
   }
-  function set3DImage(url: string) {
-    threeDImage.value = url;
+  function set3DModel(model: string[]) {
+    threeDModel.value = model;
   }
 
   function setCuteRecords(newRecords: string[]) {
@@ -87,7 +108,7 @@ export const useAppStore = defineStore("app", () => {
     hasPhoto,
     cuteImage,
     aiImage,
-    threeDImage,
+    threeDModel,
     cuteRecords,
     aiRecords,
     threeDRecords,
@@ -97,11 +118,15 @@ export const useAppStore = defineStore("app", () => {
     has3DImage,
     aiLoading,
     threeDLoading,
+    originalImage,
+    threeDDirectory,
     setPhoto,
+    setOriginalImage,
     clearPhoto,
+    clearOriginalImage,
     setCuteImage,
     setAIImage,
-    set3DImage,
+    set3DModel,
     setCuteRecords,
     setAIRecords,
     set3DRecords,

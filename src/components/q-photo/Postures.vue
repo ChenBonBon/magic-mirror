@@ -22,7 +22,7 @@ function handleClick(index: number) {
 <template>
   <div class="postures">
     <img
-      v-for="i in 6"
+      v-for="i in 5"
       :key="'posture-' + i"
       :src="
         activeIndex === i

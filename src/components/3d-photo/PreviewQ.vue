@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { generateImage, getImageRecords } from "../../services/photo";
 import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
+import Loading from "../Loading.vue";
 import Postures from "./Postures.vue";
 
 const props = defineProps<{
@@ -49,6 +50,9 @@ async function getHistoryRecords() {
 
   if (res) {
     store.setCuteRecords(res.map((item) => item.imageUrl));
+    if (res.length > 0) {
+      store.setCuteImage(res[0].imageUrl);
+    }
   }
 }
 
@@ -62,7 +66,20 @@ onMounted(() => {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
-    <img :src="store.cuteImage" alt="photo" class="photo" />
+    <loading v-if="store.cuteLoading">
+      <template #loading-bar>
+        <img
+          src="/images/3d-photo/loading-bar.png"
+          alt="loading"
+          class="loading-bar"
+        />
+      </template>
+    </loading>
+    <img
+      :src="store.hasCuteImage ? store.cuteImage : store.originalImage"
+      alt="photo"
+      class="photo"
+    />
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">
@@ -156,7 +173,6 @@ onMounted(() => {
     width: 640px;
     height: 640px;
     border-radius: 50%;
-    transform: rotateY(180deg);
   }
 }
 .step-4-wrapper {
@@ -246,5 +262,9 @@ onMounted(() => {
   left: 434px;
   bottom: 212px;
   width: 212px;
+}
+.loading-bar {
+  width: 320px;
+  padding: 20px;
 }
 </style>

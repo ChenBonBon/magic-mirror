@@ -1,5 +1,10 @@
+type PaymentStatus = "success" | "waiting";
+
 export interface CreateOrderRes {
-  orderNo: string;
-  amount: number;
-  qrCode: string;
+  QRCode: string;
+  billNo: string;
+}
+
+export interface GetPaymentStatusRes {
+  status: PaymentStatus;
 }

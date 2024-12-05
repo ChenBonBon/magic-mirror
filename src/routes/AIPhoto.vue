@@ -8,18 +8,19 @@ import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
 import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import Print from "../components/Print.vue";
-import ScanSuccessful from "../components/ScanSuccessful.vue";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
-import { useAppStore } from "../useAppStore";
-
-const store = useAppStore();
 
 const step = ref(1);
 const qrcode = ref("");
+const billNo = ref("");
 
 function handleNext() {
   step.value += 1;
+}
+
+function handlePrev() {
+  step.value -= 1;
 }
 
 function handleBack(newStep: number) {
@@ -27,10 +28,12 @@ function handleBack(newStep: number) {
 }
 
 async function handlePrint() {
-  const res = await createOrder("aiPhoto", store.aiImage);
+  const res = await createOrder();
 
   if (res) {
-    qrcode.value = res.qrCode;
+    qrcode.value = res.QRCode;
+    billNo.value = res.billNo;
+
     handleNext();
   }
 }
@@ -63,10 +66,13 @@ async function handlePrint() {
         src="/images/payment/ai-photo.png"
         :width="319"
         :qrcode="qrcode"
+        :bill-no="billNo"
+        @prev="handlePrev"
+        @next="handleNext"
       />
-      <scan-successful v-else-if="step === 5" />
-      <payment-successful v-else-if="step === 6" @next="handleNext" />
-      <print v-else-if="step === 7" />
+      <!-- <scan-successful v-else-if="step === 5" /> -->
+      <payment-successful v-else-if="step === 5" @next="handleNext" />
+      <print workflow-type="cute" v-else-if="step === 6" />
       <page-footer v-show="step === 1" />
       <pagination :step="step" :total="3" @click="handleBack" />
     </div>

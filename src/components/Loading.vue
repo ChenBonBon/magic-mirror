@@ -36,8 +36,10 @@ const { percent } = useFadeProgressPercent(DURATION);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    font-family: monospace;
     font-size: 64px;
-    color: #ffffff;
+    font-weight: 600;
+    color: #000000;
   }
 }
 // 转转转动画

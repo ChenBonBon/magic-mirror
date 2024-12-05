@@ -53,11 +53,12 @@ defineExpose({
     z-index: 1;
     transform: translate(-50%, -59%);
   }
-  .photo,
   .video,
   .canvas {
     border-radius: 50%;
-    transform: rotateY(180deg);
+  }
+  .video {
+    transform: scaleX(-1);
   }
 }
 </style>

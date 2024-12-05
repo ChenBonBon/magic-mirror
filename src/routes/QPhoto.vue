@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import Display3D from "../components/3d-photo/Display.vue";
+import Preview3D from "../components/3d-photo/Preview.vue";
 import Display from "../components/Display.vue";
 import PageFooter from "../components/PageFooter.vue";
 import Pagination from "../components/Pagination.vue";
@@ -8,18 +10,21 @@ import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import Print from "../components/Print.vue";
 import Home from "../components/q-photo/Home.vue";
 import Preview from "../components/q-photo/Preview.vue";
-import ScanSuccessful from "../components/ScanSuccessful.vue";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
-import { useAppStore } from "../useAppStore";
-
-const store = useAppStore();
+import { getSessionId } from "../services/session";
 
 const step = ref(1);
 const qrcode = ref("");
+const billNo = ref("");
+const workflowType = ref("cute");
 
 function handleNext() {
   step.value += 1;
+}
+
+function handlePrev() {
+  step.value -= 1;
 }
 
 function handleBack(newStep: number) {
@@ -27,19 +32,24 @@ function handleBack(newStep: number) {
 }
 
 async function handlePrint() {
-  const res = await createOrder("cute", store.cuteImage);
+  workflowType.value = "cute";
+  const res = await createOrder();
 
   if (res) {
-    qrcode.value = res.qrCode;
+    qrcode.value = res.QRCode;
+    billNo.value = res.billNo;
     handleNext();
   }
 }
 
 async function handleGenerate3D() {
-  const res = await createOrder("To3d", store.cuteImage);
+  await getSessionId("To3d");
+  workflowType.value = "To3d";
+  const res = await createOrder();
 
   if (res) {
-    qrcode.value = res.qrCode;
+    qrcode.value = res.QRCode;
+    billNo.value = res.billNo;
     handleNext();
   }
 }
@@ -70,13 +80,44 @@ async function handleGenerate3D() {
       />
       <payment
         v-else-if="step === 4"
-        src="/images/payment/q-photo.png"
-        :width="388"
+        :src="
+          workflowType === 'cute'
+            ? '/images/payment/q-photo.png'
+            : '/images/payment/3d-photo.png'
+        "
+        :width="workflowType === 'cute' ? 388 : 347"
         :qrcode="qrcode"
+        :bill-no="billNo"
+        @prev="handlePrev"
+        @next="handleNext"
       />
-      <scan-successful v-else-if="step === 5" />
-      <payment-successful v-else-if="step === 6" @next="handleNext" />
-      <print v-else-if="step === 7" />
+      <!-- <scan-successful v-else-if="step === 5" /> -->
+      <payment-successful v-else-if="step === 5" @next="handleNext" />
+      <print
+        workflow-type="cute"
+        v-else-if="step === 6 && workflowType === 'cute'"
+      />
+      <Preview3D
+        v-else-if="step === 6 && workflowType === 'To3d'"
+        title="/images/3d-photo/title.png"
+        @next="handleNext"
+      >
+        <template #preview-tip>
+          <img
+            src="/images/3d-photo/preview-tip.png"
+            alt="3D模型生成  3D MODEL"
+            class="preview-tip-3d"
+          />
+        </template>
+        <template #generate-tip>
+          <img
+            src="/images/3d-photo/generate-tip.png"
+            alt="生成最终3D模型"
+            class="generate-tip-3d"
+          />
+        </template>
+      </Preview3D>
+      <Display3D v-else-if="step === 7" @next="handleNext" />
       <page-footer v-show="step === 1" />
       <pagination :step="step" :total="3" @click="handleBack" />
     </div>
@@ -100,5 +141,17 @@ async function handleGenerate3D() {
 .loading-bar {
   width: 185px;
   margin: 17px;
+}
+.preview-tip-3d {
+  position: absolute;
+  top: 361px;
+  right: 170px;
+  width: 339px;
+}
+.generate-tip-3d {
+  position: absolute;
+  bottom: 214px;
+  left: 432px;
+  width: 217px;
 }
 </style>

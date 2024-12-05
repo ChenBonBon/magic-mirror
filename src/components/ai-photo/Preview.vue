@@ -12,7 +12,12 @@ defineProps<{
 
 const store = useAppStore();
 
-const posture = ref(1);
+const tab = ref("Movies");
+const posture = ref(0);
+
+function setTab(index: string) {
+  tab.value = index;
+}
 
 function setPosture(index: number) {
   posture.value = index;
@@ -26,7 +31,7 @@ async function generate() {
   if (store.hasPhoto) {
     store.startAILoading();
 
-    const res = await generateAI(store.photo!, posture.value);
+    const res = await generateAI(store.photo!, tab.value, posture.value);
 
     if (res && res.status === "completed") {
       store.setAIImage(res.imageUrl);
@@ -42,6 +47,9 @@ async function getHistoryRecords() {
 
   if (res) {
     store.setAIRecords(res.map((item) => item.imageUrl));
+    if (res.length > 0) {
+      store.setCuteImage(res[0].imageUrl);
+    }
   }
 }
 
@@ -65,7 +73,7 @@ onMounted(() => {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
-    <loading v-show="store.aiLoading">
+    <loading v-if="store.aiLoading">
       <template #loading-bar>
         <img
           src="/images/ai-photo/loading-bar.png"
@@ -74,7 +82,11 @@ onMounted(() => {
         />
       </template>
     </loading>
-    <img :src="store.aiImage" alt="photo" class="photo" />
+    <img
+      :src="store.hasCuteImage ? store.cuteImage : store.originalImage"
+      alt="photo"
+      class="photo"
+    />
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">
@@ -117,7 +129,11 @@ onMounted(() => {
     />
     <div v-else class="third-record disabled">3</div>
   </div>
-  <postures :disabled="store.aiLoading" @click="setPosture" />
+  <postures
+    :disabled="store.aiLoading"
+    @click-tab="setTab"
+    @click-posture="setPosture"
+  />
   <div
     class="actions"
     :style="{ justifyContent: store.hasAIImage ? 'space-between' : 'center' }"
@@ -163,7 +179,6 @@ onMounted(() => {
     width: 640px;
     height: 640px;
     border-radius: 50%;
-    transform: rotateY(180deg);
   }
 }
 .step-4-wrapper {

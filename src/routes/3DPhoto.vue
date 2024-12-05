@@ -8,17 +8,19 @@ import PageFooter from "../components/PageFooter.vue";
 import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
 import PaymentSuccessful from "../components/PaymentSuccessful.vue";
-import ScanSuccessful from "../components/ScanSuccessful.vue";
 import MainLayout from "../layout/MainLayout.vue";
-import { useAppStore } from "../useAppStore";
-
-const store = useAppStore();
+import { createOrder } from "../services/order";
 
 const step = ref(1);
 const qrcode = ref("");
+const billNo = ref("");
 
 function handleNext() {
   step.value += 1;
+}
+
+function handlePrev() {
+  step.value -= 1;
 }
 
 function handleBack(newStep: number) {
@@ -26,13 +28,14 @@ function handleBack(newStep: number) {
 }
 
 async function handleCreateOrder() {
-  // const res = await createOrder("To3d", store.displayImage);
+  const res = await createOrder();
 
-  // if (res) {
-  //   qrcode.value = res.qrCode;
-  // handleNext();
-  step.value = 6;
-  // }
+  if (res) {
+    qrcode.value = res.QRCode;
+    billNo.value = res.billNo;
+
+    handleNext();
+  }
 }
 </script>
 
@@ -58,11 +61,14 @@ async function handleCreateOrder() {
         src="/images/payment/3d-photo.png"
         :width="347"
         :qrcode="qrcode"
+        :bill-no="billNo"
+        @prev="handlePrev"
+        @next="handleNext"
       />
-      <scan-successful v-else-if="step === 4" />
-      <payment-successful v-else-if="step === 5" @next="handleNext" />
+      <!-- <scan-successful v-else-if="step === 4" /> -->
+      <payment-successful v-else-if="step === 4" @next="handleNext" />
       <preview
-        v-else-if="step === 6"
+        v-else-if="step === 5"
         title="/images/3d-photo/title.png"
         @next="handleNext"
       >
@@ -81,7 +87,7 @@ async function handleCreateOrder() {
           />
         </template>
       </preview>
-      <display v-else-if="step === 7" @next="handleNext" />
+      <display v-else-if="step === 6" @next="handleNext" />
       <page-footer v-show="step === 1" />
       <pagination :step="step" :total="2" @click="handleBack" />
     </div>
