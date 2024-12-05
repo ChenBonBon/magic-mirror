@@ -97,4 +97,8 @@ async function handleGenerate3D() {
     width: 212px;
   }
 }
+.loading-bar {
+  width: 185px;
+  margin: 17px;
+}
 </style>

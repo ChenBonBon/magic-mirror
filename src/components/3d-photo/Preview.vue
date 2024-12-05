@@ -3,7 +3,7 @@ import { onMounted } from "vue";
 import { generate3D, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 
-const props = defineProps<{
+defineProps<{
   title: string;
   onNext: () => void;
 }>();
@@ -12,7 +12,7 @@ const store = useAppStore();
 
 async function generate() {
   if (store.hasPhoto) {
-    store.startLoading();
+    store.start3DLoading();
 
     const res = await generate3D(store.cuteImage);
 
@@ -21,9 +21,11 @@ async function generate() {
       if (webpUrl) {
         store.set3DImage(webpUrl);
       }
+
+      store.set3DRecords(res.history);
     }
 
-    store.stopLoading();
+    store.stop3DLoading();
   }
 }
 
@@ -31,16 +33,14 @@ async function getHistoryRecords() {
   const res = await getImageRecords();
 
   if (res) {
-    store.set3DRecords(res.map((item) => item.imageUrl));
+    store.set3DRecords(res);
   }
 }
 
-function handleClick(record: string) {
-  if (record) {
-    store.set3DImage(record);
-
-    props.onNext();
-  }
+function handleClick(index: number) {
+  store.set3DImage(
+    store.threeDRecords[index].modelUrls.find((item) => item.endsWith(".webp"))!
+  );
 }
 
 onMounted(() => {
@@ -53,7 +53,11 @@ onMounted(() => {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
-    <img :src="store.threeDImage" alt="3D模型" />
+    <img
+      :src="store.has3DImage ? store.threeDImage : store.cuteImage"
+      alt="3D模型"
+      class="preview-image"
+    />
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">
@@ -66,41 +70,35 @@ onMounted(() => {
   </div>
   <div class="records">
     <img
-      src="/images/q-photo/record.png"
+      v-if="store.threeDRecords[0]"
+      :src="
+        store.threeDRecords[0].modelUrls.find((item) => item.endsWith('.webp'))
+      "
       alt="first"
       class="first-record"
-      @click="handleClick(store.threeDRecords[0])"
+      @click="handleClick(0)"
     />
+    <div v-else class="first-record disabled">1</div>
     <img
-      src="/images/q-photo/record.png"
+      v-if="store.threeDRecords[1]"
+      :src="
+        store.threeDRecords[1].modelUrls.find((item) => item.endsWith('.webp'))
+      "
       alt="second"
       class="second-record"
-      @click="handleClick(store.threeDRecords[1])"
+      @click="handleClick(1)"
     />
+    <div v-else class="second-record disabled">2</div>
     <img
-      src="/images/q-photo/record.png"
+      v-if="store.threeDRecords[2]"
+      :src="
+        store.threeDRecords[2].modelUrls.find((item) => item.endsWith('.webp'))
+      "
       alt="third"
       class="third-record"
-      @click="handleClick(store.threeDRecords[2])"
+      @click="handleClick(2)"
     />
-    <img
-      src="/images/q-photo/record.png"
-      alt="forth"
-      class="forth-record"
-      @click="handleClick(store.threeDRecords[3])"
-    />
-    <img
-      src="/images/q-photo/record.png"
-      alt="fifth"
-      class="fifth-record"
-      @click="handleClick(store.threeDRecords[4])"
-    />
-    <img
-      src="/images/q-photo/record.png"
-      alt="sixth"
-      class="sixth-record"
-      @click="handleClick(store.threeDRecords[5])"
-    />
+    <div v-else class="third-record disabled">3</div>
   </div>
   <div
     class="actions"
@@ -126,6 +124,7 @@ onMounted(() => {
   background-image: url("/images/q-photo/title-wrapper.png");
   background-size: cover;
   background-repeat: no-repeat;
+  z-index: 1;
   .title {
     width: 86px;
     height: 86px;
@@ -143,6 +142,11 @@ onMounted(() => {
   background-image: url("/images/q-photo/preview.png");
   background-size: cover;
   background-repeat: no-repeat;
+  .preview-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
 }
 .step-4-wrapper {
   position: absolute;
@@ -166,37 +170,29 @@ onMounted(() => {
     position: absolute;
     width: 240px;
     height: 240px;
-  }
-  .forth-record,
-  .fifth-record,
-  .sixth-record {
-    position: absolute;
-    width: 216px;
-    height: 216px;
+    border-radius: 50%;
+    &.disabled {
+      font-family: monospace;
+      font-size: 80px;
+      text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
+        1px 1px 0 black;
+      background: #e6e6e6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
   .first-record {
-    top: 981px;
-    left: 107px;
+    top: 990px;
+    left: 122px;
   }
   .second-record {
-    top: 1082px;
+    top: 1080px;
     left: 428px;
   }
   .third-record {
     top: 981px;
     right: 106px;
-  }
-  .forth-record {
-    top: 1259px;
-    left: 149px;
-  }
-  .fifth-record {
-    top: 1349px;
-    left: 440px;
-  }
-  .sixth-record {
-    top: 1259px;
-    right: 149px;
   }
 }
 .actions {

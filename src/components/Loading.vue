@@ -4,42 +4,40 @@ import { useFadeProgressPercent } from "../hooks/useFadeProgressPercent";
 const DURATION = 60 * 1000;
 
 const { percent } = useFadeProgressPercent(DURATION);
-
-function handleClick() {
-  return false;
-}
 </script>
 
 <template>
-  <div class="loading-wrapper" @click="handleClick">
-    <div class="loading"></div>
-    <div>{{ percent }}%</div>
+  <div class="loading">
+    <div class="loading-bar-wrapper">
+      <slot name="loading-bar"></slot>
+    </div>
+    <div class="percent">{{ percent }}%</div>
   </div>
 </template>
 
 <style lang="less" scoped>
-.loading-wrapper {
-  position: fixed;
+.loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-  font-size: 64px;
-  color: #ffffff;
-  .loading {
-    width: 100px;
-    height: 100px;
-    border: 10px solid #fff;
-    border-top-color: transparent;
-    border-radius: 100%;
-    animation: circle-7fb57159 infinite 1.5s linear;
+  z-index: 1;
+  .loading-bar-wrapper {
+    width: 100%;
+    height: 100%;
+    animation: circle infinite 1.5s linear;
+    background-image: url("/images/loading/loading-wrapper.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .percent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 64px;
+    color: #ffffff;
   }
 }
 // 转转转动画

@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { generateAI, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
+import Loading from "../Loading.vue";
 import Postures from "./Postures.vue";
 
 defineProps<{
@@ -18,8 +19,12 @@ function setPosture(index: number) {
 }
 
 async function generate() {
+  if (store.aiLoading) {
+    return;
+  }
+
   if (store.hasPhoto) {
-    store.startLoading();
+    store.startAILoading();
 
     const res = await generateAI(store.photo!, posture.value);
 
@@ -28,7 +33,7 @@ async function generate() {
       store.setAIRecords(res.history.map((item) => item.imageUrl));
     }
 
-    store.stopLoading();
+    store.stopAILoading();
   }
 }
 
@@ -41,6 +46,10 @@ async function getHistoryRecords() {
 }
 
 function handleClick(record: string) {
+  if (store.aiLoading) {
+    return;
+  }
+
   if (record) {
     store.setAIImage(record);
   }
@@ -56,6 +65,15 @@ onMounted(() => {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
+    <loading v-show="store.aiLoading">
+      <template #loading-bar>
+        <img
+          src="/images/ai-photo/loading-bar.png"
+          alt="loading"
+          class="loading-bar"
+        />
+      </template>
+    </loading>
     <img :src="store.aiImage" alt="photo" class="photo" />
   </div>
   <slot name="preview-tip" />
@@ -99,7 +117,7 @@ onMounted(() => {
     />
     <div v-else class="third-record disabled">3</div>
   </div>
-  <postures @click="setPosture" />
+  <postures :disabled="store.aiLoading" @click="setPosture" />
   <div
     class="actions"
     :style="{ justifyContent: store.hasAIImage ? 'space-between' : 'center' }"
@@ -229,5 +247,9 @@ onMounted(() => {
       width: 109px;
     }
   }
+}
+.loading-bar {
+  width: 320px;
+  padding: 20px;
 }
 </style>

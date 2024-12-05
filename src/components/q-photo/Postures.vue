@@ -2,12 +2,17 @@
 import { ref } from "vue";
 
 const props = defineProps<{
+  disabled: boolean;
   onClick: (index: number) => void;
 }>();
 
 const activeIndex = ref(1);
 
 function handleClick(index: number) {
+  if (props.disabled) {
+    return;
+  }
+
   activeIndex.value = index;
 
   props.onClick(index);

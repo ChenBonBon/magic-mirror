@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { generateImage, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
+import Loading from "../Loading.vue";
 import Postures from "./Postures.vue";
 
 defineProps<{
@@ -18,8 +19,12 @@ function setPosture(index: number) {
 }
 
 async function generate() {
+  if (store.cuteLoading) {
+    return;
+  }
+
   if (store.hasPhoto) {
-    store.startLoading();
+    store.startCuteLoading();
 
     const res = await generateImage(store.photo!, posture.value);
 
@@ -28,7 +33,7 @@ async function generate() {
       store.setCuteRecords(res.history.map((item) => item.imageUrl));
     }
 
-    store.stopLoading();
+    store.stopCuteLoading();
   }
 }
 
@@ -41,6 +46,10 @@ async function getHistoryRecords() {
 }
 
 function handleClick(record: string) {
+  if (store.cuteLoading) {
+    return;
+  }
+
   if (record) {
     store.setCuteImage(record);
   }
@@ -56,6 +65,15 @@ onMounted(() => {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
+    <loading v-show="store.cuteLoading">
+      <template #loading-bar>
+        <img
+          src="/images/q-photo/loading-bar.png"
+          alt="loading"
+          class="loading-bar"
+        />
+      </template>
+    </loading>
     <img :src="store.cuteImage" alt="photo" class="photo" />
   </div>
   <slot name="preview-tip" />
@@ -99,7 +117,7 @@ onMounted(() => {
     />
     <div v-else class="third-record disabled">3</div>
   </div>
-  <postures @click="setPosture" />
+  <postures :disabled="store.cuteLoading" @click="setPosture" />
   <div
     class="actions"
     :style="{ justifyContent: store.hasCuteImage ? 'space-between' : 'center' }"
@@ -240,5 +258,9 @@ onMounted(() => {
   left: 434px;
   bottom: 212px;
   width: 212px;
+}
+.loading-bar {
+  width: 320px;
+  padding: 20px;
 }
 </style>

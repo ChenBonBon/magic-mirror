@@ -40,29 +40,38 @@ onMounted(() => {
         <div class="marquees-wrapper">
           <Marquee id="cute" :data="qData" href="/q-photo">
             <template #title>
-              <img
-                src="/images/home/q-photo.png"
-                alt="Q版照片"
-                class="q-photo"
-              />
+              <div class="q-photo">
+                <img
+                  src="/images/home/q-photo.png"
+                  alt="Q版照片"
+                  class="q-photo-img"
+                />
+                <span class="sub-title">点击立刻体验</span>
+              </div>
             </template>
           </Marquee>
           <Marquee id="aiPhoto" :data="aiData" :reverse="true" href="/ai-photo">
             <template #title>
-              <img
-                src="/images/home/ai-photo.png"
-                alt="AI照片"
-                class="ai-photo"
-              />
+              <div class="ai-photo">
+                <img
+                  src="/images/home/ai-photo.png"
+                  alt="AI照片"
+                  class="ai-photo-img"
+                />
+                <span class="sub-title">点击立刻体验</span>
+              </div>
             </template>
           </Marquee>
           <Marquee id="threeDPhoto" :data="threeDData" href="/3d-photo">
             <template #title>
-              <img
-                src="/images/home/3d-photo.png"
-                alt="3D照片"
-                class="three-d-photo"
-              />
+              <div class="three-d-photo">
+                <img
+                  src="/images/home/3d-photo.png"
+                  alt="3D照片"
+                  class="three-d-photo-img"
+                />
+                <span class="sub-title">点击立刻体验</span>
+              </div>
             </template>
           </Marquee>
         </div>
@@ -105,18 +114,42 @@ onMounted(() => {
         width: 199px;
         margin-left: 135px;
         transform: rotate(9deg);
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        .q-photo-img {
+          width: 100%;
+        }
       }
       .ai-photo {
         width: 162px;
         margin: 100px 0 25px calc(100% - 150px);
         transform: rotate(9deg);
+        display: flex;
+        align-items: baseline;
+        flex-direction: row-reverse;
+        gap: 8px;
+        .ai-photo-img {
+          width: 100%;
+        }
       }
       .three-d-photo {
         width: 182px;
         margin: 100px 0 25px -50px;
         transform: rotate(9deg);
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        .three-d-photo-img {
+          width: 100%;
+        }
       }
     }
   }
+}
+.sub-title {
+  color: #ffffff;
+  transform: rotate(-9deg);
+  flex-shrink: 0;
 }
 </style>

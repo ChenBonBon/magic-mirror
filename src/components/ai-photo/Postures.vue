@@ -1,16 +1,57 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const activeTab = ref(0);
-const activeIndex = ref(1);
+const props = defineProps<{
+  disabled: boolean;
+  onClick: (index: number) => void;
+}>();
 
-const tabs = ["COSPLAY", "主题二", "主题三", "主题四"];
+const activeTab = ref(0);
+const activeIndex = ref(0);
+
+const tabs = ["电影", "动漫", "游戏"];
+
+const postures = [
+  [
+    "/images/ai-photo/tab-1/1.png",
+    "/images/ai-photo/tab-1/2.png",
+    "/images/ai-photo/tab-1/3.png",
+    "/images/ai-photo/tab-1/4.png",
+    "/images/ai-photo/tab-1/5.png",
+  ],
+  [
+    "/images/ai-photo/tab-2/1.png",
+    "/images/ai-photo/tab-2/2.png",
+    "/images/ai-photo/tab-2/3.png",
+    "/images/ai-photo/tab-2/4.png",
+    "/images/ai-photo/tab-2/5.png",
+    "/images/ai-photo/tab-2/6.png",
+  ],
+  [
+    "/images/ai-photo/tab-3/1.png",
+    "/images/ai-photo/tab-3/2.png",
+    "/images/ai-photo/tab-3/3.png",
+    "/images/ai-photo/tab-3/4.png",
+    "/images/ai-photo/tab-3/5.png",
+    "/images/ai-photo/tab-3/6.png",
+    "/images/ai-photo/tab-3/7.png",
+  ],
+];
 
 function handleClickTab(index: number) {
+  if (props.disabled) {
+    return;
+  }
+
+  activeIndex.value = 0;
   activeTab.value = index;
 }
 
 function handleClickPosture(index: number) {
+  if (props.disabled) {
+    return;
+  }
+
   activeIndex.value = index;
 }
 </script>
@@ -29,25 +70,19 @@ function handleClickPosture(index: number) {
         :key="'tab-' + index"
         @click="handleClickTab(index)"
       >
-        <img
-          :src="'/images/ai-photo/tab-' + (index + 1) + '.png'"
-          :alt="tab"
-          class="tab-text"
-        />
+        <span class="tab-text">{{ tab }}</span>
       </div>
     </div>
     <div class="postures">
-      <div
-        v-for="i in 6"
-        :key="'posture-' + i"
-        class="posture-wrapper"
-        @click="handleClickPosture(i)"
-      >
-        <img
-          :src="'/images/ai-photo/posture-' + i + '.png'"
-          :alt="'posture-' + i"
-          class="posture"
-        />
+      <div class="postures-inner">
+        <div
+          v-for="(item, index) in postures[activeTab]"
+          :key="'posture-' + index"
+          :class="['posture-wrapper', activeIndex === index ? 'active' : '']"
+          @click="handleClickPosture(index)"
+        >
+          <img :src="item" :alt="item" class="posture" />
+        </div>
       </div>
     </div>
     <img
@@ -90,6 +125,7 @@ function handleClickPosture(index: number) {
       background-repeat: no-repeat;
       display: flex;
       justify-content: center;
+      align-items: center;
       &.active {
         background-image: url("/images/ai-photo/tab-active.png");
         background-size: cover;
@@ -97,40 +133,48 @@ function handleClickPosture(index: number) {
         height: 43px;
       }
       .tab-text {
-        &:first-of-type {
-          top: 12px;
-          height: 18px;
-        }
-        position: absolute;
-        top: 10px;
-        height: 22px;
+        font-size: 24px;
       }
     }
   }
   .postures {
-    width: 822px;
+    width: 780px;
     height: 163px;
-    background-image: url("/images/ai-photo/posture-bg.png");
+    background-image: url(/images/ai-photo/posture-bg.png);
     background-size: cover;
     background-repeat: no-repeat;
     position: absolute;
     top: 43px;
     left: 51px;
+    padding: 0px 36px;
     display: flex;
-    gap: 24px;
-    padding-left: 30px;
-    .posture-wrapper {
-      width: 112px;
-      height: 112px;
-      background-image: url("/images/ai-photo/posture-wrapper.png");
-      background-size: cover;
-      background-repeat: no-repeat;
-      margin-top: 24px;
+    align-items: center;
+    .postures-inner {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      .posture {
-        width: 101px;
+      gap: 24px;
+      width: 780px;
+      overflow: auto;
+      .posture-wrapper {
+        width: 112px;
+        height: 112px;
+        background-image: url("/images/ai-photo/posture-wrapper.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: hidden;
+        border: 10px solid transparent;
+        border-radius: 50%;
+        flex-shrink: 0;
+        &.active {
+          border-color: #ffffff;
+        }
+        .posture {
+          width: 112px;
+        }
       }
     }
   }

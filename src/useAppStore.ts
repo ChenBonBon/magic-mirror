@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+import { Generate3DRecord } from "./models/photo";
 
 export const useAppStore = defineStore("app", () => {
   const photo = ref<Blob>();
@@ -8,8 +9,10 @@ export const useAppStore = defineStore("app", () => {
   const threeDImage = ref("");
   const cuteRecords = ref<string[]>([]);
   const aiRecords = ref<string[]>([]);
-  const threeDRecords = ref<string[]>([]);
-  const loading = ref(false);
+  const threeDRecords = ref<Generate3DRecord[]>([]);
+  const cuteLoading = ref(false);
+  const aiLoading = ref(false);
+  const threeDLoading = ref(false);
 
   const hasPhoto = computed(() => {
     return typeof photo.value !== "undefined";
@@ -53,16 +56,30 @@ export const useAppStore = defineStore("app", () => {
     aiRecords.value = newRecords;
   }
 
-  function set3DRecords(newRecords: string[]) {
+  function set3DRecords(newRecords: Generate3DRecord[]) {
     threeDRecords.value = newRecords;
   }
 
-  function startLoading() {
-    loading.value = true;
+  function startCuteLoading() {
+    cuteLoading.value = true;
   }
 
-  function stopLoading() {
-    loading.value = false;
+  function stopCuteLoading() {
+    cuteLoading.value = false;
+  }
+  function startAILoading() {
+    aiLoading.value = true;
+  }
+
+  function stopAILoading() {
+    aiLoading.value = false;
+  }
+  function start3DLoading() {
+    threeDLoading.value = true;
+  }
+
+  function stop3DLoading() {
+    threeDLoading.value = false;
   }
 
   return {
@@ -74,10 +91,12 @@ export const useAppStore = defineStore("app", () => {
     cuteRecords,
     aiRecords,
     threeDRecords,
-    loading,
+    cuteLoading,
     hasCuteImage,
     hasAIImage,
     has3DImage,
+    aiLoading,
+    threeDLoading,
     setPhoto,
     clearPhoto,
     setCuteImage,
@@ -86,7 +105,11 @@ export const useAppStore = defineStore("app", () => {
     setCuteRecords,
     setAIRecords,
     set3DRecords,
-    startLoading,
-    stopLoading,
+    startCuteLoading,
+    stopCuteLoading,
+    startAILoading,
+    stopAILoading,
+    start3DLoading,
+    stop3DLoading,
   };
 });

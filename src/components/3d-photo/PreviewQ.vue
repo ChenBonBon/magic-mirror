@@ -25,7 +25,7 @@ function setPosture(index: number) {
 
 async function generate() {
   if (store.hasPhoto) {
-    store.startLoading();
+    store.startCuteLoading();
 
     const res = await generateImage(store.photo!, posture.value);
 
@@ -34,7 +34,7 @@ async function generate() {
       store.setCuteRecords(res.history.map((item) => item.imageUrl));
     }
 
-    store.stopLoading();
+    store.stopCuteLoading();
   }
 }
 
