@@ -20,7 +20,7 @@ defineProps<{
       class="printing-cn"
     />
     <div class="loading-wrapper">
-      <loading>
+      <loading percent-color="#000000">
         <template #loading-bar>
           <img
             :src="

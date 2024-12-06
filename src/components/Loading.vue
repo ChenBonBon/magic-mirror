@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { useFadeProgressPercent } from "../hooks/useFadeProgressPercent";
 
+defineProps<{
+  percentColor?: string;
+}>();
+
 const DURATION = 60 * 1000;
 
 const { percent } = useFadeProgressPercent(DURATION);
@@ -11,7 +15,9 @@ const { percent } = useFadeProgressPercent(DURATION);
     <div class="loading-bar-wrapper">
       <slot name="loading-bar"></slot>
     </div>
-    <div class="percent">{{ percent }}%</div>
+    <div class="percent" :style="{ color: percentColor ?? '#ffffff' }">
+      {{ percent }}%
+    </div>
   </div>
 </template>
 
@@ -39,7 +45,7 @@ const { percent } = useFadeProgressPercent(DURATION);
     font-family: monospace;
     font-size: 64px;
     font-weight: 600;
-    color: #000000;
+    color: #ffffff;
   }
 }
 // 转转转动画

@@ -72,7 +72,7 @@ async function handlePrint() {
       />
       <!-- <scan-successful v-else-if="step === 5" /> -->
       <payment-successful v-else-if="step === 5" @next="handleNext" />
-      <print workflow-type="cute" v-else-if="step === 6" />
+      <print workflow-type="aiPhoto" v-else-if="step === 6" />
       <page-footer v-show="step === 1" />
       <pagination :step="step" :total="3" @click="handleBack" />
     </div>
