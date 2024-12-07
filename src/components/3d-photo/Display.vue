@@ -1,15 +1,54 @@
 <script setup lang="ts">
+import VueQrcode from "vue-qrcode";
 import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
+
 defineProps<{
   onNext: () => void;
 }>();
 
+const protocol = import.meta.env.VITE_SHARE_PROTOL;
+const host = import.meta.env.VITE_SHARE_HOST;
+const port = import.meta.env.VITE_SHARE_PORT;
+
+let baseURL = protocol + "://" + host;
+
+if (port) {
+  baseURL += ":" + port;
+}
+
 const store = useAppStore();
+const qrcode =
+  baseURL +
+  ":/about?modelId=" +
+  window.localStorage.getItem("magic-mirror-sessionId");
 </script>
 
 <template>
   <img src="/images/display/dot-2.png" alt="dot-2" class="dot-2" />
+  <div class="qrcodes">
+    <div class="qrcode-wrapper">
+      <vue-qrcode
+        :value="qrcode"
+        class="qrcode"
+        :color="{ dark: '#000000ff', light: '#ffffffff' }"
+        type="image/png"
+      />
+      <img
+        src="/images/3d-photo/qrcode-display.png"
+        alt="qrcode"
+        class="qrcode-tip"
+      />
+    </div>
+    <div class="qrcode-wrapper">
+      <img src="/images/wechat.jpg" alt="qrcode" class="qrcode" />
+      <img
+        src="/images/3d-photo/qrcode-print.png"
+        alt="qrcode"
+        class="qrcode-tip"
+      />
+    </div>
+  </div>
   <div class="effect-display-photo-wrapper">
     <three-d-model
       v-if="store.has3DImage"
@@ -175,5 +214,27 @@ const store = useAppStore();
   left: 431px;
   bottom: 214px;
   width: 217px;
+}
+.qrcodes {
+  position: absolute;
+  top: 354px;
+  left: 64px;
+  display: flex;
+  gap: 63px;
+  .qrcode-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 171px;
+    background: black;
+    align-items: center;
+    padding: 12px 0;
+    gap: 8px;
+    .qrcode {
+      width: 143px;
+    }
+    .qrcode-tip {
+      width: 87px;
+    }
+  }
 }
 </style>
