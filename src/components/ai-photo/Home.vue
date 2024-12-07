@@ -68,6 +68,7 @@ onMounted(async () => {
 
   store.clearPhoto();
   store.clearOriginalImage();
+  store.clearAIRecords();
 
   if (cameraRef.value && cameraRef.value.video) {
     stream.value = await openCamera(cameraRef.value.video);

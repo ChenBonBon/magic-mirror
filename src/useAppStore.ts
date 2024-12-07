@@ -115,6 +115,18 @@ export const useAppStore = defineStore("app", () => {
     threeDLoading.value = false;
   }
 
+  function clearCuteRecords() {
+    cuteRecords.value = [];
+  }
+
+  function clearAIRecords() {
+    aiRecords.value = [];
+  }
+
+  function clear3DRecords() {
+    threeDRecords.value = [];
+  }
+
   return {
     photo,
     hasPhoto,
@@ -151,5 +163,8 @@ export const useAppStore = defineStore("app", () => {
     stopAILoading,
     start3DLoading,
     stop3DLoading,
+    clearCuteRecords,
+    clearAIRecords,
+    clear3DRecords,
   };
 });

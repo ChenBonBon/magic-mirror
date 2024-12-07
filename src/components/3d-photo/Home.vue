@@ -65,8 +65,11 @@ onMounted(async () => {
   if (!window.localStorage.getItem("magic-mirror-sessionId")) {
     getSessionId("cute");
   }
+
   store.clearPhoto();
   store.clearOriginalImage();
+  store.clear3DRecords();
+
   if (cameraRef.value && cameraRef.value.video) {
     stream.value = await openCamera(cameraRef.value.video);
   }
