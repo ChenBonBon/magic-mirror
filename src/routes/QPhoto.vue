@@ -163,10 +163,6 @@ async function handlePrint() {
     width: 212px;
   }
 }
-.loading-bar {
-  width: 185px;
-  margin: 17px;
-}
 .preview-tip-3d {
   position: absolute;
   top: 361px;

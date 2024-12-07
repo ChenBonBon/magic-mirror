@@ -276,7 +276,6 @@ onMounted(() => {
   width: 212px;
 }
 .loading-bar {
-  width: 320px;
-  padding: 20px;
+  width: 342px;
 }
 </style>
