@@ -2,6 +2,11 @@
 import { useTemplateRef } from "vue";
 import { useAppStore } from "../useAppStore";
 
+defineProps<{
+  time: number;
+  isTiming: boolean;
+}>();
+
 const video = useTemplateRef("video");
 const canvas = useTemplateRef("canvas");
 
@@ -16,6 +21,7 @@ defineExpose({
 <template>
   <div class="camera-wrapper">
     <img src="/images/camera-line.png" alt="line" class="line" />
+    <span v-show="isTiming" class="countdown">{{ time }}</span>
     <video
       ref="video"
       width="715"
@@ -52,6 +58,15 @@ defineExpose({
     left: 50%;
     z-index: 1;
     transform: translate(-50%, -59%);
+  }
+  .countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    font-size: 200px;
+    color: #ffffff;
   }
   .video,
   .canvas {

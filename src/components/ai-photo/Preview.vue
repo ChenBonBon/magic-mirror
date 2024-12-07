@@ -28,6 +28,10 @@ async function generate() {
     return;
   }
 
+  if (store.reachMaxAI) {
+    return;
+  }
+
   if (store.hasPhoto) {
     store.startAILoading();
 
@@ -83,7 +87,7 @@ onMounted(() => {
       </template>
     </loading>
     <img
-      :src="store.hasCuteImage ? store.cuteImage : store.originalImage"
+      :src="store.hasAIImage ? store.aiImage : store.originalImage"
       alt="photo"
       class="photo"
     />
@@ -136,9 +140,12 @@ onMounted(() => {
   />
   <div
     class="actions"
-    :style="{ justifyContent: store.hasAIImage ? 'space-between' : 'center' }"
+    :style="{
+      justifyContent:
+        store.hasAIImage && !store.reachMaxAI ? 'space-between' : 'center',
+    }"
   >
-    <div class="generate-wrapper" @click="generate">
+    <div class="generate-wrapper" v-show="!store.reachMaxAI" @click="generate">
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
     </div>
     <div class="next-wrapper" v-show="store.hasAIImage" @click="onNext">

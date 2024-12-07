@@ -25,6 +25,14 @@ function setPosture(index: number) {
 }
 
 async function generate() {
+  if (store.cuteLoading) {
+    return;
+  }
+
+  if (store.reachMaxCute) {
+    return;
+  }
+  
   if (store.hasPhoto) {
     store.startCuteLoading();
 

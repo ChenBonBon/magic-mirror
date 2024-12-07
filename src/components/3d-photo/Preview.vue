@@ -17,6 +17,10 @@ async function generate() {
     return;
   }
 
+  if (store.reachMax3D) {
+    return;
+  }
+
   if (store.hasPhoto) {
     store.start3DLoading();
 
@@ -123,9 +127,12 @@ onMounted(() => {
   </div>
   <div
     class="actions"
-    :style="{ justifyContent: store.has3DImage ? 'space-between' : 'center' }"
+    :style="{
+      justifyContent:
+        store.has3DImage && !store.reachMax3D ? 'space-between' : 'center',
+    }"
   >
-    <div class="generate-wrapper" @click="generate">
+    <div class="generate-wrapper" v-show="!store.reachMax3D" @click="generate">
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
     </div>
     <div class="next-wrapper" v-show="store.has3DImage" @click="onNext">

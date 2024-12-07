@@ -5,7 +5,7 @@ defineProps<{
   percentColor?: string;
 }>();
 
-const DURATION = 60 * 1000;
+const DURATION = 60;
 
 const { percent } = useFadeProgressPercent(DURATION);
 </script>

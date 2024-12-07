@@ -31,6 +31,18 @@ export const useAppStore = defineStore("app", () => {
     return threeDRecords.value.length > 0;
   });
 
+  const reachMaxCute = computed(() => {
+    return cuteRecords.value.length >= 3;
+  });
+
+  const reachMaxAI = computed(() => {
+    return aiRecords.value.length >= 3;
+  });
+
+  const reachMax3D = computed(() => {
+    return threeDRecords.value.length >= 3;
+  });
+
   const threeDDirectory = computed(() => {
     if (threeDRecords.value.length > 0) {
       const paths = threeDRecords.value[0].modelUrls[0].split("/");
@@ -120,6 +132,9 @@ export const useAppStore = defineStore("app", () => {
     threeDLoading,
     originalImage,
     threeDDirectory,
+    reachMaxCute,
+    reachMaxAI,
+    reachMax3D,
     setPhoto,
     setOriginalImage,
     clearPhoto,

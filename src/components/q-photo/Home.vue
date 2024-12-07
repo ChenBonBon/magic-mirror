@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
+import { useCountdown } from "../../hooks/useCountdown";
 import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
 import { closeCamera, openCamera } from "../../utils/camera";
@@ -15,6 +16,7 @@ const props = defineProps<{
 const cameraRef = useTemplateRef("camera");
 
 const store = useAppStore();
+const { time, isTiming, start } = useCountdown(3);
 
 const stream = ref();
 
@@ -28,28 +30,32 @@ async function handleClickPhotograph() {
     return;
   }
 
-  if (cameraRef.value && cameraRef.value.canvas) {
-    const context = cameraRef.value.canvas.getContext("2d");
-    if (context && cameraRef.value.video) {
-      context.translate(cameraRef.value.video.width, 0);
-      context.scale(-1, 1);
-      context.drawImage(
-        cameraRef.value.video,
-        0,
-        0,
-        cameraRef.value.video.width,
-        cameraRef.value.video.height
-      );
-      const data = cameraRef.value.canvas.toDataURL("image/png");
-      store.setOriginalImage(data);
+  setTimeout(() => {
+    if (cameraRef.value && cameraRef.value.canvas) {
+      const context = cameraRef.value.canvas.getContext("2d");
+      if (context && cameraRef.value.video) {
+        context.translate(cameraRef.value.video.width, 0);
+        context.scale(-1, 1);
+        context.drawImage(
+          cameraRef.value.video,
+          0,
+          0,
+          cameraRef.value.video.width,
+          cameraRef.value.video.height
+        );
+        const data = cameraRef.value.canvas.toDataURL("image/png");
+        store.setOriginalImage(data);
 
-      cameraRef.value.canvas.toBlob((blob) => {
-        if (blob) {
-          store.setPhoto(blob);
-        }
-      });
+        cameraRef.value.canvas.toBlob((blob) => {
+          if (blob) {
+            store.setPhoto(blob);
+          }
+        });
+      }
     }
-  }
+  }, 3000);
+
+  start();
 }
 
 function handleClickPhotographConfirm() {
@@ -63,6 +69,7 @@ onMounted(async () => {
     getSessionId("cute");
   }
   store.clearPhoto();
+  store.clearOriginalImage();
   if (cameraRef.value && cameraRef.value.video) {
     stream.value = await openCamera(cameraRef.value.video);
   }
@@ -113,7 +120,7 @@ onBeforeUnmount(() => {
       class="step-2-tip"
     />
   </div>
-  <camera ref="camera" />
+  <camera ref="camera" :time="time" :is-timing="isTiming" />
   <img
     src="/images/q-photo/sub-title-arrow.png"
     alt="sub-title-arrow"

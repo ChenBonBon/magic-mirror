@@ -1,25 +1,45 @@
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onUnmounted, ref, unref } from "vue";
 
-export function useCountDown(leftTime: number, interval = 100) {
-  const countdown = ref(leftTime);
+export function useCountdown(duration: number, onCountdownEnd?: () => void) {
+  const time = ref(duration);
+  const isTiming = ref(false);
+  let timer: ReturnType<typeof setInterval> | null;
 
-  let timer: number;
+  const clear = () => {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  };
 
-  onMounted(() => {
+  const stop = () => {
+    clear();
+    isTiming.value = false;
+  };
+
+  const reset = () => {
+    stop();
+    time.value = duration;
+  };
+
+  const start = () => {
+    if (unref(isTiming) || !!timer) {
+      return;
+    }
+    isTiming.value = true;
     timer = setInterval(() => {
-      if (countdown.value <= 0) {
-        clearInterval(timer);
-
-        countdown.value = 0;
+      if (unref(time) <= 0) {
+        reset();
+        onCountdownEnd && onCountdownEnd();
+      } else {
+        time.value--;
       }
+    }, 1000);
+  };
 
-      countdown.value = countdown.value - interval;
-    }, interval);
+  onUnmounted(() => {
+    reset();
   });
 
-  onBeforeUnmount(() => {
-    clearInterval(timer);
-  });
-
-  return { countdown };
+  return { time, isTiming, start, stop, reset };
 }

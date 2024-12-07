@@ -23,6 +23,10 @@ async function generate() {
     return;
   }
 
+  if (store.reachMaxCute) {
+    return;
+  }
+
   if (store.hasPhoto) {
     store.startCuteLoading();
 
@@ -127,9 +131,16 @@ onMounted(() => {
   <postures :disabled="store.cuteLoading" @click="setPosture" />
   <div
     class="actions"
-    :style="{ justifyContent: store.hasCuteImage ? 'space-between' : 'center' }"
+    :style="{
+      justifyContent:
+        store.hasCuteImage && !store.reachMaxCute ? 'space-between' : 'center',
+    }"
   >
-    <div class="generate-wrapper" @click="generate">
+    <div
+      class="generate-wrapper"
+      v-show="!store.reachMaxCute"
+      @click="generate"
+    >
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
     </div>
     <div class="next-wrapper" v-show="store.hasCuteImage" @click="onNext">
