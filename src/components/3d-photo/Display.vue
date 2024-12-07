@@ -55,6 +55,11 @@ const qrcode =
       :path="store.threeDDirectory"
       model="base.obj"
       material="base.mtl"
+      :scale="3.5"
+      :width="900"
+      :height="900"
+      :bg-color="0xffffff"
+      :bg-opacity="0"
     />
   </div>
   <div class="effect-display-wrapper">
@@ -140,6 +145,9 @@ const qrcode =
   background-image: url("/images/3d-photo/display-wrapper.png");
   background-size: cover;
   background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .effect-display-wrapper {
   width: 330px;

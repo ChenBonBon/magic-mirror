@@ -7,6 +7,11 @@ const props = defineProps({
   image: String,
   material: String,
   onNext: Function,
+  scale: Number,
+  width: Number,
+  height: Number,
+  bgColor: Number,
+  bgOpacity: Number,
 });
 
 const container = useTemplateRef("container");
@@ -14,7 +19,7 @@ const output = useTemplateRef("output");
 
 onMounted(() => {
   const scene = new THREE.Scene(); //场景构建
-  const camera = new THREE.PerspectiveCamera(45, 640 / 640, 0.1, 1000); //相机构建
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000); //相机构建
   //创建一个webgl对象
   const renderer = new THREE.WebGLRenderer({
     antialias: false,
@@ -26,8 +31,8 @@ onMounted(() => {
     container.value.appendChild(modelContainer);
   }
 
-  renderer.setClearColor(0xeeeeee);
-  renderer.setSize(640, 640);
+  renderer.setClearColor(props.bgColor, props.bgOpacity);
+  renderer.setSize(props.width, props.height);
   renderer.shadowMapEnabled = true; //激活阴影
   //构建一个坐标轴
   const axes = new THREE.AxisHelper(20);
@@ -36,11 +41,9 @@ onMounted(() => {
   //控制器
 
   const trackballControls = new THREE.TrackballControls(camera);
-  trackballControls.rotateSpeed = 1.0;
   trackballControls.zoomSpeed = 1.0;
-  trackballControls.panSpeed = 1.0;
   trackballControls.noZoom = false;
-  trackballControls.noPan = false;
+  trackballControls.noPan = true;
   trackballControls.staticMoving = true;
   trackballControls.dynamicDampingFactor = 0.3;
   //设置旋转速度
@@ -55,9 +58,7 @@ onMounted(() => {
   //设置相机距离原点的最远距离
   trackballControls.minDistance = 10;
   //设置相机距离原点的最远距离
-  trackballControls.maxDistance = 50;
-  //是否开启右键拖拽
-  trackballControls.enablePan = true;
+  trackballControls.maxDistance = 10;
 
   const planeGeometry = new THREE.PlaneGeometry(40, 20);
   //const planeMaterial = new THREE.MeshBasicMaterial({color:0xcccccc});
@@ -110,9 +111,9 @@ onMounted(() => {
         object.children[0].geometry.computeBoundingBox();
         object.children[0].geometry.center();
 
-        object.position.y = 1;
-        object.rotation.y = 0.2;
-        object.scale.set(2, 2, 2);
+        object.position.set(0, 0, 0);
+
+        object.scale.set(props.scale, props.scale, props.scale);
         // 将模型加入到场景
         scene.add(object);
       },
@@ -131,12 +132,10 @@ onMounted(() => {
   }
   renderScene();
 
-  // 设置颜色
-  renderer.setClearColor(0xffffff, 0);
   // 设置分辨率
   renderer.setPixelRatio(window.devicePixelRatio);
   // 设置渲染尺寸
-  renderer.setSize(640, 640);
+  renderer.setSize(props.width, props.height);
   modelContainer.appendChild(renderer.domElement);
   // 自适应监听
   window.addEventListener("resize", resize, false);
@@ -152,9 +151,9 @@ onMounted(() => {
 
   // 监听窗口自适应
   function resize() {
-    camera.aspect = 640 / 640;
+    camera.aspect = 1;
     camera.updateProjectionMatrix();
-    renderer.setSize(640, 640);
+    renderer.setSize(props.width, props.height);
   }
 
   // 时刻渲染

@@ -81,8 +81,13 @@ onMounted(() => {
       :path="store.threeDDirectory"
       model="base.obj"
       material="base.mtl"
+      :scale="3"
+      :width="640"
+      :height="640"
+      :bg-color="0xff9a65"
+      :bg-opacity="1"
     />
-    <img v-else :src="store.cuteImage" alt="3D模型" class="preview-image" />
+    <!-- <img v-else :src="store.cuteImage" alt="3D模型" class="preview-image" /> -->
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">
@@ -170,10 +175,11 @@ onMounted(() => {
   background-image: url("/images/q-photo/preview.png");
   background-size: cover;
   background-repeat: no-repeat;
+  border-radius: 50%;
+  overflow: hidden;
   .preview-image {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
   }
 }
 .step-4-wrapper {
