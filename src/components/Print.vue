@@ -34,7 +34,6 @@ defineProps<{
         </template>
       </loading>
     </div>
-    <img src="/images/wechat.jpg" alt="qrcode" class="qrcode" />
   </div>
 </template>
 

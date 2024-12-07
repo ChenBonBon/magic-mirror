@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useToast } from "vue-toast-notification";
 import Home from "../components/ai-photo/Home.vue";
 import Preview from "../components/ai-photo/Preview.vue";
 import Display from "../components/Display.vue";
@@ -10,6 +11,12 @@ import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import Print from "../components/Print.vue";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
+import { print } from "../services/print";
+import { useAppStore } from "../useAppStore";
+
+const $toast = useToast();
+
+const store = useAppStore();
 
 const step = ref(1);
 const qrcode = ref("");
@@ -27,7 +34,7 @@ function handleBack(newStep: number) {
   step.value = newStep;
 }
 
-async function handlePrint() {
+async function handleCreateOrder() {
   const res = await createOrder();
 
   if (res) {
@@ -35,6 +42,24 @@ async function handlePrint() {
     billNo.value = res.billNo;
 
     handleNext();
+  }
+}
+
+async function handlePrint() {
+  const res = await print(store.cuteImage);
+
+  if (res) {
+    if (res.status === "success") {
+      handleNext();
+    } else if (res.status === "error") {
+      $toast.error("打印失败", {
+        position: "top",
+      });
+    } else if (res.status === "picnotfound") {
+      $toast.error("图片不存在", {
+        position: "top",
+      });
+    }
   }
 }
 </script>
@@ -59,7 +84,7 @@ async function handlePrint() {
       <display
         v-else-if="step === 3"
         workflow-type="aiPhoto"
-        @print="handlePrint"
+        @print="handleCreateOrder"
       />
       <payment
         v-else-if="step === 4"
@@ -71,7 +96,7 @@ async function handlePrint() {
         @next="handleNext"
       />
       <!-- <scan-successful v-else-if="step === 5" /> -->
-      <payment-successful v-else-if="step === 5" @next="handleNext" />
+      <payment-successful v-else-if="step === 5" @next="handlePrint" />
       <print workflow-type="aiPhoto" v-else-if="step === 6" />
       <page-footer v-show="step === 1" />
       <pagination :step="step" :total="3" @click="handleBack" />

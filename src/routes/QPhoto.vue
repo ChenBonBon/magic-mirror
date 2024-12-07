@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useToast } from "vue-toast-notification";
 import Display3D from "../components/3d-photo/Display.vue";
 import Preview3D from "../components/3d-photo/Preview.vue";
 import Display from "../components/Display.vue";
@@ -12,7 +13,13 @@ import Home from "../components/q-photo/Home.vue";
 import Preview from "../components/q-photo/Preview.vue";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
+import { print } from "../services/print";
 import { getSessionId } from "../services/session";
+import { useAppStore } from "../useAppStore";
+
+const $toast = useToast();
+
+const store = useAppStore();
 
 const step = ref(1);
 const qrcode = ref("");
@@ -31,7 +38,7 @@ function handleBack(newStep: number) {
   step.value = newStep;
 }
 
-async function handlePrint() {
+async function handleCreatePrintOrder() {
   workflowType.value = "cute";
   const res = await createOrder();
 
@@ -42,7 +49,7 @@ async function handlePrint() {
   }
 }
 
-async function handleGenerate3D() {
+async function handleCreateGenerate3DOrder() {
   await getSessionId("To3d");
   workflowType.value = "To3d";
   const res = await createOrder();
@@ -51,6 +58,24 @@ async function handleGenerate3D() {
     qrcode.value = res.QRCode;
     billNo.value = res.billNo;
     handleNext();
+  }
+}
+
+async function handlePrint() {
+  const res = await print(store.cuteImage);
+
+  if (res) {
+    if (res.status === "success") {
+      handleNext();
+    } else if (res.status === "error") {
+      $toast.error("打印失败", {
+        position: "top",
+      });
+    } else if (res.status === "picnotfound") {
+      $toast.error("图片不存在", {
+        position: "top",
+      });
+    }
   }
 }
 </script>
@@ -75,8 +100,8 @@ async function handleGenerate3D() {
       <display
         v-else-if="step === 3"
         workflow-type="cute"
-        @print="handlePrint"
-        @generate3-d="handleGenerate3D"
+        @print="handleCreatePrintOrder"
+        @generate3-d="handleCreateGenerate3DOrder"
       />
       <payment
         v-else-if="step === 4"
@@ -92,7 +117,7 @@ async function handleGenerate3D() {
         @next="handleNext"
       />
       <!-- <scan-successful v-else-if="step === 5" /> -->
-      <payment-successful v-else-if="step === 5" @next="handleNext" />
+      <payment-successful v-else-if="step === 5" @next="handlePrint" />
       <print
         workflow-type="cute"
         v-else-if="step === 6 && workflowType === 'cute'"

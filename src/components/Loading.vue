@@ -42,7 +42,6 @@ const { percent } = useFadeProgressPercent(DURATION);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: monospace;
     font-size: 64px;
     font-weight: 600;
     color: #ffffff;

@@ -212,7 +212,6 @@ onMounted(() => {
     height: 240px;
     border-radius: 50%;
     &.disabled {
-      font-family: monospace;
       font-size: 80px;
       text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
         1px 1px 0 black;
