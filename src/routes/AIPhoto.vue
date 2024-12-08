@@ -46,7 +46,7 @@ async function handleCreateOrder() {
 }
 
 async function handlePrint() {
-  const res = await print(store.cuteImage);
+  const res = await print(store.aiImage);
 
   if (res) {
     if (res.status === "success") {

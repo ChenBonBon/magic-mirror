@@ -23,8 +23,19 @@ const stream = ref();
 async function handleClickPhotograph() {
   if (store.hasPhoto) {
     store.clearPhoto();
-    if (cameraRef.value && cameraRef.value.video) {
+    if (cameraRef.value && cameraRef.value.video && cameraRef.value.canvas) {
       stream.value = await openCamera(cameraRef.value.video);
+      const context = cameraRef.value.canvas.getContext("2d");
+      if (context) {
+        context.translate(cameraRef.value.video.width, 0);
+        context.scale(-1, 1);
+        context.clearRect(
+          0,
+          0,
+          cameraRef.value.canvas.width,
+          cameraRef.value.canvas.height
+        );
+      }
     }
 
     return;

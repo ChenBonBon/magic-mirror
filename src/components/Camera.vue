@@ -21,7 +21,7 @@ defineExpose({
 <template>
   <div class="camera-wrapper">
     <img src="/images/camera-line.png" alt="line" class="line" />
-    <span v-show="isTiming" class="countdown">{{ time }}</span>
+    <span v-show="isTiming && time > 0" class="countdown">{{ time }}</span>
     <video
       ref="video"
       width="715"

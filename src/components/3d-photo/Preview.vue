@@ -67,7 +67,7 @@ onMounted(() => {
     <img :src="title" alt="title" class="title" />
   </div>
   <div class="preview">
-    <loading v-if="store.threeDLoading">
+    <loading v-if="store.threeDLoading" :duration="120">
       <template #loading-bar>
         <img
           src="/images/3d-photo/loading-bar.png"
@@ -87,7 +87,7 @@ onMounted(() => {
       :bg-color="0xff9a65"
       :bg-opacity="1"
     />
-    <!-- <img v-else :src="store.cuteImage" alt="3D模型" class="preview-image" /> -->
+    <img v-else :src="store.cuteImage" alt="3D模型" class="preview-image" />
   </div>
   <slot name="preview-tip" />
   <div class="step-4-wrapper">

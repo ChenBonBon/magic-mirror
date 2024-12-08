@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { useFadeProgressPercent } from "../hooks/useFadeProgressPercent";
 
-defineProps<{
+const props = defineProps<{
+  duration?: number;
   percentColor?: string;
 }>();
 
-const DURATION = 60;
-
-const { percent } = useFadeProgressPercent(DURATION);
+const { percent } = useFadeProgressPercent(props.duration ?? 60);
 </script>
 
 <template>
