@@ -25,6 +25,7 @@ const step = ref(1);
 const qrcode = ref("");
 const billNo = ref("");
 const workflowType = ref("cute");
+const printing = ref(false);
 
 function handleNext() {
   step.value += 1;
@@ -62,6 +63,12 @@ async function handleCreateGenerate3DOrder() {
 }
 
 async function handlePrint() {
+  if (printing.value) {
+    return;
+  }
+
+  printing.value = true;
+
   const res = await print(store.cuteImage);
 
   if (res) {
@@ -77,6 +84,8 @@ async function handlePrint() {
       });
     }
   }
+
+  printing.value = false;
 }
 </script>
 
@@ -117,7 +126,10 @@ async function handlePrint() {
         @next="handleNext"
       />
       <!-- <scan-successful v-else-if="step === 5" /> -->
-      <payment-successful v-else-if="step === 5" @next="handlePrint" />
+      <payment-successful
+        v-else-if="step === 5"
+        @next="workflowType === 'cute' ? handlePrint : handleNext"
+      />
       <print
         workflow-type="cute"
         v-else-if="step === 6 && workflowType === 'cute'"

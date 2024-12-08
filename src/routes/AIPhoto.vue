@@ -21,6 +21,7 @@ const store = useAppStore();
 const step = ref(1);
 const qrcode = ref("");
 const billNo = ref("");
+const printing = ref(false);
 
 function handleNext() {
   step.value += 1;
@@ -46,6 +47,12 @@ async function handleCreateOrder() {
 }
 
 async function handlePrint() {
+  if (printing.value) {
+    return;
+  }
+
+  printing.value = true;
+
   const res = await print(store.aiImage);
 
   if (res) {
@@ -61,6 +68,8 @@ async function handlePrint() {
       });
     }
   }
+
+  printing.value = false;
 }
 </script>
 

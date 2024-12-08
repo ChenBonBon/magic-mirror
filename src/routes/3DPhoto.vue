@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useToast } from "vue-toast-notification";
 import Display from "../components/3d-photo/Display.vue";
 import Home from "../components/3d-photo/Home.vue";
 import Preview from "../components/3d-photo/Preview.vue";
@@ -11,12 +10,6 @@ import Payment from "../components/Payment.vue";
 import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
-import { print } from "../services/print";
-import { useAppStore } from "../useAppStore";
-
-const $toast = useToast();
-
-const store = useAppStore();
 
 const step = ref(1);
 const qrcode = ref("");
@@ -42,24 +35,6 @@ async function handleCreateOrder() {
     billNo.value = res.billNo;
 
     handleNext();
-  }
-}
-
-async function handlePrint() {
-  const res = await print(store.cuteImage);
-
-  if (res) {
-    if (res.status === "success") {
-      handleNext();
-    } else if (res.status === "error") {
-      $toast.error("打印失败", {
-        position: "top",
-      });
-    } else if (res.status === "picnotfound") {
-      $toast.error("图片不存在", {
-        position: "top",
-      });
-    }
   }
 }
 </script>
@@ -91,7 +66,7 @@ async function handlePrint() {
         @next="handleNext"
       />
       <!-- <scan-successful v-else-if="step === 4" /> -->
-      <payment-successful v-else-if="step === 4" @next="handlePrint" />
+      <payment-successful v-else-if="step === 4" @next="handleNext" />
       <preview
         v-else-if="step === 5"
         title="/images/3d-photo/title.png"
