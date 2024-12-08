@@ -27,10 +27,13 @@ async function generate() {
     const res = await generate3D(store.cuteImage);
 
     if (res && res.status === "completed") {
-      const modelUrls = res.modelUrls.filter((item) => !item.endsWith(".webp"));
+      const image = res.modelUrls.find((item) => item.endsWith(".webp"));
+      const model = res.modelUrls.find((item) => item.endsWith(".glb"));
 
-      store.set3DModel(modelUrls);
-      store.set3DRecords(res.history);
+      if (image && model) {
+        store.set3DModel({ image, model });
+        store.set3DRecords(res.history);
+      }
     }
 
     store.stop3DLoading();
@@ -50,11 +53,14 @@ function handleClick(index: number) {
     return;
   }
 
-  store.set3DModel(
-    store.threeDRecords[index].modelUrls.filter(
-      (item) => !item.endsWith(".webp")
-    )!
-  );
+  const record = store.threeDRecords[index].modelUrls;
+
+  const image = record.find((item) => item.endsWith(".webp"));
+  const model = record.find((item) => item.endsWith(".glb"));
+
+  if (image && model) {
+    store.set3DModel({ image, model });
+  }
 }
 
 onMounted(() => {
@@ -77,15 +83,11 @@ onMounted(() => {
       </template>
     </loading>
     <three-d-model
-      v-if="store.has3DImage"
-      :path="store.threeDDirectory"
-      model="base.obj"
-      material="base.mtl"
-      :scale="3"
+      v-if="store.has3DImage && store.threeDModel"
+      :url="store.threeDModel.model"
       :width="640"
       :height="640"
-      :bg-color="0xff9a65"
-      :bg-opacity="1"
+      bg-color="#ff9a65"
     />
     <img v-else :src="store.cuteImage" alt="3D模型" class="preview-image" />
   </div>

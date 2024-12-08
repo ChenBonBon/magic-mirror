@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
+import { ThreeDModel } from "./models/model";
 import { Generate3DRecord } from "./models/photo";
 
 export const useAppStore = defineStore("app", () => {
@@ -7,7 +8,7 @@ export const useAppStore = defineStore("app", () => {
   const originalImage = ref("");
   const cuteImage = ref("");
   const aiImage = ref("");
-  const threeDModel = ref<string[]>();
+  const threeDModel = ref<ThreeDModel>();
   const cuteRecords = ref<string[]>([]);
   const aiRecords = ref<string[]>([]);
   const threeDRecords = ref<Generate3DRecord[]>([]);
@@ -43,18 +44,6 @@ export const useAppStore = defineStore("app", () => {
     return threeDRecords.value.length >= 3;
   });
 
-  const threeDDirectory = computed(() => {
-    if (threeDRecords.value.length > 0) {
-      const paths = threeDRecords.value[0].modelUrls[0].split("/");
-
-      paths.pop();
-
-      return paths.join("/") + "/";
-    }
-
-    return "/";
-  });
-
   function setPhoto(data: Blob) {
     photo.value = data;
   }
@@ -77,7 +66,7 @@ export const useAppStore = defineStore("app", () => {
   function setAIImage(url: string) {
     aiImage.value = url;
   }
-  function set3DModel(model: string[]) {
+  function set3DModel(model: ThreeDModel) {
     threeDModel.value = model;
   }
 
@@ -143,7 +132,6 @@ export const useAppStore = defineStore("app", () => {
     aiLoading,
     threeDLoading,
     originalImage,
-    threeDDirectory,
     reachMaxCute,
     reachMaxAI,
     reachMax3D,

@@ -51,15 +51,10 @@ const qrcode =
   </div>
   <div class="effect-display-photo-wrapper">
     <three-d-model
-      v-if="store.has3DImage"
-      :path="store.threeDDirectory"
-      model="base.obj"
-      material="base.mtl"
-      :scale="3.5"
-      :width="900"
-      :height="900"
-      :bg-color="0xffffff"
-      :bg-opacity="0"
+      v-if="store.has3DImage && store.threeDModel"
+      :url="store.threeDModel.model"
+      :width="1100"
+      :height="1100"
     />
   </div>
   <div class="effect-display-wrapper">
