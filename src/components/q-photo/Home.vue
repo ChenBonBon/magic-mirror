@@ -16,7 +16,7 @@ const props = defineProps<{
 const cameraRef = useTemplateRef("camera");
 
 const store = useAppStore();
-const { time, isTiming, start } = useCountdown(3);
+const { time, isTiming, start } = useCountdown(5);
 
 const stream = ref();
 
@@ -37,8 +37,6 @@ async function handleClickPhotograph() {
         );
       }
     }
-
-    return;
   }
 
   setTimeout(() => {
@@ -64,7 +62,7 @@ async function handleClickPhotograph() {
         });
       }
     }
-  }, 3000);
+  }, 5000);
 
   start();
 }
