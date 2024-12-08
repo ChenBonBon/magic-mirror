@@ -87,6 +87,14 @@ async function handlePrint() {
 
   printing.value = false;
 }
+
+function handlePaymentSuccessful() {
+  if (workflowType.value === "cute") {
+    handlePrint();
+  } else {
+    handleNext();
+  }
+}
 </script>
 
 <template>
@@ -128,7 +136,7 @@ async function handlePrint() {
       <!-- <scan-successful v-else-if="step === 5" /> -->
       <payment-successful
         v-else-if="step === 5"
-        @next="workflowType === 'cute' ? handlePrint : handleNext"
+        @next="handlePaymentSuccessful"
       />
       <print
         workflow-type="cute"

@@ -1,7 +1,11 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   onNext: () => void;
 }>();
+
+function handleClick() {
+  props.onNext();
+}
 </script>
 
 <template>
@@ -30,7 +34,7 @@ defineProps<{
         src="/images/payment/start.png"
         alt="开  START  始"
         class="start"
-        @click="onNext"
+        @click="handleClick"
       />
     </div>
   </div>
