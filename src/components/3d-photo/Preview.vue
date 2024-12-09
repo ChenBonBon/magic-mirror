@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { generate3D, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
@@ -11,6 +11,40 @@ defineProps<{
 }>();
 
 const store = useAppStore();
+
+const selectedImage = ref(0);
+
+const firstRecordStyle = computed(() => {
+  if (store.cuteRecords.length === 1) {
+    return {
+      top: "1361px",
+      left: "431px",
+    };
+  }
+
+  return {
+    top: "1321px",
+    left: "118px",
+  };
+});
+
+const secondRecordStyle = computed(() => {
+  if (store.cuteRecords.length === 2) {
+    return {
+      top: "1321px",
+      left: "752px",
+    };
+  }
+
+  return {
+    top: "1361px",
+    left: "431px",
+  };
+});
+
+function handleSelect(index: number) {
+  selectedImage.value = index;
+}
 
 async function generate() {
   if (store.threeDLoading) {
@@ -24,7 +58,7 @@ async function generate() {
   if (store.hasPhoto) {
     store.start3DLoading();
 
-    const res = await generate3D(store.cuteImage);
+    const res = await generate3D(store.cuteRecords[selectedImage.value]);
 
     if (res && res.status === "completed") {
       const image = res.modelUrls.find((item) => item.endsWith(".webp"));
@@ -121,16 +155,31 @@ onMounted(() => {
       @click="handleClick(1)"
     />
     <div v-else class="second-record disabled">2</div>
+  </div>
+  <div class="q-records">
     <img
-      v-if="store.threeDRecords[2]"
-      :src="
-        store.threeDRecords[2].modelUrls.find((item) => item.endsWith('.webp'))
-      "
-      alt="third"
-      class="third-record"
-      @click="handleClick(2)"
+      v-if="store.cuteRecords[0]"
+      :src="store.cuteRecords[0]"
+      alt="first"
+      :class="['first-record', selectedImage === 0 ? 'selected' : '']"
+      :style="firstRecordStyle"
+      @click="handleSelect(0)"
     />
-    <div v-else class="third-record disabled">3</div>
+    <img
+      v-if="store.cuteRecords[1]"
+      :src="store.cuteRecords[1]"
+      alt="second"
+      :class="['second-record', selectedImage === 1 ? 'selected' : '']"
+      :style="secondRecordStyle"
+      @click="handleSelect(1)"
+    />
+    <img
+      v-if="store.cuteRecords[2]"
+      :src="store.cuteRecords[2]"
+      alt="third"
+      :class="['third-record', selectedImage === 2 ? 'selected' : '']"
+      @click="handleSelect(2)"
+    />
   </div>
   <div
     class="actions"
@@ -201,11 +250,10 @@ onMounted(() => {
 }
 .records {
   .first-record,
-  .second-record,
-  .third-record {
+  .second-record {
     position: absolute;
-    width: 240px;
-    height: 240px;
+    width: 216px;
+    height: 216px;
     border-radius: 50%;
     &.disabled {
       font-size: 80px;
@@ -218,16 +266,29 @@ onMounted(() => {
     }
   }
   .first-record {
-    top: 990px;
-    left: 122px;
+    top: 1086px;
+    left: 279px;
   }
   .second-record {
-    top: 1080px;
-    left: 428px;
+    top: 1086px;
+    left: 580px;
+  }
+}
+.q-records {
+  .first-record,
+  .second-record,
+  .third-record {
+    position: absolute;
+    width: 216px;
+    height: 216px;
+    border-radius: 50%;
+    &.selected {
+      border: 10px solid #ffffff;
+    }
   }
   .third-record {
-    top: 981px;
-    right: 106px;
+    top: 1321px;
+    left: 752px;
   }
 }
 .actions {
