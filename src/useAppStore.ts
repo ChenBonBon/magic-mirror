@@ -41,7 +41,7 @@ export const useAppStore = defineStore("app", () => {
   });
 
   const reachMax3D = computed(() => {
-    return threeDRecords.value.length >= 3;
+    return threeDRecords.value.length >= 2;
   });
 
   function setPhoto(data: Blob) {
