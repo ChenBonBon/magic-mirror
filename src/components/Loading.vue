@@ -6,7 +6,7 @@ const props = defineProps<{
   percentColor?: string;
 }>();
 
-const { percent } = useFadeProgressPercent(props.duration ?? 60);
+const { percent } = useFadeProgressPercent(props.duration ?? 90);
 </script>
 
 <template>
