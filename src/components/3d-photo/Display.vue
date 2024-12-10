@@ -53,8 +53,8 @@ const qrcode =
     <three-d-model
       v-if="store.has3DImage && store.threeDModel"
       :url="store.threeDModel.model"
-      :width="1100"
-      :height="1100"
+      :width="1000"
+      :height="1000"
     />
   </div>
   <div class="effect-display-wrapper">

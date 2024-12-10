@@ -13,7 +13,7 @@ import {
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { type GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { onMounted, reactive } from "vue";
+import { reactive, watchEffect } from "vue";
 
 type StateType = {
   title: string;
@@ -158,7 +158,7 @@ const renderThree = () => {
   animate();
 };
 
-onMounted(() => {
+watchEffect(() => {
   renderThree();
 });
 </script>
