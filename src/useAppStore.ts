@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { ThreeDModel } from "./models/model";
-import { Generate3DRecord } from "./models/photo";
+import { Generate3DRecord, GenerateRecord } from "./models/photo";
 
 export const useAppStore = defineStore("app", () => {
   const photo = ref<Blob>();
@@ -10,7 +10,7 @@ export const useAppStore = defineStore("app", () => {
   const aiImage = ref("");
   const threeDModel = ref<ThreeDModel>();
   const cuteRecords = ref<string[]>([]);
-  const aiRecords = ref<string[]>([]);
+  const aiRecords = ref<GenerateRecord[]>([]);
   const threeDRecords = ref<Generate3DRecord[]>([]);
   const cuteLoading = ref(false);
   const aiLoading = ref(false);
@@ -74,7 +74,7 @@ export const useAppStore = defineStore("app", () => {
     cuteRecords.value = newRecords;
   }
 
-  function setAIRecords(newRecords: string[]) {
+  function setAIRecords(newRecords: GenerateRecord[]) {
     aiRecords.value = newRecords;
   }
 

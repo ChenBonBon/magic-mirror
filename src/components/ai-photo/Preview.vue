@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { GenerateRecord } from "../../models/photo";
 import { generateAI, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import Loading from "../Loading.vue";
+import Attributes, { Gender, Pose } from "./Attributes.vue";
 import Postures from "./Postures.vue";
 
 defineProps<{
@@ -14,6 +16,38 @@ const store = useAppStore();
 
 const tab = ref("Movies");
 const posture = ref(0);
+const selectedGender = ref<Gender>("Man");
+const selectedPose = ref<Pose>("pose1");
+
+const firstRecord = computed(() => {
+  if (store.aiRecords.length > 0) {
+    if (selectedPose.value === "pose1") {
+      return store.aiRecords[0].imageUrls[0];
+    }
+
+    return store.aiRecords[0].imageUrls[1];
+  }
+});
+
+const secondRecord = computed(() => {
+  if (store.aiRecords.length > 1) {
+    if (selectedPose.value === "pose1") {
+      return store.aiRecords[1].imageUrls[0];
+    }
+
+    return store.aiRecords[1].imageUrls[1];
+  }
+});
+
+const thirdRecord = computed(() => {
+  if (store.aiRecords.length > 2) {
+    if (selectedPose.value === "pose1") {
+      return store.aiRecords[2].imageUrls[0];
+    }
+
+    return store.aiRecords[2].imageUrls[1];
+  }
+});
 
 function setTab(index: string) {
   tab.value = index;
@@ -35,11 +69,18 @@ async function generate() {
   if (store.hasPhoto) {
     store.startAILoading();
 
-    const res = await generateAI(store.photo!, tab.value, posture.value);
+    const res = await generateAI(
+      store.photo!,
+      tab.value,
+      posture.value,
+      selectedGender.value
+    );
 
     if (res && res.status === "completed") {
-      store.setAIImage(res.imageUrl);
-      store.setAIRecords(res.history.map((item) => item.imageUrl));
+      const aiImage =
+        selectedPose.value === "pose1" ? res.imageUrls[0] : res.imageUrls[1];
+      store.setAIImage(aiImage);
+      store.setAIRecords(res.history);
     }
 
     store.stopAILoading();
@@ -50,21 +91,33 @@ async function getHistoryRecords() {
   const res = await getImageRecords();
 
   if (res) {
-    store.setAIRecords(res.map((item) => item.imageUrl));
+    store.setAIRecords(res);
     if (res.length > 0) {
       store.setCuteImage(res[0].imageUrl);
     }
   }
 }
 
-function handleClick(record: string) {
+function handleClick(record: GenerateRecord) {
   if (store.aiLoading) {
     return;
   }
 
   if (record) {
-    store.setAIImage(record);
+    const aiImage =
+      selectedPose.value === "pose1"
+        ? record.imageUrls[0]
+        : record.imageUrls[1];
+    store.setAIImage(aiImage);
   }
+}
+
+function handleChangeGender(gender: Gender) {
+  selectedGender.value = gender;
+}
+
+function handleChangePose(pose: Pose) {
+  selectedPose.value = pose;
 }
 
 onMounted(() => {
@@ -104,7 +157,7 @@ onMounted(() => {
   <div class="records">
     <img
       v-if="store.aiRecords[0]"
-      :src="store.aiRecords[0]"
+      :src="firstRecord"
       alt="first"
       class="first-record"
       @click="handleClick(store.aiRecords[0])"
@@ -118,7 +171,7 @@ onMounted(() => {
     </div>
     <img
       v-if="store.aiRecords[1]"
-      :src="store.aiRecords[1]"
+      :src="secondRecord"
       alt="second"
       class="second-record"
       @click="handleClick(store.aiRecords[1])"
@@ -126,13 +179,19 @@ onMounted(() => {
     <div v-else class="second-record disabled">2</div>
     <img
       v-if="store.aiRecords[2]"
-      :src="store.aiRecords[2]"
+      :src="thirdRecord"
       alt="third"
       class="third-record"
       @click="handleClick(store.aiRecords[2])"
     />
     <div v-else class="third-record disabled">3</div>
   </div>
+  <attributes
+    :gender="selectedGender"
+    :pose="selectedPose"
+    @change-gender="handleChangeGender"
+    @change-pose="handleChangePose"
+  />
   <postures
     :disabled="store.aiLoading"
     @click-tab="setTab"
@@ -208,8 +267,8 @@ onMounted(() => {
   .second-record,
   .third-record {
     position: absolute;
-    width: 240px;
-    height: 240px;
+    width: 169px;
+    height: 169px;
     border-radius: 50%;
     &.disabled {
       font-size: 80px;
@@ -222,16 +281,16 @@ onMounted(() => {
     }
   }
   .first-record {
-    top: 990px;
-    left: 122px;
+    top: 1063px;
+    left: 610px;
   }
   .second-record {
-    top: 1080px;
-    left: 428px;
+    top: 937px;
+    left: 821px;
   }
   .third-record {
-    top: 981px;
-    right: 106px;
+    top: 694px;
+    left: 897px;
   }
 }
 .actions {

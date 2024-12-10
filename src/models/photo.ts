@@ -3,6 +3,7 @@ export interface GenerateRecord {
   imageUrl: string;
   qrCode: string;
   status: string;
+  imageUrls: string[];
   modelUrls: string[];
 }
 

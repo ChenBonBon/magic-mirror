@@ -1,3 +1,4 @@
+import { Gender } from "../components/ai-photo/Attributes.vue";
 import http from "../http";
 import { HTTPResponse } from "../models/http";
 import {
@@ -27,7 +28,12 @@ export async function generateImage(image: Blob, styleIndex: number) {
   }
 }
 
-export async function generateAI(image: Blob, tab: string, styleIndex: number) {
+export async function generateAI(
+  image: Blob,
+  tab: string,
+  styleIndex: number,
+  gender: Gender
+) {
   const res = await http.post<HTTPResponse<GenerateResponse>>(
     "/image/generate",
     {
@@ -35,6 +41,7 @@ export async function generateAI(image: Blob, tab: string, styleIndex: number) {
       workflowType: "aiPhoto",
       image,
       "params[STYLE]": tab + "_" + styleIndex,
+      gender,
     },
     {
       headers: {
