@@ -11,7 +11,7 @@ export function useBackToHome() {
   const store = useAppStore();
 
   const { isTiming, start, reset, stop } = useCountdown(
-    backToHomeTime ?? 60,
+    parseInt(backToHomeTime, 10) ?? 60,
     () => {
       router.push("/");
     }
