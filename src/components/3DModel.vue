@@ -13,12 +13,7 @@ import {
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { type GLTF, GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { reactive, watchEffect } from "vue";
-
-type StateType = {
-  title: string;
-  demoId: string;
-};
+import { onMounted, ref, watchEffect } from "vue";
 
 const props = defineProps<{
   width: number;
@@ -27,10 +22,8 @@ const props = defineProps<{
   bgColor?: string;
 }>();
 
-const state: StateType = reactive({
-  title: "加载模型",
-  demoId: "viewBox",
-});
+const mounted = ref(false);
+
 // 本地开发路径
 // const url = "../public/static/model/model.glb";
 // 打包路径
@@ -58,10 +51,15 @@ const renderThree = () => {
   });
   // 设置渲染器大小
   renderer.setSize(props.width, props.height);
+
+  const viewBox = document.getElementById("viewBox") as HTMLElement;
+
+  while (viewBox.firstChild) {
+    viewBox.removeChild(viewBox.firstChild);
+  }
+
   // 渲染器追加至节点中
-  (document.getElementById(state.demoId) as HTMLElement).appendChild(
-    renderer.domElement
-  );
+  viewBox.appendChild(renderer.domElement);
 
   // 初始化射线辅助器
   const rayCaster = new Raycaster();
@@ -158,8 +156,15 @@ const renderThree = () => {
   animate();
 };
 
-watchEffect(() => {
+onMounted(() => {
+  mounted.value = true;
   renderThree();
+});
+
+watchEffect(() => {
+  if (mounted.value) {
+    renderThree();
+  }
 });
 </script>
 

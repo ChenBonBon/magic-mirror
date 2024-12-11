@@ -12,7 +12,7 @@ defineProps<{
 
 const store = useAppStore();
 
-const selectedImage = ref(0);
+const selectedImage = ref(store.cuteImage);
 
 const firstRecordStyle = computed(() => {
   if (store.cuteRecords.length === 1) {
@@ -43,7 +43,11 @@ const secondRecordStyle = computed(() => {
 });
 
 function handleSelect(index: number) {
-  selectedImage.value = index;
+  selectedImage.value = store.cuteRecords[index];
+
+  if (!store.has3DImage) {
+    store.setCuteImage(store.cuteRecords[index]);
+  }
 }
 
 async function generate() {
@@ -58,7 +62,7 @@ async function generate() {
   if (store.hasPhoto) {
     store.start3DLoading();
 
-    const res = await generate3D(store.cuteRecords[selectedImage.value]);
+    const res = await generate3D(selectedImage.value);
 
     if (res && res.status === "completed") {
       const image = res.modelUrls.find((item) => item.endsWith(".webp"));
@@ -141,7 +145,16 @@ onMounted(() => {
         store.threeDRecords[0].modelUrls.find((item) => item.endsWith('.webp'))
       "
       alt="first"
-      class="first-record"
+      :class="[
+        'first-record',
+        store.threeDModel &&
+        store.threeDModel.model ===
+          store.threeDRecords[0].modelUrls.find((item) =>
+            item.endsWith('.glb')
+          )
+          ? 'selected'
+          : '',
+      ]"
       @click="handleClick(0)"
     />
     <div v-else class="first-record disabled">1</div>
@@ -151,7 +164,16 @@ onMounted(() => {
         store.threeDRecords[1].modelUrls.find((item) => item.endsWith('.webp'))
       "
       alt="second"
-      class="second-record"
+      :class="[
+        'second-record',
+        store.threeDModel &&
+        store.threeDModel.model ===
+          store.threeDRecords[1].modelUrls.find((item) =>
+            item.endsWith('.glb')
+          )
+          ? 'selected'
+          : '',
+      ]"
       @click="handleClick(1)"
     />
     <div v-else class="second-record disabled">2</div>
@@ -161,7 +183,10 @@ onMounted(() => {
       v-if="store.cuteRecords[0]"
       :src="store.cuteRecords[0]"
       alt="first"
-      :class="['first-record', selectedImage === 0 ? 'selected' : '']"
+      :class="[
+        'first-record',
+        selectedImage === store.cuteRecords[0] ? 'selected' : '',
+      ]"
       :style="firstRecordStyle"
       @click="handleSelect(0)"
     />
@@ -169,7 +194,10 @@ onMounted(() => {
       v-if="store.cuteRecords[1]"
       :src="store.cuteRecords[1]"
       alt="second"
-      :class="['second-record', selectedImage === 1 ? 'selected' : '']"
+      :class="[
+        'second-record',
+        selectedImage === store.cuteRecords[1] ? 'selected' : '',
+      ]"
       :style="secondRecordStyle"
       @click="handleSelect(1)"
     />
@@ -177,7 +205,10 @@ onMounted(() => {
       v-if="store.cuteRecords[2]"
       :src="store.cuteRecords[2]"
       alt="third"
-      :class="['third-record', selectedImage === 2 ? 'selected' : '']"
+      :class="[
+        'third-record',
+        selectedImage === store.cuteRecords[2] ? 'selected' : '',
+      ]"
       @click="handleSelect(2)"
     />
   </div>
@@ -255,6 +286,10 @@ onMounted(() => {
     width: 216px;
     height: 216px;
     border-radius: 50%;
+    border: 10px solid transparent;
+    &.selected {
+      border-color: #ffffff;
+    }
     &.disabled {
       font-size: 80px;
       text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black,
@@ -282,8 +317,9 @@ onMounted(() => {
     width: 216px;
     height: 216px;
     border-radius: 50%;
+    border: 10px solid transparent;
     &.selected {
-      border: 10px solid #ffffff;
+      border-color: #ffffff;
     }
   }
   .third-record {
