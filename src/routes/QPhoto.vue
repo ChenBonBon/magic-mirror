@@ -11,6 +11,7 @@ import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import Print from "../components/Print.vue";
 import Home from "../components/q-photo/Home.vue";
 import Preview from "../components/q-photo/Preview.vue";
+import { useBackToHome } from "../hooks/useBackToHome";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
 import { print } from "../services/print";
@@ -20,6 +21,8 @@ import { useAppStore } from "../useAppStore";
 const $toast = useToast();
 
 const store = useAppStore();
+
+useBackToHome();
 
 const step = ref(1);
 const qrcode = ref("");

@@ -8,8 +8,11 @@ import PageFooter from "../components/PageFooter.vue";
 import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
 import PaymentSuccessful from "../components/PaymentSuccessful.vue";
+import { useBackToHome } from "../hooks/useBackToHome";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
+
+useBackToHome();
 
 const step = ref(1);
 const qrcode = ref("");

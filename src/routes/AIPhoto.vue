@@ -13,10 +13,13 @@ import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
 import { print } from "../services/print";
 import { useAppStore } from "../useAppStore";
+import { useBackToHome } from "../hooks/useBackToHome";
 
 const $toast = useToast();
 
 const store = useAppStore();
+
+useBackToHome();
 
 const step = ref(1);
 const qrcode = ref("");
