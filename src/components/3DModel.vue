@@ -122,7 +122,7 @@ const renderThree = () => {
     scene.add(model);
 
     // 设置模型加载完毕后大小
-    model.scale.set(3.5, 3.5, 3.5);
+    model.scale.set(3.0, 3.0, 3.0);
   });
 
   const clickEvent = (event: MouseEvent) => {
