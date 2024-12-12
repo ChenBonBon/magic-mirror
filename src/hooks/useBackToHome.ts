@@ -3,7 +3,6 @@ import { useRouter } from "vue-router";
 import { useCountdown } from "./useCountdown";
 
 const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
-const backToHomeDebug = import.meta.env.VITE_BACK_TO_HOME_DEBUG;
 
 export function useBackToHome() {
   const router = useRouter();
@@ -61,9 +60,7 @@ export function useBackToHome() {
   });
 
   watch(time, (val) => {
-    if (backToHomeDebug === "true") {
-      console.log(val);
-    }
+    console.log(val);
   });
 
   return {

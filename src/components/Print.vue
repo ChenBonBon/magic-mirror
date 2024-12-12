@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { WorkflowType } from "../models/session";
 import Loading from "./Loading.vue";
@@ -13,12 +12,6 @@ const router = useRouter();
 function handleBack() {
   router.push("/");
 }
-
-onMounted(() => {
-  setTimeout(() => {
-    handleBack();
-  }, 15000);
-});
 </script>
 
 <template>

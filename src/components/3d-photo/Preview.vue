@@ -61,7 +61,7 @@ async function generate() {
     return;
   }
 
-  if (store.hasPhoto) {
+  if (selectedImage.value) {
     store.start3DLoading();
     props.onResetCountdown();
 

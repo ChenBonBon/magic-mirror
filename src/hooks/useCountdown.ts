@@ -3,12 +3,12 @@ import { onUnmounted, ref, unref } from "vue";
 export function useCountdown(duration: number, onCountdownEnd?: () => void) {
   const time = ref(duration);
   const isTiming = ref(false);
-  let timer: ReturnType<typeof setInterval> | null;
+  const timer = ref<ReturnType<typeof setInterval> | null>(null);
 
   const clear = () => {
-    if (timer) {
-      clearInterval(timer);
-      timer = null;
+    if (timer.value) {
+      clearInterval(timer.value);
+      timer.value = null;
     }
   };
 
@@ -23,13 +23,14 @@ export function useCountdown(duration: number, onCountdownEnd?: () => void) {
   };
 
   const start = () => {
-    if (unref(isTiming) || !!timer) {
+    if (unref(isTiming) || !!timer.value) {
       return;
     }
     isTiming.value = true;
-    timer = setInterval(() => {
+    timer.value = setInterval(() => {
       if (unref(time) <= 0) {
         reset();
+        console.log("countdown end", time);
         onCountdownEnd && onCountdownEnd();
       } else {
         time.value--;
