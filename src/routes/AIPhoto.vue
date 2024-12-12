@@ -25,13 +25,10 @@ const step = ref(1);
 const qrcode = ref("");
 const billNo = ref("");
 const printing = ref(false);
+const creating = ref(false);
 
-function handleNext() {
-  step.value += 1;
-}
-
-function handlePrev() {
-  step.value -= 1;
+function handleNavigate(newStep: number) {
+  step.value = newStep;
 }
 
 function handleBack(newStep: number) {
@@ -39,14 +36,21 @@ function handleBack(newStep: number) {
 }
 
 async function handleCreateOrder() {
+  if (creating.value) {
+    return;
+  }
+
+  creating.value = true;
   const res = await createOrder();
 
   if (res) {
     qrcode.value = res.QRCode;
     billNo.value = res.billNo;
 
-    handleNext();
+    handleNavigate(3);
   }
+
+  creating.value = false;
 }
 
 async function handlePrint() {
@@ -60,7 +64,7 @@ async function handlePrint() {
 
   if (res) {
     if (res.status === "success") {
-      handleNext();
+      handleNavigate(6);
     } else if (res.status === "error") {
       $toast.error("打印失败", {
         position: "top",
@@ -79,11 +83,11 @@ async function handlePrint() {
 <template>
   <main-layout>
     <div class="ai-photo">
-      <home v-if="step === 1" @next="handleNext" />
+      <home v-if="step === 1" @next="handleNavigate(2)" />
       <preview
         v-else-if="step === 2"
         title="/images/ai-photo/title.png"
-        @next="handleNext"
+        @next="handleNavigate(3)"
         @start-countdown="start"
         @reset-countdown="forceReset"
       >
@@ -106,8 +110,8 @@ async function handlePrint() {
         :width="319"
         :qrcode="qrcode"
         :bill-no="billNo"
-        @prev="handlePrev"
-        @next="handleNext"
+        @prev="handleNavigate(3)"
+        @next="handleNavigate(5)"
         @start-countdown="start"
         @reset-countdown="forceReset"
       />

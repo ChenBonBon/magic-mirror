@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import VueQrcode from "vue-qrcode";
+import { useRouter } from "vue-router";
 import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
-
-defineProps<{
-  onNext: () => void;
-}>();
 
 const protocol = import.meta.env.VITE_SHARE_PROTOL;
 const host = import.meta.env.VITE_SHARE_HOST;
@@ -19,6 +16,12 @@ if (port) {
 }
 
 const store = useAppStore();
+
+const router = useRouter();
+
+function handleBack() {
+  router.push("/");
+}
 
 const qrcode = computed(() => {
   const prefix =
@@ -105,6 +108,7 @@ const qrcode = computed(() => {
     alt="即刻拥有独属模型"
     class="print-tip"
   />
+  <button class="back-btn" @click="handleBack">回到首页</button>
 </template>
 
 <style lang="less" scoped>
@@ -258,5 +262,18 @@ const qrcode = computed(() => {
       width: 87px;
     }
   }
+}
+.back-btn {
+  width: 400px;
+  height: 75px;
+  border-radius: 24px;
+  font-size: 36px;
+  border: none;
+  position: absolute;
+  bottom: 300px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ffffff;
+  background-color: #ff9a65;
 }
 </style>

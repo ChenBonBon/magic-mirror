@@ -21,6 +21,10 @@ const { time, isTiming, start } = useCountdown(5);
 const stream = ref();
 
 async function handleClickPhotograph() {
+  if (isTiming.value) {
+    return;
+  }
+
   if (store.hasPhoto) {
     store.clearPhoto();
     if (cameraRef.value && cameraRef.value.video && cameraRef.value.canvas) {

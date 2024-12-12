@@ -17,13 +17,10 @@ const { start, forceReset } = useBackToHome();
 const step = ref(1);
 const qrcode = ref("");
 const billNo = ref("");
+const creating = ref(false);
 
-function handleNext() {
-  step.value += 1;
-}
-
-function handlePrev() {
-  step.value -= 1;
+function handleNavigate(newStep: number) {
+  step.value = newStep;
 }
 
 function handleBack(newStep: number) {
@@ -31,21 +28,28 @@ function handleBack(newStep: number) {
 }
 
 async function handleCreateOrder() {
+  if (creating.value) {
+    return;
+  }
+
+  creating.value = true;
   const res = await createOrder();
 
   if (res) {
     qrcode.value = res.QRCode;
     billNo.value = res.billNo;
 
-    handleNext();
+    handleNavigate(3);
   }
+
+  creating.value = false;
 }
 </script>
 
 <template>
   <main-layout>
     <div class="three-d-photo">
-      <home v-if="step === 1" @next="handleNext" />
+      <home v-if="step === 1" @next="handleNavigate(2)" />
       <preview-q
         v-else-if="step === 2"
         title="/images/q-photo/title.png"
@@ -67,17 +71,17 @@ async function handleCreateOrder() {
         :width="347"
         :qrcode="qrcode"
         :bill-no="billNo"
-        @prev="handlePrev"
-        @next="handleNext"
+        @prev="handleNavigate(2)"
+        @next="handleNavigate(4)"
         @start-countdown="start"
         @reset-countdown="forceReset"
       />
       <!-- <scan-successful v-else-if="step === 4" /> -->
-      <payment-successful v-else-if="step === 4" @next="handleNext" />
+      <payment-successful v-else-if="step === 4" @next="handleNavigate(5)" />
       <preview
         v-else-if="step === 5"
         title="/images/3d-photo/title.png"
-        @next="handleNext"
+        @next="handleNavigate(6)"
         @start-countdown="start"
         @reset-countdown="forceReset"
       >
@@ -96,7 +100,7 @@ async function handleCreateOrder() {
           />
         </template>
       </preview>
-      <display v-else-if="step === 6" @next="handleNext" />
+      <display v-else-if="step === 6" />
       <page-footer v-show="step === 1" />
       <pagination :step="step" :total="2" @click="handleBack" />
     </div>

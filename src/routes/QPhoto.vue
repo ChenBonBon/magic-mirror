@@ -29,13 +29,10 @@ const qrcode = ref("");
 const billNo = ref("");
 const workflowType = ref("cute");
 const printing = ref(false);
+const creating = ref(false);
 
-function handleNext() {
-  step.value += 1;
-}
-
-function handlePrev() {
-  step.value -= 1;
+function handleNavigate(newStep: number) {
+  step.value = newStep;
 }
 
 function handleBack(newStep: number) {
@@ -43,17 +40,29 @@ function handleBack(newStep: number) {
 }
 
 async function handleCreatePrintOrder() {
+  if (creating.value) {
+    return;
+  }
+
+  creating.value = true;
   workflowType.value = "cute";
   const res = await createOrder();
 
   if (res) {
     qrcode.value = res.QRCode;
     billNo.value = res.billNo;
-    handleNext();
+    handleNavigate(4);
   }
+
+  creating.value = false;
 }
 
 async function handleCreateGenerate3DOrder() {
+  if (creating.value) {
+    return;
+  }
+
+  creating.value = true;
   await getSessionId("To3d");
   workflowType.value = "To3d";
   const res = await createOrder();
@@ -61,8 +70,10 @@ async function handleCreateGenerate3DOrder() {
   if (res) {
     qrcode.value = res.QRCode;
     billNo.value = res.billNo;
-    handleNext();
+    handleNavigate(4);
   }
+
+  creating.value = false;
 }
 
 async function handlePrint() {
@@ -76,7 +87,7 @@ async function handlePrint() {
 
   if (res) {
     if (res.status === "success") {
-      handleNext();
+      handleNavigate(6);
     } else if (res.status === "error") {
       $toast.error("打印失败", {
         position: "top",
@@ -95,7 +106,7 @@ function handlePaymentSuccessful() {
   if (workflowType.value === "cute") {
     handlePrint();
   } else {
-    handleNext();
+    handleNavigate(6);
   }
 }
 </script>
@@ -103,11 +114,11 @@ function handlePaymentSuccessful() {
 <template>
   <main-layout>
     <div class="q-photo">
-      <home v-if="step === 1" @next="handleNext" />
+      <home v-if="step === 1" @next="handleNavigate(2)" />
       <preview
         v-else-if="step === 2"
         title="/images/q-photo/title.png"
-        @next="handleNext"
+        @next="handleNavigate(3)"
         @start-countdown="start"
         @reset-countdown="forceReset"
       >
@@ -135,8 +146,8 @@ function handlePaymentSuccessful() {
         :width="workflowType === 'cute' ? 388 : 347"
         :qrcode="qrcode"
         :bill-no="billNo"
-        @prev="handlePrev"
-        @next="handleNext"
+        @prev="handleNavigate(3)"
+        @next="handleNavigate(5)"
         @start-countdown="start"
         @reset-countdown="forceReset"
       />
@@ -152,7 +163,7 @@ function handlePaymentSuccessful() {
       <Preview3D
         v-else-if="step === 6 && workflowType === 'To3d'"
         title="/images/3d-photo/title.png"
-        @next="handleNext"
+        @next="handleNavigate(7)"
         @start-countdown="start"
         @reset-countdown="forceReset"
       >
@@ -171,7 +182,7 @@ function handlePaymentSuccessful() {
           />
         </template>
       </Preview3D>
-      <Display3D v-else-if="step === 7" @next="handleNext" />
+      <Display3D v-else-if="step === 7" />
       <page-footer v-show="step === 1" />
       <pagination :step="step" :total="3" @click="handleBack" />
     </div>
