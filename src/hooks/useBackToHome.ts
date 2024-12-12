@@ -1,6 +1,5 @@
-import { onBeforeUnmount, onMounted, watchEffect } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAppStore } from "../useAppStore";
 import { useCountdown } from "./useCountdown";
 
 const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
@@ -8,21 +7,30 @@ const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
 export function useBackToHome() {
   const router = useRouter();
 
-  const store = useAppStore();
-
-  const { isTiming, start, reset, stop } = useCountdown(
+  const { start, reset, stop } = useCountdown(
     parseInt(backToHomeTime, 10) ?? 60,
     () => {
       router.push("/");
     }
   );
 
+  const forceWait = ref(false);
+
   function handleReset() {
     reset();
 
     setTimeout(() => {
+      if (forceWait.value) {
+        return;
+      }
+
       start();
     }, 1000);
+  }
+
+  function forceReset() {
+    forceWait.value = true;
+    reset();
   }
 
   onMounted(() => {
@@ -38,36 +46,6 @@ export function useBackToHome() {
     document.addEventListener("scroll", handleReset);
   });
 
-  watchEffect(() => {
-    if (isTiming.value && store.cuteLoading) {
-      reset();
-    } else {
-      if (!isTiming.value && !store.cuteLoading) {
-        start();
-      }
-    }
-  });
-
-  watchEffect(() => {
-    if (isTiming.value && store.aiLoading) {
-      reset();
-    } else {
-      if (!isTiming.value && !store.aiLoading) {
-        start();
-      }
-    }
-  });
-
-  watchEffect(() => {
-    if (isTiming.value && store.threeDLoading) {
-      reset();
-    } else {
-      if (!isTiming.value && !store.threeDLoading) {
-        start();
-      }
-    }
-  });
-
   onBeforeUnmount(() => {
     stop();
 
@@ -80,4 +58,9 @@ export function useBackToHome() {
     document.removeEventListener("mousewheel", handleReset);
     document.removeEventListener("scroll", handleReset);
   });
+
+  return {
+    start,
+    forceReset,
+  };
 }

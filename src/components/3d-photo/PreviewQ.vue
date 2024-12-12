@@ -9,6 +9,8 @@ import Postures from "../q-photo/Postures.vue";
 const props = defineProps<{
   title: string;
   onNext: () => void;
+  onStartCountdown: () => void;
+  onResetCountdown: () => void;
 }>();
 
 const store = useAppStore();
@@ -35,6 +37,7 @@ async function generate() {
 
   if (store.hasPhoto) {
     store.startCuteLoading();
+    props.onResetCountdown();
 
     const res = await generateImage(store.photo!, posture.value);
 
@@ -44,6 +47,7 @@ async function generate() {
     }
 
     store.stopCuteLoading();
+    props.onStartCountdown();
   }
 }
 

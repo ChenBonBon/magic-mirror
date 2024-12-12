@@ -7,9 +7,11 @@ import Loading from "../Loading.vue";
 import Attributes, { Gender, Pose } from "./Attributes.vue";
 import Postures from "./Postures.vue";
 
-defineProps<{
+const props = defineProps<{
   title: string;
   onNext: () => void;
+  onStartCountdown: () => void;
+  onResetCountdown: () => void;
 }>();
 
 const store = useAppStore();
@@ -68,6 +70,7 @@ async function generate() {
 
   if (store.hasPhoto) {
     store.startAILoading();
+    props.onResetCountdown();
 
     const res = await generateAI(
       store.photo!,
@@ -84,6 +87,7 @@ async function generate() {
     }
 
     store.stopAILoading();
+    props.onStartCountdown();
   }
 }
 

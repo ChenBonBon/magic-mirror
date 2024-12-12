@@ -5,9 +5,11 @@ import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
 import Loading from "../Loading.vue";
 
-defineProps<{
+const props = defineProps<{
   title: string;
   onNext: () => void;
+  onStartCountdown: () => void;
+  onResetCountdown: () => void;
 }>();
 
 const store = useAppStore();
@@ -61,6 +63,7 @@ async function generate() {
 
   if (store.hasPhoto) {
     store.start3DLoading();
+    props.onResetCountdown();
 
     const res = await generate3D(selectedImage.value);
 
@@ -75,6 +78,7 @@ async function generate() {
     }
 
     store.stop3DLoading();
+    props.onStartCountdown();
   }
 }
 
@@ -149,9 +153,7 @@ onMounted(() => {
         'first-record',
         store.threeDModel &&
         store.threeDModel.model ===
-          store.threeDRecords[0].modelUrls.find((item) =>
-            item.endsWith('.glb')
-          )
+          store.threeDRecords[0].modelUrls.find((item) => item.endsWith('.glb'))
           ? 'selected'
           : '',
       ]"
@@ -168,9 +170,7 @@ onMounted(() => {
         'second-record',
         store.threeDModel &&
         store.threeDModel.model ===
-          store.threeDRecords[1].modelUrls.find((item) =>
-            item.endsWith('.glb')
-          )
+          store.threeDRecords[1].modelUrls.find((item) => item.endsWith('.glb'))
           ? 'selected'
           : '',
       ]"

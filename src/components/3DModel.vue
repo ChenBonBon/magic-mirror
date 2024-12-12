@@ -2,11 +2,12 @@
 import {
   AmbientLight,
   Color,
-  DirectionalLight,
   DoubleSide,
   PerspectiveCamera,
+  PointLight,
   Raycaster,
   Scene,
+  SpotLight,
   Vector2,
   WebGLRenderer,
 } from "three";
@@ -92,17 +93,19 @@ const renderThree = () => {
 
   // 加载模型
   loader.load(props.url, (gltf: GLTF) => {
-    // 初始化环境光，环境光不能用来投射阴影，因为它没有方向。
-    const ambientLight = new AmbientLight(0xffffff, 1); // 白光，强度为1
-    // 环境光添加至场景中
+    // 聚光灯
+    var spotLight = new SpotLight(0xffffff);
+    spotLight.position.set(-10, 20, 10);
+    spotLight.castShadow = true;
+
+    // 环境光
+    var ambientLight = new AmbientLight(0xffffff, 3);
     scene.add(ambientLight);
 
-    // 添加平行光，使物体看起来更加有效果
-    const dirLight = new DirectionalLight(0xffffff, 5);
-    // 根据需要自行调整位置
-    dirLight.position.set(0, 1, 0);
-    // 场景中添加平行光
-    scene.add(dirLight);
+    // 点光源附加到相机
+    var pointLight = new PointLight(0xffffff, 5);
+    camera.add(pointLight);
+    scene.add(spotLight);
 
     gltf.scene.traverse((child: any) => {
       if (child.isMesh) {
@@ -116,7 +119,6 @@ const renderThree = () => {
       }
     });
 
-    // console.log(gltf);
     const model = gltf.scene;
     // 将模型添加至场景中
     scene.add(model);
@@ -132,18 +134,6 @@ const renderThree = () => {
 
     // 执行射线检测
     rayCaster.setFromCamera(mouse, camera);
-    // 射线涉及到的物体集合
-    const intersects = rayCaster.intersectObjects(scene.children, true);
-
-    // todo
-    // 以下编写点击事件后需要做的内容
-    console.log("intersects:", intersects);
-
-    if (!intersects.length) {
-      console.log("未选中任何模型");
-    } else {
-      console.log("选中模型咯");
-    }
   };
 
   document.addEventListener("click", clickEvent, false);
