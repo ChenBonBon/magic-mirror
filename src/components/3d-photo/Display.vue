@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from "vue";
 import VueQrcode from "vue-qrcode";
 import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
@@ -18,10 +19,28 @@ if (port) {
 }
 
 const store = useAppStore();
-const qrcode =
-  baseURL +
-  ":/about?modelId=" +
-  window.localStorage.getItem("magic-mirror-sessionId");
+
+const qrcode = computed(() => {
+  const prefix =
+    baseURL +
+    ":/about?modelId=" +
+    window.localStorage.getItem("magic-mirror-sessionId") +
+    "/cata";
+
+  if (store.threeDModel) {
+    const selectedModel = store.threeDModel.model;
+
+    const index = store.threeDRecords.findIndex(
+      (record) =>
+        record.modelUrls.filter((url) => url.endsWith(".glb"))[0] ===
+        selectedModel
+    );
+
+    return prefix + index;
+  }
+
+  return "";
+});
 </script>
 
 <template>
