@@ -1,4 +1,4 @@
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useCountdown } from "./useCountdown";
 
@@ -7,7 +7,7 @@ const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
 export function useBackToHome() {
   const router = useRouter();
 
-  const { start, reset, stop } = useCountdown(
+  const { time, start, reset, stop } = useCountdown(
     parseInt(backToHomeTime, 10) ?? 60,
     () => {
       router.push("/");
@@ -57,6 +57,10 @@ export function useBackToHome() {
     document.removeEventListener("wheel", handleReset);
     document.removeEventListener("mousewheel", handleReset);
     document.removeEventListener("scroll", handleReset);
+  });
+
+  watch(time, (val) => {
+    console.log(val);
   });
 
   return {
