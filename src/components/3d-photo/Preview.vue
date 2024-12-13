@@ -231,7 +231,6 @@ onMounted(() => {
   </div>
   <slot name="generate-tip" />
   <audio v-if="generated" src="/audios/3d-generated.mp3" autoplay></audio>
-  <audio v-else src="/audios/3d-preview.mp3" autoplay></audio>
 </template>
 
 <style lang="less" scoped>
