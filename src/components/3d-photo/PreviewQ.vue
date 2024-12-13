@@ -17,6 +17,7 @@ const clearBackToHome = inject<() => void>("clearBackToHome");
 const store = useAppStore();
 
 const posture = ref(1);
+const generated = ref(false);
 
 async function handleNext() {
   await getSessionId("To3d");
@@ -45,6 +46,7 @@ async function generate() {
     if (res && res.status === "completed") {
       store.setCuteImage(res.imageUrl);
       store.setCuteRecords(res.history.map((item) => item.imageUrl));
+      generated.value = true;
     }
 
     store.stopCuteLoading();
@@ -152,6 +154,8 @@ onMounted(() => {
     alt="生成最终Q版照片"
     class="generate-tip"
   />
+  <audio v-if="generated" src="/audios/q-preview.mp3" autoplay></audio>
+  <audio v-else src="/audios/q-preview-q.mp3" autoplay></audio>
 </template>
 
 <style lang="less" scoped>

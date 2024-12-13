@@ -16,6 +16,7 @@ const clearBackToHome = inject<() => void>("clearBackToHome");
 const store = useAppStore();
 
 const posture = ref(1);
+const generated = ref(false);
 
 function setPosture(index: number) {
   posture.value = index;
@@ -39,6 +40,7 @@ async function generate() {
     if (res && res.status === "completed") {
       store.setCuteImage(res.imageUrl);
       store.setCuteRecords(res.history.map((item) => item.imageUrl));
+      generated.value = true;
     }
 
     store.stopCuteLoading();
@@ -157,6 +159,8 @@ onMounted(() => {
     alt="生成最终Q版照片"
     class="generate-tip"
   />
+  <audio v-if="generated" src="/audios/q-generated.mp3" autoplay></audio>
+  <audio v-else src="/audios/q-preview.mp3" autoplay></audio>
 </template>
 
 <style lang="less" scoped>

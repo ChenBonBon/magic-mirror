@@ -79,6 +79,7 @@ onMounted(() => {
         class="marquee-bg"
       />
     </div>
+    <audio src="/audios/home.mp3" autoplay loop></audio>
   </main-layout>
 </template>
 

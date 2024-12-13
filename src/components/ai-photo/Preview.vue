@@ -21,6 +21,7 @@ const tab = ref("Movies");
 const posture = ref(0);
 const selectedGender = ref<Gender>("Man");
 const selectedPose = ref<Pose>("pose1");
+const generated = ref(false);
 
 const firstRecord = computed(() => {
   if (store.aiRecords.length > 0) {
@@ -85,6 +86,7 @@ async function generate() {
         selectedPose.value === "pose1" ? res.imageUrls[0] : res.imageUrls[1];
       store.setAIImage(aiImage);
       store.setAIRecords(res.history);
+      generated.value = true;
     }
 
     store.stopAILoading();
@@ -217,6 +219,8 @@ onMounted(() => {
     </div>
   </div>
   <slot name="generate-tip" />
+  <audio v-if="generated" src="/audios/ai-generated.mp3" autoplay></audio>
+  <audio v-else src="/audios/ai-preview.mp3" autoplay></audio>
 </template>
 
 <style lang="less" scoped>

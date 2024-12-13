@@ -16,6 +16,7 @@ const clearBackToHome = inject<() => void>("clearBackToHome");
 const store = useAppStore();
 
 const selectedImage = ref(store.cuteImage);
+const generated = ref(false);
 
 const firstRecordStyle = computed(() => {
   if (store.cuteRecords.length === 1) {
@@ -76,6 +77,7 @@ async function generate() {
         store.set3DModel({ image, model });
         store.set3DRecords(res.history);
       }
+      generated.value = true;
     }
 
     store.stop3DLoading();
@@ -228,6 +230,8 @@ onMounted(() => {
     </div>
   </div>
   <slot name="generate-tip" />
+  <audio v-if="generated" src="/audios/3d-generated.mp3" autoplay></audio>
+  <audio v-else src="/audios/3d-preview.mp3" autoplay></audio>
 </template>
 
 <style lang="less" scoped>
