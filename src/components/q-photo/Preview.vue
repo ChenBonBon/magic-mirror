@@ -169,13 +169,12 @@ onMounted(() => {
   background-image: url("/images/q-photo/title-wrapper.png");
   background-size: cover;
   background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 1;
   .title {
-    width: 86px;
-    height: 86px;
-    position: absolute;
-    top: 30px;
-    left: 35px;
+    width: 175px;
   }
 }
 .preview {

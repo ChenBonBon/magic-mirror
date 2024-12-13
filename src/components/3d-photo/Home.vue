@@ -104,21 +104,21 @@ onBeforeUnmount(() => {
 <template>
   <navigator
     :active="{
-      src: '/images/navigator/3d-photo-active.png',
+      src: '/images/navigator/3d-photo.png',
       alt: '3D重建',
-      width: 127,
+      width: 200,
     }"
     :inactives="[
       {
         src: '/images/navigator/ai-photo.png',
         alt: 'AI摄影',
-        width: 82,
+        width: 125,
         href: '/ai-photo',
       },
       {
         src: '/images/navigator/q-photo.png',
         alt: 'Q版照片',
-        width: 85,
+        width: 150,
         href: '/q-photo',
       },
     ]"

@@ -165,12 +165,11 @@ onMounted(() => {
   background-size: cover;
   background-repeat: no-repeat;
   z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   .title {
-    width: 86px;
-    height: 86px;
-    position: absolute;
-    top: 30px;
-    left: 35px;
+    width: 175px;
   }
 }
 .preview {

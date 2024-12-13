@@ -46,7 +46,6 @@ onMounted(() => {
                   alt="Q版照片"
                   class="q-photo-img"
                 />
-                <span class="sub-title">点击立刻体验</span>
               </div>
             </template>
           </Marquee>
@@ -58,7 +57,6 @@ onMounted(() => {
                   alt="AI照片"
                   class="ai-photo-img"
                 />
-                <span class="sub-title">点击立刻体验</span>
               </div>
             </template>
           </Marquee>
@@ -70,7 +68,6 @@ onMounted(() => {
                   alt="3D照片"
                   class="three-d-photo-img"
                 />
-                <span class="sub-title">点击立刻体验</span>
               </div>
             </template>
           </Marquee>
@@ -108,38 +105,25 @@ onMounted(() => {
     z-index: 1;
     .marquees-wrapper {
       position: relative;
-      top: -28px;
+      top: 0;
       transform: rotate(-9deg);
       .q-photo {
-        width: 199px;
+        width: 800px;
         margin-left: 135px;
-        transform: rotate(9deg);
-        display: flex;
-        align-items: flex-start;
-        gap: 8px;
         .q-photo-img {
           width: 100%;
         }
       }
       .ai-photo {
-        width: 162px;
-        margin: 100px 0 25px calc(100% - 150px);
-        transform: rotate(9deg);
-        display: flex;
-        align-items: baseline;
-        flex-direction: row-reverse;
-        gap: 8px;
+        width: 700px;
+        margin: 75px 0 0 calc(100% - 700px);
         .ai-photo-img {
           width: 100%;
         }
       }
       .three-d-photo {
-        width: 182px;
-        margin: 100px 0 25px -50px;
-        transform: rotate(9deg);
-        display: flex;
-        align-items: flex-start;
-        gap: 8px;
+        width: 800px;
+        margin: 75px 0 0 -50px;
         .three-d-photo-img {
           width: 100%;
         }
