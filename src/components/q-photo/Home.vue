@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
+import { inject, onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
 import { useCountdown } from "../../hooks/useCountdown";
 import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
@@ -12,6 +12,9 @@ import PhotographGroup from "../PhotographGroup.vue";
 const props = defineProps<{
   onNext: () => void;
 }>();
+
+const startBackToHome = inject<() => void>("startBackToHome");
+const clearBackToHome = inject<() => void>("clearBackToHome");
 
 const cameraRef = useTemplateRef("camera");
 
@@ -64,10 +67,13 @@ async function handleClickPhotograph() {
             store.setPhoto(blob);
           }
         });
+
+        startBackToHome && startBackToHome();
       }
     }
   }, 5000);
 
+  clearBackToHome && clearBackToHome();
   start();
 }
 

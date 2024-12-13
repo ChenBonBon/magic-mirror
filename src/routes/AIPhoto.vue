@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { useToast } from "vue-toast-notification";
 import Home from "../components/ai-photo/Home.vue";
 import Preview from "../components/ai-photo/Preview.vue";
@@ -13,6 +13,10 @@ import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
 import { print } from "../services/print";
 import { useAppStore } from "../useAppStore";
+
+const startBackToHome = inject<() => void>("startBackToHome");
+const clearBackToHome = inject<() => void>("clearBackToHome");
+const resetBackToHome = inject<() => void>("resetBackToHome");
 
 const $toast = useToast();
 
@@ -75,6 +79,22 @@ async function handlePrint() {
 
   printing.value = false;
 }
+
+function handleReset() {
+  resetBackToHome && resetBackToHome();
+}
+
+onMounted(() => {
+  startBackToHome && startBackToHome();
+
+  document.addEventListener("click", handleReset);
+});
+
+onBeforeUnmount(() => {
+  clearBackToHome && clearBackToHome();
+
+  document.removeEventListener("click", handleReset);
+});
 </script>
 
 <template>

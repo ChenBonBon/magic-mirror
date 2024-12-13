@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { inject, onBeforeUnmount, onMounted, ref } from "vue";
 import Display from "../components/3d-photo/Display.vue";
 import Home from "../components/3d-photo/Home.vue";
 import Preview from "../components/3d-photo/Preview.vue";
@@ -10,6 +10,10 @@ import Payment from "../components/Payment.vue";
 import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
+
+const startBackToHome = inject<() => void>("startBackToHome");
+const clearBackToHome = inject<() => void>("clearBackToHome");
+const resetBackToHome = inject<() => void>("resetBackToHome");
 
 const step = ref(1);
 const qrcode = ref("");
@@ -41,6 +45,22 @@ async function handleCreateOrder() {
 
   creating.value = false;
 }
+
+function handleReset() {
+  resetBackToHome && resetBackToHome();
+}
+
+onMounted(() => {
+  startBackToHome && startBackToHome();
+
+  document.addEventListener("click", handleReset);
+});
+
+onBeforeUnmount(() => {
+  clearBackToHome && clearBackToHome();
+
+  document.removeEventListener("click", handleReset);
+});
 </script>
 
 <template>

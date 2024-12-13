@@ -1,66 +1,47 @@
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useCountdown } from "./useCountdown";
 
-export function useBackToHome(backToHomeTime: number) {
+const backToHomeTimeConf = import.meta.env.VITE_BACK_TO_HOME_TIME;
+const backToHomeTime = backToHomeTimeConf
+  ? parseInt(backToHomeTimeConf, 10)
+  : 60000;
+
+export default function useBackToHome() {
   const router = useRouter();
 
-  const { start, reset, stop } = useCountdown(backToHomeTime ?? 60, () => {
-    router.push("/");
-  });
+  const startTime = ref(Date.now());
 
-  const forceWait = ref(false);
+  let raf: number;
 
-  function handleReset() {
-    reset();
+  const backToHome = () => {
+    const current = Date.now();
+    console.log(current - startTime.value);
 
-    setTimeout(() => {
-      if (forceWait.value) {
-        return;
-      }
+    if (current - startTime.value > backToHomeTime) {
+      router.push("/");
+    } else {
+      raf = requestAnimationFrame(backToHome);
+    }
+  };
 
-      start();
-    }, 1000);
+  function start() {
+    startTime.value = Date.now();
+    raf = requestAnimationFrame(backToHome);
   }
 
-  function forceStop() {
-    forceWait.value = true;
-    stop();
+  function reset() {
+    startTime.value = Date.now();
   }
 
-  function handleStart() {
-    forceWait.value = false;
-    start();
+  function clear() {
+    if (raf) {
+      cancelAnimationFrame(raf);
+    }
   }
-
-  onMounted(() => {
-    start();
-
-    document.addEventListener("click", handleReset);
-    document.addEventListener("mousemove", handleReset);
-    document.addEventListener("touchstart", handleReset);
-    document.addEventListener("touchmove", handleReset);
-    document.addEventListener("keydown", handleReset);
-    document.addEventListener("wheel", handleReset);
-    document.addEventListener("mousewheel", handleReset);
-    document.addEventListener("scroll", handleReset);
-  });
-
-  onBeforeUnmount(() => {
-    stop();
-
-    document.removeEventListener("click", handleReset);
-    document.removeEventListener("mousemove", handleReset);
-    document.removeEventListener("touchstart", handleReset);
-    document.removeEventListener("touchmove", handleReset);
-    document.removeEventListener("keydown", handleReset);
-    document.removeEventListener("wheel", handleReset);
-    document.removeEventListener("mousewheel", handleReset);
-    document.removeEventListener("scroll", handleReset);
-  });
 
   return {
-    start: handleStart,
-    stop: forceStop,
+    start,
+    reset,
+    clear,
   };
 }

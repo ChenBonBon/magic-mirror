@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, inject, onMounted, ref } from "vue";
 import { generate3D, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
@@ -9,6 +9,9 @@ defineProps<{
   title: string;
   onNext: () => void;
 }>();
+
+const startBackToHome = inject<() => void>("startBackToHome");
+const clearBackToHome = inject<() => void>("clearBackToHome");
 
 const store = useAppStore();
 
@@ -61,6 +64,7 @@ async function generate() {
 
   if (selectedImage.value) {
     store.start3DLoading();
+    clearBackToHome && clearBackToHome();
 
     const res = await generate3D(selectedImage.value);
 
@@ -75,6 +79,7 @@ async function generate() {
     }
 
     store.stop3DLoading();
+    startBackToHome && startBackToHome();
   }
 }
 

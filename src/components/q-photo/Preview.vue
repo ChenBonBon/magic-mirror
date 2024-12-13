@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { inject, onMounted, ref } from "vue";
 import { generateImage, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import Loading from "../Loading.vue";
@@ -9,6 +9,9 @@ defineProps<{
   title: string;
   onNext: () => void;
 }>();
+
+const startBackToHome = inject<() => void>("startBackToHome");
+const clearBackToHome = inject<() => void>("clearBackToHome");
 
 const store = useAppStore();
 
@@ -29,6 +32,7 @@ async function generate() {
 
   if (store.hasPhoto) {
     store.startCuteLoading();
+    clearBackToHome && clearBackToHome();
 
     const res = await generateImage(store.photo!, posture.value);
 
@@ -38,6 +42,7 @@ async function generate() {
     }
 
     store.stopCuteLoading();
+    startBackToHome && startBackToHome();
   }
 }
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { useToast } from "vue-toast-notification";
 import Display3D from "../components/3d-photo/Display.vue";
 import Preview3D from "../components/3d-photo/Preview.vue";
@@ -16,6 +16,10 @@ import { createOrder } from "../services/order";
 import { print } from "../services/print";
 import { getSessionId } from "../services/session";
 import { useAppStore } from "../useAppStore";
+
+const startBackToHome = inject<() => void>("startBackToHome");
+const clearBackToHome = inject<() => void>("clearBackToHome");
+const resetBackToHome = inject<() => void>("resetBackToHome");
 
 const $toast = useToast();
 
@@ -106,6 +110,22 @@ function handlePaymentSuccessful() {
     handleNavigate(6);
   }
 }
+
+function handleReset() {
+  resetBackToHome && resetBackToHome();
+}
+
+onMounted(() => {
+  startBackToHome && startBackToHome();
+
+  document.addEventListener("click", handleReset);
+});
+
+onBeforeUnmount(() => {
+  clearBackToHome && clearBackToHome();
+
+  document.removeEventListener("click", handleReset);
+});
 </script>
 
 <template>

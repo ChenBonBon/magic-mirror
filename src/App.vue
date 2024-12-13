@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
+import useBackToHome from "./hooks/useBackToHome";
+
+import { provide } from "vue";
+
+const { start, clear, reset } = useBackToHome();
+
+provide("startBackToHome", start);
+provide("clearBackToHome", clear);
+provide("resetBackToHome", reset);
 
 onMounted(() => {
   // 阻止双击放大
