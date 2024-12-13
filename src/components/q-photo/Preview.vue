@@ -1,18 +1,20 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useBackToHome } from "../../hooks/useBackToHome";
 import { generateImage, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import Loading from "../Loading.vue";
 import Postures from "./Postures.vue";
 
-const props = defineProps<{
+defineProps<{
   title: string;
   onNext: () => void;
-  onStartCountdown: () => void;
-  onResetCountdown: () => void;
 }>();
 
+const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
+
 const store = useAppStore();
+const { start, stop } = useBackToHome(parseInt(backToHomeTime, 10));
 
 const posture = ref(1);
 
@@ -31,7 +33,7 @@ async function generate() {
 
   if (store.hasPhoto) {
     store.startCuteLoading();
-    props.onResetCountdown();
+    stop();
 
     const res = await generateImage(store.photo!, posture.value);
 
@@ -41,7 +43,7 @@ async function generate() {
     }
 
     store.stopCuteLoading();
-    props.onStartCountdown();
+    start();
   }
 }
 
@@ -68,6 +70,11 @@ function handleClick(record: string) {
 
 onMounted(() => {
   getHistoryRecords();
+  start();
+});
+
+onBeforeUnmount(() => {
+  stop();
 });
 </script>
 

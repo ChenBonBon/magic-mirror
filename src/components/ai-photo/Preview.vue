@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useBackToHome } from "../../hooks/useBackToHome";
 import { GenerateRecord } from "../../models/photo";
 import { generateAI, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
@@ -7,14 +8,15 @@ import Loading from "../Loading.vue";
 import Attributes, { Gender, Pose } from "./Attributes.vue";
 import Postures from "./Postures.vue";
 
-const props = defineProps<{
+defineProps<{
   title: string;
   onNext: () => void;
-  onStartCountdown: () => void;
-  onResetCountdown: () => void;
 }>();
 
+const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
+
 const store = useAppStore();
+const { start, stop } = useBackToHome(parseInt(backToHomeTime, 10));
 
 const tab = ref("Movies");
 const posture = ref(0);
@@ -70,7 +72,7 @@ async function generate() {
 
   if (store.hasPhoto) {
     store.startAILoading();
-    props.onResetCountdown();
+    stop();
 
     const res = await generateAI(
       store.photo!,
@@ -87,7 +89,7 @@ async function generate() {
     }
 
     store.stopAILoading();
-    props.onStartCountdown();
+    start();
   }
 }
 
@@ -126,6 +128,11 @@ function handleChangePose(pose: Pose) {
 
 onMounted(() => {
   getHistoryRecords();
+  start();
+});
+
+onBeforeUnmount(() => {
+  stop();
 });
 </script>
 

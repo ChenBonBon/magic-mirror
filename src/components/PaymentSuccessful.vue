@@ -1,11 +1,26 @@
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted } from "vue";
+import { useBackToHome } from "../hooks/useBackToHome";
+
 const props = defineProps<{
   onNext: () => void;
 }>();
 
+const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
+
+const { start, stop } = useBackToHome(parseInt(backToHomeTime, 10));
+
 function handleClick() {
   props.onNext();
 }
+
+onMounted(async () => {
+  start();
+});
+
+onBeforeUnmount(() => {
+  stop();
+});
 </script>
 
 <template>

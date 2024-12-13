@@ -1,18 +1,13 @@
-import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCountdown } from "./useCountdown";
 
-const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
-
-export function useBackToHome() {
+export function useBackToHome(backToHomeTime: number) {
   const router = useRouter();
 
-  const { time, start, reset, stop } = useCountdown(
-    parseInt(backToHomeTime, 10) ?? 60,
-    () => {
-      router.push("/");
-    }
-  );
+  const { start, reset, stop } = useCountdown(backToHomeTime ?? 60, () => {
+    router.push("/");
+  });
 
   const forceWait = ref(false);
 
@@ -28,9 +23,14 @@ export function useBackToHome() {
     }, 1000);
   }
 
-  function forceReset() {
+  function forceStop() {
     forceWait.value = true;
-    reset();
+    stop();
+  }
+
+  function handleStart() {
+    forceWait.value = false;
+    start();
   }
 
   onMounted(() => {
@@ -59,12 +59,8 @@ export function useBackToHome() {
     document.removeEventListener("scroll", handleReset);
   });
 
-  watch(time, (val) => {
-    console.log(val);
-  });
-
   return {
-    start,
-    forceReset,
+    start: handleStart,
+    stop: forceStop,
   };
 }

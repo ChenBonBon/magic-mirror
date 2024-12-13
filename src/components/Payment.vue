@@ -10,8 +10,6 @@ const props = defineProps<{
   qrcode: string;
   onPrev: () => void;
   onNext: () => void;
-  onResetCountdown: () => void;
-  onStartCountdown: () => void;
 }>();
 
 const startTime = new Date().getTime();
@@ -29,19 +27,16 @@ async function getPaymentStatus() {
     if (res.status === "success") {
       clearInterval(intervalId);
       props.onNext();
-      props.onStartCountdown();
     }
   }
 }
 
 onMounted(() => {
-  props.onResetCountdown();
   intervalId = setInterval(getPaymentStatus, 1000);
 });
 
 onBeforeUnmount(() => {
   clearInterval(intervalId);
-  props.onResetCountdown();
 });
 </script>
 

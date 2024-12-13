@@ -8,11 +8,8 @@ import PageFooter from "../components/PageFooter.vue";
 import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
 import PaymentSuccessful from "../components/PaymentSuccessful.vue";
-import { useBackToHome } from "../hooks/useBackToHome";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
-
-const { start, forceReset } = useBackToHome();
 
 const step = ref(1);
 const qrcode = ref("");
@@ -54,8 +51,6 @@ async function handleCreateOrder() {
         v-else-if="step === 2"
         title="/images/q-photo/title.png"
         @next="handleCreateOrder"
-        @start-countdown="start"
-        @reset-countdown="forceReset"
       >
         <template #generate-tip>
           <img
@@ -73,8 +68,6 @@ async function handleCreateOrder() {
         :bill-no="billNo"
         @prev="handleNavigate(2)"
         @next="handleNavigate(4)"
-        @start-countdown="start"
-        @reset-countdown="forceReset"
       />
       <!-- <scan-successful v-else-if="step === 4" /> -->
       <payment-successful v-else-if="step === 4" @next="handleNavigate(5)" />
@@ -82,8 +75,6 @@ async function handleCreateOrder() {
         v-else-if="step === 5"
         title="/images/3d-photo/title.png"
         @next="handleNavigate(6)"
-        @start-countdown="start"
-        @reset-countdown="forceReset"
       >
         <template #preview-tip>
           <img

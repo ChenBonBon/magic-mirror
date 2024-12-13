@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useBackToHome } from "../hooks/useBackToHome";
 import { WorkflowType } from "../models/session";
 import Loading from "./Loading.vue";
 
@@ -9,9 +11,19 @@ defineProps<{
 
 const router = useRouter();
 
+const { start, stop } = useBackToHome(15);
+
 function handleBack() {
   router.push("/");
 }
+
+onMounted(() => {
+  start();
+});
+
+onBeforeUnmount(() => {
+  stop();
+});
 </script>
 
 <template>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { onBeforeUnmount, onMounted } from "vue";
+import { useBackToHome } from "../hooks/useBackToHome";
 import { WorkflowType } from "../models/session";
 import { useAppStore } from "../useAppStore";
 
@@ -8,7 +10,19 @@ defineProps<{
   onGenerate3D?: () => void;
 }>();
 
+const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
+
 const store = useAppStore();
+
+const { start, stop } = useBackToHome(parseInt(backToHomeTime, 10));
+
+onMounted(() => {
+  start();
+});
+
+onBeforeUnmount(() => {
+  stop();
+});
 </script>
 
 <template>

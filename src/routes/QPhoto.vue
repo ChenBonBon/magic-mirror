@@ -11,7 +11,6 @@ import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import Print from "../components/Print.vue";
 import Home from "../components/q-photo/Home.vue";
 import Preview from "../components/q-photo/Preview.vue";
-import { useBackToHome } from "../hooks/useBackToHome";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
 import { print } from "../services/print";
@@ -21,8 +20,6 @@ import { useAppStore } from "../useAppStore";
 const $toast = useToast();
 
 const store = useAppStore();
-
-const { start, forceReset } = useBackToHome();
 
 const step = ref(1);
 const qrcode = ref("");
@@ -119,8 +116,6 @@ function handlePaymentSuccessful() {
         v-else-if="step === 2"
         title="/images/q-photo/title.png"
         @next="handleNavigate(3)"
-        @start-countdown="start"
-        @reset-countdown="forceReset"
       >
         <template #generate-tip>
           <img
@@ -148,8 +143,6 @@ function handlePaymentSuccessful() {
         :bill-no="billNo"
         @prev="handleNavigate(3)"
         @next="handleNavigate(5)"
-        @start-countdown="start"
-        @reset-countdown="forceReset"
       />
       <!-- <scan-successful v-else-if="step === 5" /> -->
       <payment-successful
@@ -164,8 +157,6 @@ function handlePaymentSuccessful() {
         v-else-if="step === 6 && workflowType === 'To3d'"
         title="/images/3d-photo/title.png"
         @next="handleNavigate(7)"
-        @start-countdown="start"
-        @reset-countdown="forceReset"
       >
         <template #preview-tip>
           <img
