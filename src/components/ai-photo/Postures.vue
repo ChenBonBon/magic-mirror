@@ -59,7 +59,7 @@ function handleClickPosture(index: number) {
   }
 
   activeIndex.value = index;
-  props.onClickPosture(index + 1);
+  props.onClickPosture(index);
 }
 </script>
 

@@ -77,7 +77,7 @@ async function generate() {
     const res = await generateAI(
       store.photo!,
       tab.value,
-      posture.value,
+      posture.value + 1,
       selectedGender.value
     );
 
