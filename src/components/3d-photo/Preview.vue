@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useBackToHome } from "../../hooks/useBackToHome";
+import { computed, onMounted, ref } from "vue";
 import { generate3D, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
@@ -11,11 +10,7 @@ defineProps<{
   onNext: () => void;
 }>();
 
-const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
-
 const store = useAppStore();
-
-const { start, stop } = useBackToHome(parseInt(backToHomeTime, 10));
 
 const selectedImage = ref(store.cuteImage);
 
@@ -66,7 +61,6 @@ async function generate() {
 
   if (selectedImage.value) {
     store.start3DLoading();
-    stop();
 
     const res = await generate3D(selectedImage.value);
 
@@ -81,7 +75,6 @@ async function generate() {
     }
 
     store.stop3DLoading();
-    start();
   }
 }
 
@@ -110,11 +103,6 @@ function handleClick(index: number) {
 
 onMounted(() => {
   getHistoryRecords();
-  start();
-});
-
-onBeforeUnmount(() => {
-  stop();
 });
 </script>
 

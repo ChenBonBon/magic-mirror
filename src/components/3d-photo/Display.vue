@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted } from "vue";
+import { computed } from "vue";
 import VueQrcode from "vue-qrcode";
 import { useRouter } from "vue-router";
-import { useBackToHome } from "../../hooks/useBackToHome";
 import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
 
 const protocol = import.meta.env.VITE_SHARE_PROTOL;
 const host = import.meta.env.VITE_SHARE_HOST;
 const port = import.meta.env.VITE_SHARE_PORT;
-const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
 
 let baseURL = protocol + "://" + host;
 
@@ -20,8 +18,6 @@ if (port) {
 const store = useAppStore();
 
 const router = useRouter();
-
-const { start, stop } = useBackToHome(parseInt(backToHomeTime, 10));
 
 function handleBack() {
   router.push("/");
@@ -47,14 +43,6 @@ const qrcode = computed(() => {
   }
 
   return "";
-});
-
-onMounted(() => {
-  start();
-});
-
-onBeforeUnmount(() => {
-  stop();
 });
 </script>
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
-import { useBackToHome } from "../../hooks/useBackToHome";
 import { useCountdown } from "../../hooks/useCountdown";
 import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
@@ -13,15 +12,10 @@ const props = defineProps<{
   onNext: () => void;
 }>();
 
-const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
-
 const cameraRef = useTemplateRef("camera");
 
 const store = useAppStore();
 const { time, isTiming, start } = useCountdown(5);
-const { start: startBackToHome, stop } = useBackToHome(
-  parseInt(backToHomeTime, 10)
-);
 
 const stream = ref();
 
@@ -69,8 +63,6 @@ async function handleClickPhotograph() {
             store.setPhoto(blob);
           }
         });
-
-        startBackToHome();
       }
     }
   }, 5000);
@@ -95,16 +87,12 @@ onMounted(async () => {
   if (cameraRef.value && cameraRef.value.video) {
     stream.value = await openCamera(cameraRef.value.video);
   }
-
-  startBackToHome();
 });
 
 onBeforeUnmount(() => {
   if (stream.value) {
     closeCamera(stream.value);
   }
-
-  stop();
 });
 </script>
 

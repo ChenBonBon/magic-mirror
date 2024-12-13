@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { useBackToHome } from "../../hooks/useBackToHome";
+import { computed, onMounted, ref } from "vue";
 import { GenerateRecord } from "../../models/photo";
 import { generateAI, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
@@ -13,10 +12,7 @@ defineProps<{
   onNext: () => void;
 }>();
 
-const backToHomeTime = import.meta.env.VITE_BACK_TO_HOME_TIME;
-
 const store = useAppStore();
-const { start, stop } = useBackToHome(parseInt(backToHomeTime, 10));
 
 const tab = ref("Movies");
 const posture = ref(0);
@@ -72,7 +68,6 @@ async function generate() {
 
   if (store.hasPhoto) {
     store.startAILoading();
-    stop();
 
     const res = await generateAI(
       store.photo!,
@@ -89,7 +84,6 @@ async function generate() {
     }
 
     store.stopAILoading();
-    start();
   }
 }
 
@@ -128,11 +122,6 @@ function handleChangePose(pose: Pose) {
 
 onMounted(() => {
   getHistoryRecords();
-  start();
-});
-
-onBeforeUnmount(() => {
-  stop();
 });
 </script>
 
