@@ -48,7 +48,7 @@ async function handleCreateOrder() {
     qrcode.value = res.QRCode;
     billNo.value = res.billNo;
 
-    handleNavigate(3);
+    handleNavigate(4);
   }
 
   creating.value = false;
