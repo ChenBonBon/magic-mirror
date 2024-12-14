@@ -21,11 +21,14 @@ const store = useAppStore();
 const { time, isTiming, start } = useCountdown(5);
 
 const stream = ref();
+const clicked = ref(false);
 
 async function handleClickPhotograph() {
   if (isTiming.value) {
     return;
   }
+
+  clicked.value = true;
 
   if (store.hasPhoto) {
     store.clearPhoto();
@@ -129,6 +132,7 @@ onBeforeUnmount(() => {
     @click-photograph="handleClickPhotograph"
     @click-photograph-confirm="handleClickPhotographConfirm"
   />
+  <audio v-if="!clicked" src="/audios/take-photo.mp3" autoplay></audio>
 </template>
 
 <style lang="less" scoped></style>

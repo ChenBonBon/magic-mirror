@@ -15,7 +15,6 @@ export default function useBackToHome() {
 
   const backToHome = () => {
     const current = Date.now();
-    console.log(current - startTime.value);
 
     if (current - startTime.value > backToHomeTime) {
       router.push("/");

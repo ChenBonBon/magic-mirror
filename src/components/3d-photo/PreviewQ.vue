@@ -154,8 +154,8 @@ onMounted(() => {
     alt="生成最终Q版照片"
     class="generate-tip"
   />
-  <audio v-if="generated" src="/audios/q-preview.mp3" autoplay></audio>
-  <audio v-else src="/audios/q-preview-q.mp3" autoplay></audio>
+  <audio v-if="generated" src="/audios/3d-preview-q.mp3" autoplay></audio>
+  <audio v-else src="/audios/q-preview.mp3" autoplay></audio>
 </template>
 
 <style lang="less" scoped>
