@@ -70,6 +70,19 @@ const qrcode = computed(() => {
         class="qrcode-tip"
       />
     </div>
+    <div class="qrcode-wrapper">
+      <vue-qrcode
+        value="https://www.wjx.cn/vm/mBiHHhA.aspx#"
+        class="qrcode"
+        :color="{ dark: '#000000ff', light: '#ffffffff' }"
+        type="image/png"
+      />
+      <img
+        src="/images/3d-photo/qrcode-display.png"
+        alt="qrcode"
+        class="qrcode-tip"
+      />
+    </div>
   </div>
   <div class="effect-display-photo-wrapper">
     <three-d-model

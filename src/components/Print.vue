@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
+import VueQrcode from "vue-qrcode";
 import { useRouter } from "vue-router";
 import { WorkflowType } from "../models/session";
 import Loading from "./Loading.vue";
@@ -15,14 +16,29 @@ function handleBack() {
 }
 
 onMounted(() => {
-  setTimeout(() => {
-    handleBack();
-  }, 15000);
+  // setTimeout(() => {
+  //   handleBack();
+  // }, 15000);
 });
 </script>
 
 <template>
   <div class="print">
+    <div class="qrcodes">
+      <div class="qrcode-wrapper">
+        <vue-qrcode
+          value="https://www.wjx.cn/vm/mBiHHhA.aspx#"
+          class="qrcode"
+          :color="{ dark: '#000000ff', light: '#ffffffff' }"
+          type="image/png"
+        />
+        <img
+          src="/images/3d-photo/qrcode-display.png"
+          alt="qrcode"
+          class="qrcode-tip"
+        />
+      </div>
+    </div>
     <img
       src="/images/print/printing-en.png"
       alt="PRINTING IN PROGRESS"
@@ -84,12 +100,6 @@ onMounted(() => {
     top: 297px;
     left: 420px;
   }
-  .qrcode {
-    width: 186px;
-    position: absolute;
-    top: 1019px;
-    left: 416px;
-  }
 }
 .loading-wrapper {
   position: absolute;
@@ -113,5 +123,27 @@ onMounted(() => {
   left: 50%;
   transform: translateX(-50%);
   color: #ffffff;
+}
+.qrcodes {
+  position: absolute;
+  top: 64px;
+  left: 64px;
+  display: flex;
+  gap: 63px;
+  .qrcode-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 171px;
+    background: black;
+    align-items: center;
+    padding: 12px 0;
+    gap: 8px;
+    .qrcode {
+      width: 143px;
+    }
+    .qrcode-tip {
+      width: 87px;
+    }
+  }
 }
 </style>
