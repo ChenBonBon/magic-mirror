@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import Cursor from "../components/Cursor.vue";
 import Marquee from "../components/Marquee.vue";
 import MainLayout from "../layout/MainLayout.vue";
 import { useAppStore } from "../useAppStore";
@@ -46,6 +47,7 @@ onMounted(() => {
                   alt="Q版照片"
                   class="q-photo-img"
                 />
+                <cursor />
               </div>
             </template>
           </Marquee>
@@ -57,6 +59,7 @@ onMounted(() => {
                   alt="AI照片"
                   class="ai-photo-img"
                 />
+                <cursor />
               </div>
             </template>
           </Marquee>
@@ -68,6 +71,7 @@ onMounted(() => {
                   alt="3D照片"
                   class="three-d-photo-img"
                 />
+                <cursor />
               </div>
             </template>
           </Marquee>
@@ -106,27 +110,30 @@ onMounted(() => {
     z-index: 1;
     .marquees-wrapper {
       position: relative;
-      top: 0;
+      top: 20px;
       transform: rotate(-9deg);
       .q-photo {
+        position: relative;
         width: 800px;
         margin-left: 135px;
         .q-photo-img {
-          width: 100%;
+          width: 800px;
         }
       }
       .ai-photo {
+        position: relative;
         width: 700px;
-        margin: 75px 0 0 calc(100% - 700px);
+        margin: 50px 0 0 calc(100% - 700px);
         .ai-photo-img {
-          width: 100%;
+          width: 700px;
         }
       }
       .three-d-photo {
+        position: relative;
         width: 800px;
         margin: 75px 0 0 -50px;
         .three-d-photo-img {
-          width: 100%;
+          width: 750px;
         }
       }
     }
