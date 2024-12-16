@@ -5,7 +5,6 @@ import Home from "../components/ai-photo/Home.vue";
 import Preview from "../components/ai-photo/Preview.vue";
 import Display from "../components/Display.vue";
 import PageFooter from "../components/PageFooter.vue";
-import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
 import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import Print from "../components/Print.vue";
@@ -32,8 +31,12 @@ function handleNavigate(newStep: number) {
   step.value = newStep;
 }
 
-function handleBack(newStep: number) {
-  step.value = newStep;
+function handleNext() {
+  step.value = step.value + 1;
+}
+
+function handleBack() {
+  step.value = step.value - 1;
 }
 
 async function handleCreateOrder() {
@@ -100,11 +103,12 @@ onBeforeUnmount(() => {
 <template>
   <main-layout>
     <div class="ai-photo">
-      <home v-if="step === 1" @next="handleNavigate(2)" />
+      <home v-if="step === 1" @next="handleNext" />
       <preview
         v-else-if="step === 2"
         title="/images/ai-photo/title.png"
-        @next="handleNavigate(3)"
+        @next="handleNext"
+        @back="handleBack"
       >
         <template #generate-tip>
           <img
@@ -118,6 +122,7 @@ onBeforeUnmount(() => {
         v-else-if="step === 3"
         workflow-type="aiPhoto"
         @print="handleCreateOrder"
+        @back="handleBack"
       />
       <payment
         v-else-if="step === 4"
@@ -132,7 +137,6 @@ onBeforeUnmount(() => {
       <payment-successful v-else-if="step === 5" @next="handlePrint" />
       <print workflow-type="aiPhoto" v-else-if="step === 6" />
       <page-footer v-show="step === 1" />
-      <pagination :step="step" :total="3" @click="handleBack" />
     </div>
   </main-layout>
 </template>

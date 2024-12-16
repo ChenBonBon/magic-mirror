@@ -1,11 +1,28 @@
 <script setup lang="ts">
-defineProps<{
+import { onBeforeUnmount, ref } from "vue";
+
+const props = defineProps<{
   onClick: () => void;
 }>();
+
+const clicked = ref(false);
+
+function handleClick() {
+  if (clicked.value) {
+    return;
+  }
+
+  clicked.value = true;
+  props.onClick();
+}
+
+onBeforeUnmount(() => {
+  clicked.value = false;
+});
 </script>
 
 <template>
-  <div class="photograph" @click="onClick">
+  <div class="photograph" @click="handleClick">
     <div class="camera-wrapper">
       <img src="/images/photograph/camera.png" alt="camera" class="camera" />
     </div>

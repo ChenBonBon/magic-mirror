@@ -1,11 +1,32 @@
 <script setup lang="ts">
-defineProps<{
+import { onBeforeUnmount, ref } from "vue";
+
+const props = defineProps<{
   onClick: () => void;
 }>();
+
+const clicked = ref(false);
+
+function handleClick() {
+  if (clicked.value) {
+    return;
+  }
+
+  clicked.value = true;
+  props.onClick();
+
+  setTimeout(() => {
+    clicked.value = false;
+  }, 1000);
+}
+
+onBeforeUnmount(() => {
+  clicked.value = false;
+});
 </script>
 
 <template>
-  <div class="photograph-confirm" @click="onClick">
+  <div class="photograph-confirm" @click="handleClick">
     <div class="check-wrapper">
       <img
         src="/images/photograph-confirm/check.png"

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { inject, onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
+import { useRouter } from "vue-router";
 import { useCountdown } from "../../hooks/useCountdown";
 import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
 import { closeCamera, openCamera } from "../../utils/camera";
+import Back from "../Back.vue";
 import Camera from "../Camera.vue";
 import Navigator from "../Navigator.vue";
 import PhotographGroup from "../PhotographGroup.vue";
@@ -18,10 +20,15 @@ const clearBackToHome = inject<() => void>("clearBackToHome");
 const cameraRef = useTemplateRef("camera");
 
 const store = useAppStore();
+const router = useRouter();
 const { time, isTiming, start } = useCountdown(5);
 
 const stream = ref();
 const clicked = ref(false);
+
+function handleBack() {
+  router.push("/");
+}
 
 async function handleClickPhotograph() {
   if (isTiming.value) {
@@ -133,6 +140,7 @@ onBeforeUnmount(() => {
     @click-photograph-confirm="handleClickPhotographConfirm"
   />
   <audio v-if="!clicked" src="/audios/take-photo.mp3" autoplay></audio>
+  <back @click="handleBack" />
 </template>
 
 <style lang="less" scoped></style>

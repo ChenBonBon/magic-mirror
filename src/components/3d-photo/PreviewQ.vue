@@ -3,12 +3,14 @@ import { inject, onMounted, ref } from "vue";
 import { generateImage, getImageRecords } from "../../services/photo";
 import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
+import Back from "../Back.vue";
 import Loading from "../Loading.vue";
 import Postures from "../q-photo/Postures.vue";
 
 const props = defineProps<{
   title: string;
   onNext: () => void;
+  onBack: () => void;
 }>();
 
 const startBackToHome = inject<() => void>("startBackToHome");
@@ -18,6 +20,20 @@ const store = useAppStore();
 
 const posture = ref(1);
 const generated = ref(false);
+const clicked = ref(false);
+
+function handleBack() {
+  if (clicked.value) {
+    return;
+  }
+
+  clicked.value = true;
+  props.onBack();
+
+  setTimeout(() => {
+    clicked.value = false;
+  }, 1000);
+}
 
 async function handleNext() {
   await getSessionId("To3d");
@@ -156,6 +172,7 @@ onMounted(() => {
   />
   <audio v-if="generated" src="/audios/3d-preview-q.mp3" autoplay></audio>
   <audio v-else src="/audios/q-preview.mp3" autoplay></audio>
+  <back @click="handleBack" />
 </template>
 
 <style lang="less" scoped>

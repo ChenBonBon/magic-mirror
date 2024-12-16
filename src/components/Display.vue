@@ -1,14 +1,36 @@
 <script setup lang="ts">
+import { onBeforeUnmount, ref } from "vue";
 import { WorkflowType } from "../models/session";
 import { useAppStore } from "../useAppStore";
+import Back from "./Back.vue";
 
-defineProps<{
+const props = defineProps<{
   workflowType: WorkflowType;
   onPrint: () => void;
   onGenerate3D?: () => void;
+  onBack: () => void;
 }>();
 
 const store = useAppStore();
+
+const clicked = ref(false);
+
+function handleBack() {
+  if (clicked.value) {
+    return;
+  }
+
+  clicked.value = true;
+  props.onBack();
+
+  setTimeout(() => {
+    clicked.value = false;
+  }, 1000);
+}
+
+onBeforeUnmount(() => {
+  clicked.value = false;
+});
 </script>
 
 <template>
@@ -77,6 +99,7 @@ const store = useAppStore();
     alt="生成最终Q版照片"
     class="print-tip"
   />
+  <back @click="handleBack" />
 </template>
 
 <style lang="less" scoped>

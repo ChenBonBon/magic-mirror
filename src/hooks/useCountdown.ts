@@ -1,4 +1,4 @@
-import { onUnmounted, ref, unref, watch } from "vue";
+import { onUnmounted, ref, unref } from "vue";
 
 export function useCountdown(duration: number, onCountdownEnd?: () => void) {
   const time = ref(duration);
@@ -30,17 +30,12 @@ export function useCountdown(duration: number, onCountdownEnd?: () => void) {
     timer.value = setInterval(() => {
       if (unref(time) <= 0) {
         reset();
-        console.log("countdown end", time);
         onCountdownEnd && onCountdownEnd();
       } else {
         time.value--;
       }
     }, 1000);
   };
-
-  watch(time, (val) => {
-    console.log(val);
-  });
 
   onUnmounted(() => {
     reset();

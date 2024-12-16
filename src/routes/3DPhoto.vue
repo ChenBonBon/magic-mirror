@@ -5,7 +5,6 @@ import Home from "../components/3d-photo/Home.vue";
 import Preview from "../components/3d-photo/Preview.vue";
 import PreviewQ from "../components/3d-photo/PreviewQ.vue";
 import PageFooter from "../components/PageFooter.vue";
-import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
 import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import MainLayout from "../layout/MainLayout.vue";
@@ -24,8 +23,12 @@ function handleNavigate(newStep: number) {
   step.value = newStep;
 }
 
-function handleBack(newStep: number) {
-  step.value = newStep;
+function handleNext() {
+  step.value = step.value + 1;
+}
+
+function handleBack() {
+  step.value = step.value - 1;
 }
 
 async function handleCreateOrder() {
@@ -66,11 +69,12 @@ onBeforeUnmount(() => {
 <template>
   <main-layout>
     <div class="three-d-photo">
-      <home v-if="step === 1" @next="handleNavigate(2)" />
+      <home v-if="step === 1" @next="handleNext" />
       <preview-q
         v-else-if="step === 2"
         title="/images/q-photo/title.png"
         @next="handleCreateOrder"
+        @back="handleBack"
       >
         <template #generate-tip>
           <img
@@ -113,7 +117,6 @@ onBeforeUnmount(() => {
       </preview>
       <display v-else-if="step === 6" />
       <page-footer v-show="step === 1" />
-      <pagination :step="step" :total="2" @click="handleBack" />
     </div>
   </main-layout>
 </template>

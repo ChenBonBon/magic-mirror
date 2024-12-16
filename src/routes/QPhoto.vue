@@ -5,7 +5,6 @@ import Display3D from "../components/3d-photo/Display.vue";
 import Preview3D from "../components/3d-photo/Preview.vue";
 import Display from "../components/Display.vue";
 import PageFooter from "../components/PageFooter.vue";
-import Pagination from "../components/Pagination.vue";
 import Payment from "../components/Payment.vue";
 import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import Print from "../components/Print.vue";
@@ -36,8 +35,12 @@ function handleNavigate(newStep: number) {
   step.value = newStep;
 }
 
-function handleBack(newStep: number) {
-  step.value = newStep;
+function handleNext() {
+  step.value = step.value + 1;
+}
+
+function handleBack() {
+  step.value = step.value - 1;
 }
 
 async function handleCreatePrintOrder() {
@@ -131,11 +134,12 @@ onBeforeUnmount(() => {
 <template>
   <main-layout>
     <div class="q-photo">
-      <home v-if="step === 1" @next="handleNavigate(2)" />
+      <home v-if="step === 1" @next="handleNext" />
       <preview
         v-else-if="step === 2"
         title="/images/q-photo/title.png"
-        @next="handleNavigate(3)"
+        @next="handleNext"
+        @back="handleBack"
       >
         <template #generate-tip>
           <img
@@ -150,6 +154,7 @@ onBeforeUnmount(() => {
         workflow-type="cute"
         @print="handleCreatePrintOrder"
         @generate3-d="handleCreateGenerate3DOrder"
+        @back="handleBack"
       />
       <payment
         v-else-if="step === 4"
@@ -195,7 +200,6 @@ onBeforeUnmount(() => {
       </Preview3D>
       <Display3D v-else-if="step === 7" />
       <page-footer v-show="step === 1" />
-      <pagination :step="step" :total="3" @click="handleBack" />
     </div>
   </main-layout>
 </template>

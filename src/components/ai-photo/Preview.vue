@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { GenerateRecord } from "../../models/photo";
 import { generateAI, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
+import Back from "../Back.vue";
 import Loading from "../Loading.vue";
 import Attributes, { Gender, Pose } from "./Attributes.vue";
 import Postures from "./Postures.vue";
 
-defineProps<{
+const props = defineProps<{
   title: string;
   onNext: () => void;
+  onBack: () => void;
 }>();
 
 const startBackToHome = inject<() => void>("startBackToHome");
@@ -22,6 +24,7 @@ const posture = ref(0);
 const selectedGender = ref<Gender>("Man");
 const selectedPose = ref<Pose>("pose1");
 const generated = ref(false);
+const clicked = ref(false);
 
 const firstRecord = computed(() => {
   if (store.aiRecords.length > 0) {
@@ -52,6 +55,19 @@ const thirdRecord = computed(() => {
     return store.aiRecords[2].imageUrls[1];
   }
 });
+
+function handleBack() {
+  if (clicked.value) {
+    return;
+  }
+
+  clicked.value = true;
+  props.onBack();
+
+  setTimeout(() => {
+    clicked.value = false;
+  }, 1000);
+}
 
 function setTab(index: string) {
   tab.value = index;
@@ -129,6 +145,10 @@ function handleChangePose(pose: Pose) {
 
 onMounted(() => {
   getHistoryRecords();
+});
+
+onBeforeUnmount(() => {
+  clicked.value = false;
 });
 </script>
 
@@ -221,6 +241,7 @@ onMounted(() => {
   <slot name="generate-tip" />
   <audio v-if="generated" src="/audios/ai-generated.mp3" autoplay></audio>
   <audio v-else src="/audios/ai-preview.mp3" autoplay></audio>
+  <back @click="handleBack" />
 </template>
 
 <style lang="less" scoped>
