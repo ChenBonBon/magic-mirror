@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, onMounted, ref } from "vue";
+import { computed, inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { generate3D, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
@@ -112,6 +112,10 @@ function handleClick(index: number) {
 
 onMounted(() => {
   getHistoryRecords();
+});
+
+onBeforeUnmount(() => {
+  store.stop3DLoading();
 });
 </script>
 

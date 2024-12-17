@@ -24,6 +24,8 @@ const selectedGender = ref<Gender>("Man");
 const selectedPose = ref<Pose>("pose1");
 const generated = ref(false);
 const clicked = ref(false);
+const attributesClicked = ref(false);
+const postureClicked = ref(false);
 const animation = ref(true);
 
 const firstRecord = computed(() => {
@@ -145,6 +147,11 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   clicked.value = false;
+  attributesClicked.value = false;
+  postureClicked.value = false;
+  animation.value = true;
+
+  store.stopAILoading();
 });
 </script>
 
@@ -212,10 +219,16 @@ onBeforeUnmount(() => {
   <attributes
     :gender="selectedGender"
     :pose="selectedPose"
+    @click="attributesClicked = true"
     @change-gender="handleChangeGender"
     @change-pose="handleChangePose"
   />
-  <postures :disabled="store.aiLoading" @click="setPosture" />
+  <postures
+    :disabled="store.aiLoading"
+    :animation="attributesClicked === true"
+    @change="setPosture"
+    @click="postureClicked = true"
+  />
   <div
     class="actions"
     :style="{
@@ -224,7 +237,10 @@ onBeforeUnmount(() => {
     }"
   >
     <div
-      :class="['generate-wrapper', animation ? 'not-clicked' : '']"
+      :class="[
+        'generate-wrapper',
+        animation && attributesClicked && postureClicked ? 'not-clicked' : '',
+      ]"
       v-show="!store.reachMaxAI"
       @click="generate"
     >

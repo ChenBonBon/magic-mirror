@@ -21,6 +21,7 @@ const posture = ref("");
 const generated = ref(false);
 const clicked = ref(false);
 const animation = ref(true);
+const posturesClicked = ref(false);
 
 function handleBack() {
   if (clicked.value) {
@@ -93,6 +94,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   clicked.value = false;
+  store.stopCuteLoading();
 });
 </script>
 
@@ -157,7 +159,11 @@ onBeforeUnmount(() => {
     />
     <div v-else class="third-record disabled">3</div>
   </div>
-  <postures :disabled="store.cuteLoading" @click="setPosture" />
+  <postures
+    :disabled="store.cuteLoading"
+    @change="setPosture"
+    @click="posturesClicked = true"
+  />
   <div
     class="actions"
     :style="{
@@ -166,7 +172,10 @@ onBeforeUnmount(() => {
     }"
   >
     <div
-      :class="['generate-wrapper', animation ? 'not-clicked' : '']"
+      :class="[
+        'generate-wrapper',
+        animation && posturesClicked ? 'not-clicked' : '',
+      ]"
       v-show="!store.reachMaxCute"
       @click="generate"
     >

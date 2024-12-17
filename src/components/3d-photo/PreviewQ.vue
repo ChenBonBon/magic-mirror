@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { inject, onMounted, ref } from "vue";
+import { inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { generateImage, getImageRecords } from "../../services/photo";
 import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
@@ -22,6 +22,7 @@ const posture = ref("");
 const generated = ref(false);
 const clicked = ref(false);
 const animation = ref(true);
+const posturesClicked = ref(false);
 
 function handleBack() {
   if (clicked.value) {
@@ -92,6 +93,10 @@ async function getHistoryRecords() {
 onMounted(() => {
   getHistoryRecords();
 });
+
+onBeforeUnmount(() => {
+  store.stopCuteLoading();
+});
 </script>
 
 <template>
@@ -155,13 +160,20 @@ onMounted(() => {
     />
     <div v-else class="third-record disabled">3</div>
   </div>
-  <postures :disabled="store.cuteLoading" @click="setPosture" />
+  <postures
+    :disabled="store.cuteLoading"
+    @change="setPosture"
+    @click="posturesClicked = true"
+  />
   <div
     class="actions"
     :style="{ justifyContent: store.hasCuteImage ? 'space-between' : 'center' }"
   >
     <div
-      :class="['generate-wrapper', animation ? 'not-clicked' : '']"
+      :class="[
+        'generate-wrapper',
+        animation && posturesClicked ? 'not-clicked' : '',
+      ]"
       @click="generate"
     >
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />

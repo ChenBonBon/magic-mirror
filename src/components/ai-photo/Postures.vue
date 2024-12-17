@@ -5,24 +5,30 @@ import { getAIPostures } from "../../services/photo";
 
 const props = defineProps<{
   disabled: boolean;
-  onClick: (key: string) => void;
+  animation: boolean;
+  onClick: () => void;
+  onChange: (key: string) => void;
 }>();
 
 const activeTab = ref(0);
 const activeKey = ref("");
 const postures = ref<Posture[]>([]);
 const images = ref<Record<string, string>>({});
+const clicked = ref(false);
 
 function handleClickTab(type: number) {
   if (props.disabled) {
     return;
   }
 
+  clicked.value = true;
+
   activeTab.value = type;
   images.value = postures.value.find((item) => item.type === type)!.images;
   activeKey.value = Object.keys(images.value)[0];
 
   handleClickPosture(activeKey.value);
+  props.onClick();
 }
 
 function handleClickPosture(key: string) {
@@ -30,8 +36,11 @@ function handleClickPosture(key: string) {
     return;
   }
 
+  clicked.value = true;
+
   activeKey.value = key;
-  props.onClick(key);
+  props.onChange(key);
+  props.onClick();
 }
 
 async function getData() {
@@ -43,7 +52,7 @@ async function getData() {
     activeTab.value = res[0].type;
     activeKey.value = Object.keys(res[0].images)[0];
 
-    handleClickPosture(activeKey.value);
+    props.onChange(activeKey.value);
   }
 }
 
@@ -53,7 +62,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="postures-wrapper">
+  <div
+    :class="['postures-wrapper', clicked || !animation ? '' : 'not-clicked']"
+  >
     <img
       src="/images/ai-photo/left-arrow.png"
       alt="left-arrow"

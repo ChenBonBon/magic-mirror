@@ -4,11 +4,13 @@ import { getCutePostures } from "../../services/photo";
 
 const props = defineProps<{
   disabled: boolean;
-  onClick: (key: string) => void;
+  onChange: (key: string) => void;
+  onClick: () => void;
 }>();
 
 const activeKey = ref("");
 const images = ref<Record<string, string>>({});
+const clicked = ref(false);
 
 function handleClick(key: string) {
   if (props.disabled) {
@@ -17,7 +19,10 @@ function handleClick(key: string) {
 
   activeKey.value = key;
 
-  props.onClick(key);
+  props.onChange(key);
+
+  clicked.value = true;
+  props.onClick();
 }
 
 async function getData() {
@@ -28,7 +33,7 @@ async function getData() {
 
     activeKey.value = Object.keys(res.images)[0];
 
-    handleClick(activeKey.value);
+    props.onChange(activeKey.value);
   }
 }
 
@@ -38,7 +43,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="postures">
+  <div :class="['postures', clicked ? '' : 'not-clicked']">
     <div class="postures-inner">
       <img
         v-for="(value, key) in images"
@@ -56,7 +61,7 @@ onMounted(() => {
   width: 688px;
   height: 188px;
   background-image: url(/images/q-photo/posture-bg.png);
-  background-size: cover;
+  background-size: 750px 188px;
   background-repeat: no-repeat;
   position: absolute;
   top: 1375px;

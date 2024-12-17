@@ -1,17 +1,31 @@
 <script setup lang="ts">
+import { ref } from "vue";
+
 export type Gender = "Man" | "Woman";
 export type Pose = "pose1" | "pose2";
 
 const props = defineProps<{
   gender: Gender;
   pose: Pose;
+  onClick: () => void;
   onChangeGender: (gender: Gender) => void;
   onChangePose: (pose: Pose) => void;
 }>();
+
+const clicked = ref(false);
+
+function handleClick() {
+  clicked.value = true;
+
+  props.onClick();
+}
 </script>
 
 <template>
-  <div class="attributes">
+  <div
+    :class="['attributes', clicked ? '' : 'not-clicked']"
+    @click="handleClick"
+  >
     <div
       :class="['attribute-wrapper', props.gender === 'Man' ? 'active' : '']"
       @click="onChangeGender('Man')"
