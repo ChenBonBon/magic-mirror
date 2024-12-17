@@ -15,6 +15,7 @@ defineProps<{
     <photograph-confirm
       @click="onClickPhotographConfirm"
       class="photograph-confirm"
+      :visible="showConfirm"
       :style="{ transform: showConfirm ? 'translateX(0)' : 'translateX(100%)' }"
     />
   </div>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onBeforeUnmount } from "vue";
 import { useFadeProgressPercent } from "../hooks/useFadeProgressPercent";
 
 const props = defineProps<{
@@ -6,7 +7,11 @@ const props = defineProps<{
   percentColor?: string;
 }>();
 
-const { percent } = useFadeProgressPercent(props.duration ?? 90);
+const { percent, reset } = useFadeProgressPercent(props.duration ?? 90);
+
+onBeforeUnmount(() => {
+  reset();
+});
 </script>
 
 <template>

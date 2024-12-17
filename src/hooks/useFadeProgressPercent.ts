@@ -2,7 +2,7 @@ import { computed, onMounted } from "vue";
 import { useCountdown } from "./useCountdown";
 
 export function useFadeProgressPercent(duration: number) {
-  const { time, start } = useCountdown(duration);
+  const { time, start, reset } = useCountdown(duration);
 
   // 1 - e^(-5) = 0.9932620530009145
   const alpha = 5;
@@ -17,5 +17,5 @@ export function useFadeProgressPercent(duration: number) {
     start();
   });
 
-  return { percent };
+  return { percent, reset };
 }

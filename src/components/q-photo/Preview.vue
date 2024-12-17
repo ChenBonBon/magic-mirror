@@ -20,6 +20,7 @@ const store = useAppStore();
 const posture = ref("");
 const generated = ref(false);
 const clicked = ref(false);
+const animation = ref(true);
 
 function handleBack() {
   if (clicked.value) {
@@ -50,6 +51,7 @@ async function generate() {
   if (store.hasPhoto) {
     store.startCuteLoading();
     clearBackToHome && clearBackToHome();
+    animation.value = false;
 
     const res = await generateImage(store.photo!, posture.value);
 
@@ -164,13 +166,17 @@ onBeforeUnmount(() => {
     }"
   >
     <div
-      class="generate-wrapper"
+      :class="['generate-wrapper', animation ? 'not-clicked' : '']"
       v-show="!store.reachMaxCute"
       @click="generate"
     >
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
     </div>
-    <div class="next-wrapper" v-show="store.hasCuteImage" @click="onNext">
+    <div
+      class="next-wrapper not-clicked"
+      v-show="store.hasCuteImage"
+      @click="onNext"
+    >
       <img src="/images/q-photo/next.png" alt="下一步" class="next" />
     </div>
   </div>

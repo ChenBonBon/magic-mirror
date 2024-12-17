@@ -2,10 +2,12 @@
 import { onBeforeUnmount, ref } from "vue";
 
 const props = defineProps<{
+  visible: boolean;
   onClick: () => void;
 }>();
 
 const clicked = ref(false);
+const animation = ref(true);
 
 function handleClick() {
   if (clicked.value) {
@@ -13,6 +15,8 @@ function handleClick() {
   }
 
   clicked.value = true;
+  animation.value = false;
+
   props.onClick();
 
   setTimeout(() => {
@@ -26,7 +30,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="photograph-confirm" @click="handleClick">
+  <div
+    :class="['photograph-confirm', visible && animation ? 'not-clicked' : '']"
+    @click="handleClick"
+  >
     <div class="check-wrapper">
       <img
         src="/images/photograph-confirm/check.png"

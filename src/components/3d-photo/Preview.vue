@@ -17,6 +17,7 @@ const store = useAppStore();
 
 const selectedImage = ref(store.cuteImage);
 const generated = ref(false);
+const animation = ref(true);
 
 const firstRecordStyle = computed(() => {
   if (store.cuteRecords.length === 1) {
@@ -66,6 +67,7 @@ async function generate() {
   if (selectedImage.value) {
     store.start3DLoading();
     clearBackToHome && clearBackToHome();
+    animation.value = false;
 
     const res = await generate3D(selectedImage.value);
 
@@ -222,10 +224,18 @@ onMounted(() => {
         store.has3DImage && !store.reachMax3D ? 'space-between' : 'center',
     }"
   >
-    <div class="generate-wrapper" v-show="!store.reachMax3D" @click="generate">
+    <div
+      :class="['generate-wrapper', animation ? 'not-clicked' : '']"
+      v-show="!store.reachMax3D"
+      @click="generate"
+    >
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
     </div>
-    <div class="next-wrapper" v-show="store.has3DImage" @click="onNext">
+    <div
+      class="next-wrapper not-clicked"
+      v-show="store.has3DImage"
+      @click="onNext"
+    >
       <img src="/images/q-photo/next.png" alt="下一步" class="next" />
     </div>
   </div>

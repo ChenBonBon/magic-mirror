@@ -84,11 +84,11 @@ onBeforeUnmount(() => {
     alt="display-bottom-left"
     class="bottom-left"
   />
-  <div class="print-wrapper" @click="onPrint">
+  <div class="print-wrapper not-clicked" @click="onPrint">
     <img src="/images/display/print.png" alt="打印" class="print" />
   </div>
   <div
-    class="print-wrapper"
+    class="print-wrapper not-clicked"
     v-show="workflowType === 'cute'"
     @click="onGenerate3D"
   >
