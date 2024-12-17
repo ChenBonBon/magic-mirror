@@ -14,6 +14,10 @@ function handleClick() {
 
   clicked.value = true;
   props.onClick();
+
+  setTimeout(() => {
+    clicked.value = false;
+  }, 1000);
 }
 
 onBeforeUnmount(() => {
@@ -22,7 +26,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="photograph" @click="handleClick">
+  <div
+    :class="['photograph', clicked ? '' : 'not-clicked']"
+    @click="handleClick"
+  >
     <div class="camera-wrapper">
       <img src="/images/photograph/camera.png" alt="camera" class="camera" />
     </div>
@@ -41,6 +48,9 @@ onBeforeUnmount(() => {
 .photograph {
   display: flex;
   align-items: center;
+  &.not-clicked {
+    animation: resize 1s linear infinite;
+  }
   .camera-wrapper {
     position: relative;
     width: 147px;
@@ -72,6 +82,18 @@ onBeforeUnmount(() => {
     .text-cn {
       width: 52px;
     }
+  }
+}
+
+@keyframes resize {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
