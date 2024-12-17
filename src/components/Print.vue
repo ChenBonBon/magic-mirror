@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from "vue";
+import { onMounted } from "vue";
 import VueQrcode from "vue-qrcode";
 import { useRouter } from "vue-router";
 import { WorkflowType } from "../models/session";
@@ -20,7 +20,6 @@ onMounted(() => {
     handleBack();
   }, 15000);
 });
-
 </script>
 
 <template>
