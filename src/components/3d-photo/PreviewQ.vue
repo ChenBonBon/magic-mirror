@@ -18,7 +18,7 @@ const clearBackToHome = inject<() => void>("clearBackToHome");
 
 const store = useAppStore();
 
-const posture = ref(1);
+const posture = ref("");
 const generated = ref(false);
 const clicked = ref(false);
 
@@ -40,8 +40,8 @@ async function handleNext() {
   props.onNext();
 }
 
-function setPosture(index: number) {
-  posture.value = index;
+function setPosture(key: string) {
+  posture.value = key;
 }
 
 async function generate() {
@@ -172,7 +172,7 @@ onMounted(() => {
   />
   <audio v-if="generated" src="/audios/3d-preview-q.mp3" autoplay></audio>
   <audio v-else src="/audios/q-preview.mp3" autoplay></audio>
-  <back @click="handleBack" />
+  <back :disabled="store.cuteLoading" @click="handleBack" />
 </template>
 
 <style lang="less" scoped>

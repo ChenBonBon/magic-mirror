@@ -1,66 +1,55 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { Posture } from "../../models/photo";
+import { getAIPostures } from "../../services/photo";
 
 const props = defineProps<{
   disabled: boolean;
-  onClickTab: (key: string) => void;
-  onClickPosture: (index: number) => void;
+  onClick: (key: string) => void;
 }>();
 
-const activeTab = ref("Movies");
-const activeIndex = ref(0);
+const activeTab = ref(0);
+const activeKey = ref("");
+const postures = ref<Posture[]>([]);
+const images = ref<Record<string, string>>({});
 
-const tabs = [
-  { title: "电影", key: "Movies" },
-  { title: "动漫", key: "Cartoons" },
-  { title: "游戏", key: "Games" },
-];
-
-const postures: Record<string, string[]> = {
-  Movies: [
-    "/images/ai-photo/tab-1/1.png",
-    "/images/ai-photo/tab-1/2.png",
-    "/images/ai-photo/tab-1/3.png",
-    "/images/ai-photo/tab-1/4.png",
-    "/images/ai-photo/tab-1/5.png",
-  ],
-  Cartoons: [
-    "/images/ai-photo/tab-2/1.png",
-    "/images/ai-photo/tab-2/2.png",
-    "/images/ai-photo/tab-2/3.png",
-    "/images/ai-photo/tab-2/4.png",
-    "/images/ai-photo/tab-2/5.png",
-    "/images/ai-photo/tab-2/6.png",
-  ],
-  Games: [
-    "/images/ai-photo/tab-3/1.png",
-    "/images/ai-photo/tab-3/2.png",
-    "/images/ai-photo/tab-3/3.png",
-    "/images/ai-photo/tab-3/4.png",
-    "/images/ai-photo/tab-3/5.png",
-    "/images/ai-photo/tab-3/6.png",
-    "/images/ai-photo/tab-3/7.png",
-  ],
-};
-
-function handleClickTab(key: string) {
+function handleClickTab(type: number) {
   if (props.disabled) {
     return;
   }
 
-  activeIndex.value = 0;
-  activeTab.value = key;
-  props.onClickTab(key);
+  activeTab.value = type;
+  images.value = postures.value.find((item) => item.type === type)!.images;
+  activeKey.value = Object.keys(images.value)[0];
+
+  handleClickPosture(activeKey.value);
 }
 
-function handleClickPosture(index: number) {
+function handleClickPosture(key: string) {
   if (props.disabled) {
     return;
   }
 
-  activeIndex.value = index;
-  props.onClickPosture(index);
+  activeKey.value = key;
+  props.onClick(key);
 }
+
+async function getData() {
+  const res = await getAIPostures();
+
+  if (res) {
+    postures.value = res;
+    images.value = res[0].images;
+    activeTab.value = res[0].type;
+    activeKey.value = Object.keys(res[0].images)[0];
+
+    handleClickPosture(activeKey.value);
+  }
+}
+
+onMounted(() => {
+  getData();
+});
 </script>
 
 <template>
@@ -72,10 +61,10 @@ function handleClickPosture(index: number) {
     />
     <div class="tabs">
       <div
-        :class="['tab', activeTab === tab.key ? 'active' : '']"
-        v-for="(tab, index) in tabs"
+        v-for="(tab, index) in postures"
+        :class="['tab', activeTab === tab.type ? 'active' : '']"
         :key="'tab-' + index"
-        @click="handleClickTab(tab.key)"
+        @click="handleClickTab(tab.type)"
       >
         <span class="tab-text">{{ tab.title }}</span>
       </div>
@@ -83,12 +72,11 @@ function handleClickPosture(index: number) {
     <div class="postures">
       <div class="postures-inner">
         <div
-          v-for="(item, index) in postures[activeTab]"
-          :key="'posture-' + index"
-          :class="['posture-wrapper', activeIndex === index ? 'active' : '']"
-          @click="handleClickPosture(index)"
+          v-for="(value, key) in images"
+          :class="['posture-wrapper', activeKey === key ? 'active' : '']"
+          @click="handleClickPosture(key)"
         >
-          <img :src="item" :alt="item" class="posture" />
+          <img :src="value" :alt="value" class="posture" />
         </div>
       </div>
     </div>
@@ -119,25 +107,28 @@ function handleClickPosture(index: number) {
   }
   .tabs {
     position: absolute;
-    top: 0;
-    left: 149px;
+    top: -22px;
+    left: 120px;
     display: flex;
     align-items: flex-start;
     gap: 20px;
+    overflow: auto;
+    max-width: 700px;
     .tab {
       width: 149px;
-      height: 38px;
+      height: 60px;
       background-image: url("/images/ai-photo/tab.png");
-      background-size: cover;
+      background-size: 149px 60px;
       background-repeat: no-repeat;
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-shrink: 0;
       &.active {
         background-image: url("/images/ai-photo/tab-active.png");
-        background-size: cover;
+        background-size: 149px 65px;
         background-repeat: no-repeat;
-        height: 43px;
+        height: 65px;
       }
       .tab-text {
         font-size: 24px;

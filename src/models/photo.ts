@@ -20,3 +20,9 @@ export interface Generate3DRecord {
 export interface Generate3DResponse extends Generate3DRecord {
   history: Generate3DRecord[];
 }
+
+export interface Posture {
+  type: number;
+  title: string;
+  images: Record<string, string>;
+}

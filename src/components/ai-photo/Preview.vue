@@ -19,8 +19,7 @@ const clearBackToHome = inject<() => void>("clearBackToHome");
 
 const store = useAppStore();
 
-const tab = ref("Movies");
-const posture = ref(0);
+const posture = ref("");
 const selectedGender = ref<Gender>("Man");
 const selectedPose = ref<Pose>("pose1");
 const generated = ref(false);
@@ -69,12 +68,8 @@ function handleBack() {
   }, 1000);
 }
 
-function setTab(index: string) {
-  tab.value = index;
-}
-
-function setPosture(index: number) {
-  posture.value = index;
+function setPosture(key: string) {
+  posture.value = key;
 }
 
 async function generate() {
@@ -92,8 +87,7 @@ async function generate() {
 
     const res = await generateAI(
       store.photo!,
-      tab.value,
-      posture.value + 1,
+      posture.value,
       selectedGender.value
     );
 
@@ -219,11 +213,7 @@ onBeforeUnmount(() => {
     @change-gender="handleChangeGender"
     @change-pose="handleChangePose"
   />
-  <postures
-    :disabled="store.aiLoading"
-    @click-tab="setTab"
-    @click-posture="setPosture"
-  />
+  <postures :disabled="store.aiLoading" @click="setPosture" />
   <div
     class="actions"
     :style="{
@@ -241,7 +231,7 @@ onBeforeUnmount(() => {
   <slot name="generate-tip" />
   <audio v-if="generated" src="/audios/ai-generated.mp3" autoplay></audio>
   <audio v-else src="/audios/ai-preview.mp3" autoplay></audio>
-  <back @click="handleBack" />
+  <back :disabled="store.aiLoading" @click="handleBack" />
 </template>
 
 <style lang="less" scoped>

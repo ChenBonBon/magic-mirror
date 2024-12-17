@@ -140,7 +140,7 @@ onBeforeUnmount(() => {
     @click-photograph-confirm="handleClickPhotographConfirm"
   />
   <audio v-if="!clicked" src="/audios/take-photo.mp3" autoplay></audio>
-  <back @click="handleBack" />
+  <back :disabled="isTiming" @click="handleBack" />
 </template>
 
 <style lang="less" scoped></style>

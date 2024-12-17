@@ -5,16 +5,17 @@ import {
   Generate3DResponse,
   GenerateRecord,
   GenerateResponse,
+  Posture,
 } from "../models/photo";
 
-export async function generateImage(image: Blob, styleIndex: number) {
+export async function generateImage(image: Blob, key: string) {
   const res = await http.post<HTTPResponse<GenerateResponse>>(
     "/image/generate",
     {
       clientId: window.localStorage.getItem("magic-mirror-sessionId"),
       workflowType: "cute",
       image,
-      "params[STYLE]": "STYLE_" + styleIndex,
+      "params[STYLE]": key,
     },
     {
       headers: {
@@ -28,19 +29,14 @@ export async function generateImage(image: Blob, styleIndex: number) {
   }
 }
 
-export async function generateAI(
-  image: Blob,
-  tab: string,
-  styleIndex: number,
-  gender: Gender
-) {
+export async function generateAI(image: Blob, key: string, gender: Gender) {
   const res = await http.post<HTTPResponse<GenerateResponse>>(
     "/image/generate",
     {
       clientId: window.localStorage.getItem("magic-mirror-sessionId"),
       workflowType: "aiPhoto",
       image,
-      "params[STYLE]": tab + "_" + styleIndex,
+      "params[STYLE]": key,
       gender,
     },
     {
@@ -79,6 +75,22 @@ export async function getImageRecords() {
   const res = await http.get<HTTPResponse<GenerateRecord[]>>(
     "/session/history"
   );
+
+  if (res.data && res.data.code === 200) {
+    return res.data.data;
+  }
+}
+
+export async function getCutePostures() {
+  const res = await http.get<HTTPResponse<Posture>>("/categories/cute");
+
+  if (res.data && res.data.code === 200) {
+    return res.data.data;
+  }
+}
+
+export async function getAIPostures() {
+  const res = await http.get<HTTPResponse<Posture[]>>("/categories/ai");
 
   if (res.data && res.data.code === 200) {
     return res.data.data;

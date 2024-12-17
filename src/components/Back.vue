@@ -1,11 +1,20 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
+  disabled?: boolean;
   onClick: () => void;
 }>();
+
+function handleClick() {
+  if (props.disabled) {
+    return;
+  }
+
+  props.onClick();
+}
 </script>
 
 <template>
-  <div class="back" @click="onClick">
+  <div class="back" @click="handleClick">
     <svg
       t="1734327771615"
       class="icon"

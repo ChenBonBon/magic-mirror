@@ -1,34 +1,53 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { getCutePostures } from "../../services/photo";
 
 const props = defineProps<{
   disabled: boolean;
-  onClick: (index: number) => void;
+  onClick: (key: string) => void;
 }>();
 
-const activeIndex = ref(1);
+const activeKey = ref("");
+const images = ref<Record<string, string>>({});
 
-function handleClick(index: number) {
+function handleClick(key: string) {
   if (props.disabled) {
     return;
   }
 
-  activeIndex.value = index;
+  activeKey.value = key;
 
-  props.onClick(index);
+  props.onClick(key);
 }
+
+async function getData() {
+  const res = await getCutePostures();
+
+  if (res) {
+    images.value = res.images;
+
+    activeKey.value = Object.keys(res.images)[0];
+
+    handleClick(activeKey.value);
+  }
+}
+
+onMounted(() => {
+  getData();
+});
 </script>
 
 <template>
   <div class="postures">
-    <img
-      v-for="i in 5"
-      :key="'posture-' + i"
-      :src="'/images/q-photo/posture-' + i + '.png'"
-      :alt="'posture-' + i"
-      :class="['posture', activeIndex === i ? 'active' : '']"
-      @click="handleClick(i)"
-    />
+    <div class="postures-inner">
+      <img
+        v-for="(value, key) in images"
+        :src="value"
+        :alt="value"
+        :class="['posture', activeKey === key ? 'active' : '']"
+        @click="handleClick(key)"
+      />
+    </div>
   </div>
 </template>
 
@@ -43,14 +62,21 @@ function handleClick(index: number) {
   top: 1375px;
   left: 132px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0 64px;
-  .posture {
-    border: 10px solid transparent;
-    height: 112px;
-    &.active {
-      border-color: #ffffff;
+  padding: 0px 36px;
+  .postures-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    width: 780px;
+    overflow: auto;
+    .posture {
+      border: 10px solid transparent;
+      height: 112px;
+      &.active {
+        border-color: #ffffff;
+      }
     }
   }
 }
