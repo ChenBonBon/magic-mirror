@@ -88,6 +88,8 @@ async function generate() {
     store.startAILoading();
     clearBackToHome && clearBackToHome();
     animation.value = false;
+    attributesClicked.value = true;
+    postureClicked.value = true;
 
     const res = await generateAI(
       store.photo!,
@@ -139,6 +141,11 @@ function handleChangeGender(gender: Gender) {
 
 function handleChangePose(pose: Pose) {
   selectedPose.value = pose;
+}
+
+function handleClickPosture() {
+  attributesClicked.value = true;
+  postureClicked.value = true;
 }
 
 onMounted(() => {
@@ -227,7 +234,7 @@ onBeforeUnmount(() => {
     :disabled="store.aiLoading"
     :animation="attributesClicked === true"
     @change="setPosture"
-    @click="postureClicked = true"
+    @click="handleClickPosture"
   />
   <div
     class="actions"

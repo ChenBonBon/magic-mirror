@@ -53,6 +53,7 @@ async function generate() {
     store.startCuteLoading();
     clearBackToHome && clearBackToHome();
     animation.value = false;
+    posturesClicked.value = true;
 
     const res = await generateImage(store.photo!, posture.value);
 
@@ -93,8 +94,10 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-  clicked.value = false;
   store.stopCuteLoading();
+  clicked.value = false;
+  posturesClicked.value = false;
+  animation.value = true;
 });
 </script>
 
