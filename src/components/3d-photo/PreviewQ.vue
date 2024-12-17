@@ -166,6 +166,7 @@ onBeforeUnmount(() => {
   </div>
   <postures
     :disabled="store.cuteLoading"
+    :animation="!posturesClicked"
     @change="setPosture"
     @click="posturesClicked = true"
   />

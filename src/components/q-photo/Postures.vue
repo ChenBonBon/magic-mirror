@@ -4,6 +4,7 @@ import { getCutePostures } from "../../services/photo";
 
 const props = defineProps<{
   disabled: boolean;
+  animation?: boolean;
   onChange: (key: string) => void;
   onClick: () => void;
 }>();
@@ -43,7 +44,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="['postures', clicked ? '' : 'not-clicked']">
+  <div :class="['postures', clicked || !animation ? '' : 'not-clicked']">
     <div class="postures-inner">
       <img
         v-for="(value, key) in images"

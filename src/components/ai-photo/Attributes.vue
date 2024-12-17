@@ -7,6 +7,7 @@ export type Pose = "pose1" | "pose2";
 const props = defineProps<{
   gender: Gender;
   pose: Pose;
+  animation?: boolean;
   onClick: () => void;
   onChangeGender: (gender: Gender) => void;
   onChangePose: (pose: Pose) => void;
@@ -23,7 +24,7 @@ function handleClick() {
 
 <template>
   <div
-    :class="['attributes', clicked ? '' : 'not-clicked']"
+    :class="['attributes', clicked || !animation ? '' : 'not-clicked']"
     @click="handleClick"
   >
     <div

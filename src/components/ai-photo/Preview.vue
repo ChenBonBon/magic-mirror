@@ -226,13 +226,14 @@ onBeforeUnmount(() => {
   <attributes
     :gender="selectedGender"
     :pose="selectedPose"
+    :animation="!attributesClicked"
     @click="attributesClicked = true"
     @change-gender="handleChangeGender"
     @change-pose="handleChangePose"
   />
   <postures
     :disabled="store.aiLoading"
-    :animation="attributesClicked === true"
+    :animation="attributesClicked && !postureClicked"
     @change="setPosture"
     @click="handleClickPosture"
   />
