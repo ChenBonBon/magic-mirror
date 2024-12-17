@@ -16,9 +16,9 @@ function handleBack() {
 }
 
 onMounted(() => {
-  // setTimeout(() => {
-  //   handleBack();
-  // }, 15000);
+  setTimeout(() => {
+    handleBack();
+  }, 15000);
 });
 </script>
 
@@ -32,11 +32,7 @@ onMounted(() => {
           :color="{ dark: '#000000ff', light: '#ffffffff' }"
           type="image/png"
         />
-        <img
-          src="/images/3d-photo/qrcode-display.png"
-          alt="qrcode"
-          class="qrcode-tip"
-        />
+        <img src="/images/question-tip.png" alt="qrcode" class="qrcode-tip" />
       </div>
     </div>
     <img

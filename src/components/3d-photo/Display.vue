@@ -77,11 +77,7 @@ const qrcode = computed(() => {
         :color="{ dark: '#000000ff', light: '#ffffffff' }"
         type="image/png"
       />
-      <img
-        src="/images/3d-photo/qrcode-display.png"
-        alt="qrcode"
-        class="qrcode-tip"
-      />
+      <img src="/images/question-tip.png" alt="qrcode" class="qrcode-tip" />
     </div>
   </div>
   <div class="effect-display-photo-wrapper">
