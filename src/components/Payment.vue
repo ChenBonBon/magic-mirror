@@ -16,7 +16,7 @@ const startTime = new Date().getTime();
 let intervalId: number;
 
 async function getPaymentStatus() {
-  if (new Date().getTime() - startTime > 60 * 1000) {
+  if (new Date().getTime() - startTime > 120 * 1000) {
     clearInterval(intervalId);
     props.onPrev();
   }
