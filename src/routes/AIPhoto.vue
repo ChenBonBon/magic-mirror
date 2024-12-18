@@ -13,7 +13,6 @@ import { createOrder } from "../services/order";
 import { print } from "../services/print";
 import { useAppStore } from "../useAppStore";
 
-const startBackToHome = inject<() => void>("startBackToHome");
 const clearBackToHome = inject<() => void>("clearBackToHome");
 const resetBackToHome = inject<() => void>("resetBackToHome");
 
@@ -88,8 +87,6 @@ function handleReset() {
 }
 
 onMounted(() => {
-  startBackToHome && startBackToHome();
-
   document.addEventListener("click", handleReset);
 });
 

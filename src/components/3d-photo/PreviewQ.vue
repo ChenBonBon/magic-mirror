@@ -93,6 +93,8 @@ async function getHistoryRecords() {
 
 onMounted(() => {
   getHistoryRecords();
+
+  startBackToHome && startBackToHome();
 });
 
 onBeforeUnmount(() => {
@@ -100,6 +102,8 @@ onBeforeUnmount(() => {
   clicked.value = false;
   posturesClicked.value = false;
   animation.value = true;
+
+  clearBackToHome && clearBackToHome();
 });
 </script>
 

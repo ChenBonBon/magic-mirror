@@ -112,10 +112,14 @@ function handleClick(index: number) {
 
 onMounted(() => {
   getHistoryRecords();
+
+  startBackToHome && startBackToHome();
 });
 
 onBeforeUnmount(() => {
   store.stop3DLoading();
+
+  clearBackToHome && clearBackToHome();
 });
 </script>
 

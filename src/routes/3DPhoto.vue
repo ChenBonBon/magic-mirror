@@ -10,7 +10,6 @@ import PaymentSuccessful from "../components/PaymentSuccessful.vue";
 import MainLayout from "../layout/MainLayout.vue";
 import { createOrder } from "../services/order";
 
-const startBackToHome = inject<() => void>("startBackToHome");
 const clearBackToHome = inject<() => void>("clearBackToHome");
 const resetBackToHome = inject<() => void>("resetBackToHome");
 
@@ -54,8 +53,6 @@ function handleReset() {
 }
 
 onMounted(() => {
-  startBackToHome && startBackToHome();
-
   document.addEventListener("click", handleReset);
 });
 

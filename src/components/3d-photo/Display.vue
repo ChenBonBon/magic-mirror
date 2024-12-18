@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, inject, onBeforeUnmount, onMounted } from "vue";
 import VueQrcode from "vue-qrcode";
 import { useRouter } from "vue-router";
 import { useAppStore } from "../../useAppStore";
@@ -14,6 +14,9 @@ let baseURL = protocol + "://" + host;
 if (port) {
   baseURL += ":" + port;
 }
+
+const startBackToHome = inject<(time?: number) => void>("startBackToHome");
+const clearBackToHome = inject<() => void>("clearBackToHome");
 
 const store = useAppStore();
 
@@ -43,6 +46,14 @@ const qrcode = computed(() => {
   }
 
   return "";
+});
+
+onMounted(() => {
+  startBackToHome && startBackToHome(180000);
+});
+
+onBeforeUnmount(() => {
+  clearBackToHome && clearBackToHome();
 });
 </script>
 

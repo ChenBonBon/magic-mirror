@@ -150,6 +150,8 @@ function handleClickPosture() {
 
 onMounted(() => {
   getHistoryRecords();
+
+  startBackToHome && startBackToHome();
 });
 
 onBeforeUnmount(() => {
@@ -159,6 +161,8 @@ onBeforeUnmount(() => {
   animation.value = true;
 
   store.stopAILoading();
+
+  clearBackToHome && clearBackToHome();
 });
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from "vue";
+import { inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { WorkflowType } from "../models/session";
 import { useAppStore } from "../useAppStore";
 import Back from "./Back.vue";
@@ -10,6 +10,9 @@ const props = defineProps<{
   onGenerate3D?: () => void;
   onBack: () => void;
 }>();
+
+const startBackToHome = inject<() => void>("startBackToHome");
+const clearBackToHome = inject<() => void>("clearBackToHome");
 
 const store = useAppStore();
 
@@ -28,8 +31,14 @@ function handleBack() {
   }, 1000);
 }
 
+onMounted(() => {
+  startBackToHome && startBackToHome();
+});
+
 onBeforeUnmount(() => {
   clicked.value = false;
+
+  clearBackToHome && clearBackToHome();
 });
 </script>
 

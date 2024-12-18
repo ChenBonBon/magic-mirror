@@ -1,11 +1,24 @@
 <script setup lang="ts">
+import { inject, onBeforeUnmount, onMounted } from "vue";
+
 const props = defineProps<{
   onNext: () => void;
 }>();
 
+const startBackToHome = inject<() => void>("startBackToHome");
+const clearBackToHome = inject<() => void>("clearBackToHome");
+
 function handleClick() {
   props.onNext();
 }
+
+onMounted(() => {
+  startBackToHome && startBackToHome();
+});
+
+onBeforeUnmount(() => {
+  clearBackToHome && clearBackToHome();
+});
 </script>
 
 <template>

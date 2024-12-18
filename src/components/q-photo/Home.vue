@@ -105,6 +105,8 @@ onMounted(async () => {
   if (cameraRef.value && cameraRef.value.video) {
     stream.value = await openCamera(cameraRef.value.video);
   }
+
+  startBackToHome && startBackToHome();
 });
 
 onBeforeUnmount(() => {
@@ -113,6 +115,8 @@ onBeforeUnmount(() => {
   }
 
   clicked.value = false;
+
+  clearBackToHome && clearBackToHome();
 });
 </script>
 

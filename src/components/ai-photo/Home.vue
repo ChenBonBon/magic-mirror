@@ -102,12 +102,16 @@ onMounted(async () => {
   if (cameraRef.value && cameraRef.value.video) {
     stream.value = await openCamera(cameraRef.value.video);
   }
+
+  startBackToHome && startBackToHome();
 });
 
 onBeforeUnmount(() => {
   if (stream.value) {
     closeCamera(stream.value);
   }
+
+  clearBackToHome && clearBackToHome();
 });
 </script>
 

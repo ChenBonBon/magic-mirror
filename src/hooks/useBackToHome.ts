@@ -2,7 +2,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const backToHomeTimeConf = import.meta.env.VITE_BACK_TO_HOME_TIME;
-const backToHomeTime = backToHomeTimeConf
+let backToHomeTime = backToHomeTimeConf
   ? parseInt(backToHomeTimeConf, 10)
   : 60000;
 
@@ -23,8 +23,11 @@ export default function useBackToHome() {
     }
   };
 
-  function start() {
+  function start(time?: number) {
     startTime.value = Date.now();
+    if (time) {
+      backToHomeTime = time;
+    }
     raf = requestAnimationFrame(backToHome);
   }
 

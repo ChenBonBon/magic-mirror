@@ -18,7 +18,7 @@ function handleBack() {
 onMounted(() => {
   setTimeout(() => {
     handleBack();
-  }, 15000);
+  }, 120000);
 });
 </script>
 
