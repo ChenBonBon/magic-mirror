@@ -57,7 +57,7 @@ onMounted(() => {
       回到首页
     </button>
     <div class="loading-wrapper">
-      <loading percent-color="#000000" :duration="15">
+      <loading percent-color="#000000" :duration="120">
         <template #loading-bar>
           <img
             :src="
