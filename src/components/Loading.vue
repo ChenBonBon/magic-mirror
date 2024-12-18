@@ -5,9 +5,13 @@ import { useFadeProgressPercent } from "../hooks/useFadeProgressPercent";
 const props = defineProps<{
   duration?: number;
   percentColor?: string;
+  onCountdownEnd?: () => void;
 }>();
 
-const { percent, reset } = useFadeProgressPercent(props.duration ?? 90);
+const { percent, reset } = useFadeProgressPercent(
+  props.duration ?? 90,
+  props.onCountdownEnd
+);
 
 onBeforeUnmount(() => {
   reset();

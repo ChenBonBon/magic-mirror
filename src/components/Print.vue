@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import VueQrcode from "vue-qrcode";
 import { useRouter } from "vue-router";
 import { WorkflowType } from "../models/session";
@@ -11,8 +11,14 @@ defineProps<{
 
 const router = useRouter();
 
+const completed = ref(false);
+
 function handleBack() {
   router.push("/");
+}
+
+function handleCountdownEnd() {
+  completed.value = true;
 }
 
 onMounted(() => {
@@ -36,16 +42,33 @@ onMounted(() => {
       </div>
     </div>
     <img
+      v-if="!completed"
       src="/images/print/printing-en.png"
       alt="PRINTING IN PROGRESS"
       class="printing-en"
     />
+    <div class="successful-outer" v-if="completed">
+      <div class="successful-wrapper">
+        <img
+          src="/images/print/printing-complete.png"
+          alt="PRINTING IS COMPLETE"
+          class="successful-en"
+        />
+        <img
+          src="/images/print/printing-complete-cn.png"
+          alt="打印完成"
+          class="successful-cn"
+        />
+      </div>
+    </div>
     <img
+      v-else
       src="/images/print/printing-cn.png"
       alt="打印中 ······"
       class="printing-cn"
     />
     <button
+      v-if="completed"
       class="back-btn"
       :style="
         workflowType === 'cute'
@@ -56,8 +79,12 @@ onMounted(() => {
     >
       回到首页
     </button>
-    <div class="loading-wrapper">
-      <loading percent-color="#000000" :duration="120">
+    <div class="loading-wrapper" v-if="!completed">
+      <loading
+        percent-color="#000000"
+        :duration="20"
+        @countdown-end="handleCountdownEnd"
+      >
         <template #loading-bar>
           <img
             :src="
@@ -139,6 +166,37 @@ onMounted(() => {
     }
     .qrcode-tip {
       width: 87px;
+    }
+  }
+}
+.successful-outer {
+  width: 576px;
+  height: 562px;
+  position: absolute;
+  top: 261px;
+  left: 218px;
+  background-image: url("/images/payment/stars.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  .successful-wrapper {
+    width: 491px;
+    height: 473px;
+    position: absolute;
+    top: 66px;
+    left: 47px;
+    background-image: url("/images/payment/successful-wrapper.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 22px;
+    .successful-en {
+      width: 320px;
+    }
+    .successful-cn {
+      width: 310px;
     }
   }
 }
