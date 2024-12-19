@@ -77,8 +77,6 @@ const renderThree = () => {
   controls.dampingFactor = 0.05;
   controls.enablePan = false;
   controls.enableZoom = false;
-  controls.minPolarAngle = Math.PI / 2;
-  controls.maxPolarAngle = Math.PI / 2;
 
   // 初始化模型加载器
   const loader = new GLTFLoader();
