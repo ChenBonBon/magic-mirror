@@ -119,12 +119,16 @@ function handleReset() {
 
 onMounted(() => {
   document.addEventListener("click", handleReset);
+  document.addEventListener("touchstart", handleReset);
+  document.addEventListener("touchmove", handleReset);
 });
 
 onBeforeUnmount(() => {
   clearBackToHome && clearBackToHome();
 
   document.removeEventListener("click", handleReset);
+  document.removeEventListener("touchstart", handleReset);
+  document.removeEventListener("touchmove", handleReset);
 });
 </script>
 
