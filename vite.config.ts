@@ -11,7 +11,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/print/, ""),
       },
       "/api": {
-        target: "http://124.71.184.255:9157",
+        target: "http://hfotion.cn:20005",
         changeOrigin: true,
       },
     },

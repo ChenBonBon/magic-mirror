@@ -33,7 +33,6 @@ export default function useBackToHome() {
 
   function reset() {
     startTime.value = Date.now();
-    console.log("reset");
   }
 
   function clear() {
