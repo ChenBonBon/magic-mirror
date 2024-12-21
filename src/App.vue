@@ -32,7 +32,7 @@ onMounted(() => {
       }
       lastTouchEnd = now;
     },
-    false
+    { passive: false, capture: false }
   );
   // 阻止双指放大
   document.addEventListener("gesturestart", function (event) {
