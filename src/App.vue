@@ -13,11 +13,16 @@ provide("resetBackToHome", reset);
 onMounted(() => {
   // 阻止双击放大
   var lastTouchEnd = 0;
-  document.addEventListener("touchstart", function (event) {
-    if (event.touches.length > 1) {
-      event.preventDefault();
-    }
-  });
+  document.addEventListener(
+    "touchstart",
+    function (event) {
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    },
+    { passive: false, capture: false }
+  );
+
   document.addEventListener(
     "touchend",
     function (event) {
