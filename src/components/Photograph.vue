@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from "vue";
+import Cursor from "./Cursor.vue";
 
 const props = defineProps<{
   onClick: () => void;
@@ -28,10 +29,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div
-    :class="['photograph', animation ? 'not-clicked' : '']"
-    @click="handleClick"
-  >
+  <div class="photograph" @click="handleClick">
     <div class="camera-wrapper">
       <img src="/images/photograph/camera.png" alt="camera" class="camera" />
     </div>
@@ -43,6 +41,7 @@ onBeforeUnmount(() => {
       />
       <img src="/images/photograph/text-cn.png" alt="拍照" class="text-cn" />
     </div>
+    <cursor v-show="animation" class="cursor" />
   </div>
 </template>
 
@@ -50,6 +49,7 @@ onBeforeUnmount(() => {
 .photograph {
   display: flex;
   align-items: center;
+  position: relative;
   .camera-wrapper {
     position: relative;
     width: 147px;
@@ -81,6 +81,12 @@ onBeforeUnmount(() => {
     .text-cn {
       width: 52px;
     }
+  }
+  .cursor {
+    top: 20%;
+    left: 40%;
+    width: 200px;
+    height: 200px;
   }
 }
 </style>
