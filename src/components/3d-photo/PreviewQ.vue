@@ -4,6 +4,7 @@ import { generateImage, getImageRecords } from "../../services/photo";
 import { getSessionId } from "../../services/session";
 import { useAppStore } from "../../useAppStore";
 import Back from "../Back.vue";
+import Cursor from "../Cursor.vue";
 import Loading from "../Loading.vue";
 import Postures from "../q-photo/Postures.vue";
 
@@ -69,6 +70,7 @@ async function generate() {
       generated.value = true;
     }
 
+    animation.value = true;
     store.stopCuteLoading();
     startBackToHome && startBackToHome();
   }
@@ -170,29 +172,28 @@ onBeforeUnmount(() => {
   </div>
   <postures
     :disabled="store.cuteLoading"
-    :animation="!posturesClicked"
+    :animation="!posturesClicked && !store.reachMaxCute"
     @change="setPosture"
     @click="posturesClicked = true"
   />
   <div
     class="actions"
-    :style="{ justifyContent: store.hasCuteImage ? 'space-between' : 'center' }"
+    :style="{
+      justifyContent:
+        store.hasCuteImage && !store.reachMaxCute ? 'space-between' : 'center',
+    }"
   >
     <div
-      :class="[
-        'generate-wrapper',
-        animation && posturesClicked ? 'not-clicked' : '',
-      ]"
+      class="generate-wrapper"
       @click="generate"
+      v-show="!store.reachMaxCute"
     >
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
+      <cursor v-show="animation && posturesClicked" />
     </div>
-    <div
-      class="next-wrapper not-clicked"
-      v-show="store.hasCuteImage"
-      @click="handleNext"
-    >
+    <div class="next-wrapper" v-show="store.hasCuteImage" @click="handleNext">
       <img src="/images/q-photo/next.png" alt="下一步" class="next" />
+      <cursor v-show="store.reachMaxCute" />
     </div>
   </div>
   <img
@@ -301,8 +302,15 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     .generate {
       width: 279px;
+    }
+    .cursor {
+      top: 0;
+      left: 40%;
+      width: 200px;
+      height: 200px;
     }
   }
   .next-wrapper {
@@ -314,8 +322,15 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     .next {
       width: 109px;
+    }
+    .cursor {
+      top: 0;
+      left: 40%;
+      width: 200px;
+      height: 200px;
     }
   }
 }

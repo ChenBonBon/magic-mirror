@@ -3,6 +3,7 @@ import { inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { generateImage, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import Back from "../Back.vue";
+import Cursor from "../Cursor.vue";
 import Loading from "../Loading.vue";
 import Postures from "./Postures.vue";
 
@@ -63,6 +64,7 @@ async function generate() {
       generated.value = true;
     }
 
+    animation.value = true;
     store.stopCuteLoading();
     startBackToHome && startBackToHome();
   }
@@ -168,7 +170,7 @@ onBeforeUnmount(() => {
   </div>
   <postures
     :disabled="store.cuteLoading"
-    :animation="!posturesClicked"
+    :animation="!posturesClicked && !store.reachMaxCute"
     @change="setPosture"
     @click="posturesClicked = true"
   />
@@ -180,21 +182,16 @@ onBeforeUnmount(() => {
     }"
   >
     <div
-      :class="[
-        'generate-wrapper',
-        animation && posturesClicked ? 'not-clicked' : '',
-      ]"
+      class="generate-wrapper"
       v-show="!store.reachMaxCute"
       @click="generate"
     >
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
+      <cursor v-show="animation && posturesClicked" class="cursor" />
     </div>
-    <div
-      class="next-wrapper not-clicked"
-      v-show="store.hasCuteImage"
-      @click="onNext"
-    >
+    <div class="next-wrapper" v-show="store.hasCuteImage" @click="onNext">
       <img src="/images/q-photo/next.png" alt="下一步" class="next" />
+      <cursor v-show="store.reachMaxCute" class="cursor" />
     </div>
   </div>
   <img
@@ -303,8 +300,15 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     .generate {
       width: 279px;
+    }
+    .cursor {
+      top: 0;
+      left: 30%;
+      width: 200px;
+      height: 200px;
     }
   }
   .next-wrapper {
@@ -316,8 +320,15 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     .next {
       width: 109px;
+    }
+    .cursor {
+      top: 0;
+      left: 30%;
+      width: 200px;
+      height: 200px;
     }
   }
 }

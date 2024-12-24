@@ -3,6 +3,7 @@ import { inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { WorkflowType } from "../models/session";
 import { useAppStore } from "../useAppStore";
 import Back from "./Back.vue";
+import Cursor from "./Cursor.vue";
 
 const props = defineProps<{
   workflowType: WorkflowType;
@@ -93,15 +94,17 @@ onBeforeUnmount(() => {
     alt="display-bottom-left"
     class="bottom-left"
   />
-  <div class="print-wrapper not-clicked" @click="onPrint">
+  <div class="print-wrapper" @click="onPrint">
     <img src="/images/display/print.png" alt="打印" class="print" />
+    <cursor class="cursor" />
   </div>
   <div
-    class="print-wrapper not-clicked"
+    class="print-wrapper"
     v-show="workflowType === 'cute'"
     @click="onGenerate3D"
   >
     <img src="/images/display/3d.png" alt="生成3D形象" class="threed" />
+    <cursor class="cursor" />
   </div>
   <img
     src="/images/display/print-tip.png"
@@ -219,7 +222,7 @@ onBeforeUnmount(() => {
 .print-wrapper {
   position: absolute;
   right: 0;
-  bottom: 241px;
+  bottom: 340px;
   width: 281px;
   height: 86px;
   background-image: url("/images/display/print-wrapper.png");
@@ -233,6 +236,12 @@ onBeforeUnmount(() => {
   }
   .threed {
     width: 200px;
+  }
+  .cursor {
+    top: 0;
+    left: 30%;
+    width: 200px;
+    height: 200px;
   }
 }
 .print-wrapper + .print-wrapper {

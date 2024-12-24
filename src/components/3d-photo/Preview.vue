@@ -3,6 +3,7 @@ import { computed, inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { generate3D, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import ThreeDModel from "../3DModel.vue";
+import Cursor from "../Cursor.vue";
 import Loading from "../Loading.vue";
 
 defineProps<{
@@ -82,6 +83,7 @@ async function generate() {
       generated.value = true;
     }
 
+    animation.value = true;
     store.stop3DLoading();
     startBackToHome && startBackToHome();
   }
@@ -232,19 +234,13 @@ onBeforeUnmount(() => {
         store.has3DImage && !store.reachMax3D ? 'space-between' : 'center',
     }"
   >
-    <div
-      :class="['generate-wrapper', animation ? 'not-clicked' : '']"
-      v-show="!store.reachMax3D"
-      @click="generate"
-    >
+    <div class="generate-wrapper" v-show="!store.reachMax3D" @click="generate">
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
+      <cursor v-show="animation" class="cursor" />
     </div>
-    <div
-      class="next-wrapper not-clicked"
-      v-show="store.has3DImage"
-      @click="onNext"
-    >
+    <div class="next-wrapper" v-show="store.has3DImage" @click="onNext">
       <img src="/images/q-photo/next.png" alt="下一步" class="next" />
+      <cursor v-show="store.reachMax3D" class="cursor" />
     </div>
   </div>
   <slot name="generate-tip" />
@@ -366,8 +362,15 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     .generate {
       width: 279px;
+    }
+    .cursor {
+      top: 0;
+      left: 30%;
+      width: 200px;
+      height: 200px;
     }
   }
   .next-wrapper {
@@ -379,8 +382,15 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     .next {
       width: 109px;
+    }
+    .cursor {
+      top: 0;
+      left: 30%;
+      width: 200px;
+      height: 200px;
     }
   }
 }

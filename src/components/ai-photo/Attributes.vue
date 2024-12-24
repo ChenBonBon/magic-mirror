@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import Cursor from "../Cursor.vue";
 
 export type Gender = "Man" | "Woman";
 export type Pose = "pose1" | "pose2";
@@ -23,10 +24,7 @@ function handleClick() {
 </script>
 
 <template>
-  <div
-    :class="['attributes', clicked || !animation ? '' : 'not-clicked']"
-    @click="handleClick"
-  >
+  <div class="attributes" @click="handleClick">
     <div
       :class="['attribute-wrapper', props.gender === 'Man' ? 'active' : '']"
       @click="onChangeGender('Man')"
@@ -51,6 +49,7 @@ function handleClick() {
     >
       <img src="/images/ai-photo/full.png" class="attribute" />
     </div>
+    <cursor v-show="!clicked && animation" class="cursor" />
   </div>
 </template>
 
@@ -80,6 +79,12 @@ function handleClick() {
     .attribute {
       height: 75px;
     }
+  }
+  .cursor {
+    top: 25%;
+    left: 30%;
+    width: 200px;
+    height: 200px;
   }
 }
 </style>

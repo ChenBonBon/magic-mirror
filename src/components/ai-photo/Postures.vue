@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { Posture } from "../../models/photo";
 import { getAIPostures } from "../../services/photo";
+import Cursor from "../Cursor.vue";
 
 const props = defineProps<{
   disabled: boolean;
@@ -62,9 +63,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="['postures-wrapper', clicked || !animation ? '' : 'not-clicked']"
-  >
+  <div class="postures-wrapper">
     <img
       src="/images/ai-photo/left-arrow.png"
       alt="left-arrow"
@@ -90,6 +89,7 @@ onMounted(() => {
           <img :src="value" :alt="value" class="posture" />
         </div>
       </div>
+      <cursor v-show="!clicked && animation" class="cursor" />
     </div>
     <img
       src="/images/ai-photo/right-arrow.png"
@@ -185,6 +185,12 @@ onMounted(() => {
           width: 112px;
         }
       }
+    }
+    .cursor {
+      top: 0;
+      left: 40%;
+      width: 200px;
+      height: 200px;
     }
   }
 }

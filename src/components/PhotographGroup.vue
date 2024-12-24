@@ -28,7 +28,6 @@ defineProps<{
   position: absolute;
   top: 1299px;
   right: 0;
-  overflow: hidden;
   .photograph-confirm {
     transition-property: transform;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

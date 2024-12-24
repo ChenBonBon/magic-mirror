@@ -4,6 +4,7 @@ import { GenerateRecord } from "../../models/photo";
 import { generateAI, getImageRecords } from "../../services/photo";
 import { useAppStore } from "../../useAppStore";
 import Back from "../Back.vue";
+import Cursor from "../Cursor.vue";
 import Loading from "../Loading.vue";
 import Attributes, { Gender, Pose } from "./Attributes.vue";
 import Postures from "./Postures.vue";
@@ -105,6 +106,7 @@ async function generate() {
       generated.value = true;
     }
 
+    animation.value = true;
     store.stopAILoading();
     startBackToHome && startBackToHome();
   }
@@ -248,22 +250,16 @@ onBeforeUnmount(() => {
         store.hasAIImage && !store.reachMaxAI ? 'space-between' : 'center',
     }"
   >
-    <div
-      :class="[
-        'generate-wrapper',
-        animation && attributesClicked && postureClicked ? 'not-clicked' : '',
-      ]"
-      v-show="!store.reachMaxAI"
-      @click="generate"
-    >
+    <div class="generate-wrapper" v-show="!store.reachMaxAI" @click="generate">
       <img src="/images/q-photo/generate.png" alt="生成" class="generate" />
+      <cursor
+        v-show="animation && attributesClicked && postureClicked"
+        class="cursor"
+      />
     </div>
-    <div
-      class="next-wrapper not-clicked"
-      v-show="store.hasAIImage"
-      @click="onNext"
-    >
+    <div class="next-wrapper" v-show="store.hasAIImage" @click="onNext">
       <img src="/images/q-photo/next.png" alt="下一步" class="next" />
+      <cursor v-show="store.reachMaxAI" class="cursor" />
     </div>
   </div>
   <slot name="generate-tip" />
@@ -368,8 +364,15 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
     .generate {
       width: 279px;
+    }
+    .cursor {
+      top: 20%;
+      left: 40%;
+      width: 200px;
+      height: 200px;
     }
   }
   .next-wrapper {
@@ -383,6 +386,12 @@ onBeforeUnmount(() => {
     align-items: center;
     .next {
       width: 109px;
+    }
+    .cursor {
+      top: 0;
+      left: 40%;
+      width: 200px;
+      height: 200px;
     }
   }
 }

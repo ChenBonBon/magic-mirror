@@ -24,6 +24,7 @@
   bottom: 10px;
   right: 0;
   animation: rotate 1s steps(1, end) infinite;
+  pointer-events: none;
 }
 
 @keyframes rotate {

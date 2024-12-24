@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from "vue";
+import Cursor from "./Cursor.vue";
 
 const props = defineProps<{
   visible: boolean;
@@ -30,10 +31,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div
-    :class="['photograph-confirm', visible && animation ? 'not-clicked' : '']"
-    @click="handleClick"
-  >
+  <div class="photograph-confirm" @click="handleClick">
     <div class="check-wrapper">
       <img
         src="/images/photograph-confirm/check.png"
@@ -53,6 +51,7 @@ onBeforeUnmount(() => {
         class="text-cn"
       />
     </div>
+    <cursor v-show="visible && animation" class="cursor" />
   </div>
 </template>
 
@@ -60,6 +59,7 @@ onBeforeUnmount(() => {
 .photograph-confirm {
   display: flex;
   align-items: center;
+  position: relative;
   .check-wrapper {
     position: relative;
     width: 147px;
@@ -91,6 +91,12 @@ onBeforeUnmount(() => {
     .text-cn {
       width: 52px;
     }
+  }
+  .cursor {
+    top: 20%;
+    left: 40%;
+    width: 200px;
+    height: 200px;
   }
 }
 </style>

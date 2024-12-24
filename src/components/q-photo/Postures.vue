@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { getCutePostures } from "../../services/photo";
+import Cursor from "../Cursor.vue";
 
 const props = defineProps<{
   disabled: boolean;
@@ -44,7 +45,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="['postures', clicked || !animation ? '' : 'not-clicked']">
+  <div class="postures">
     <div class="postures-inner">
       <img
         v-for="(value, key) in images"
@@ -54,6 +55,7 @@ onMounted(() => {
         @click="handleClick(key)"
       />
     </div>
+    <cursor v-show="!clicked && animation" class="cursor" />
   </div>
 </template>
 
@@ -66,7 +68,8 @@ onMounted(() => {
   background-repeat: no-repeat;
   position: absolute;
   top: 1375px;
-  left: 132px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   padding: 0px 36px;
@@ -84,6 +87,12 @@ onMounted(() => {
         border-color: #ffffff;
       }
     }
+  }
+  .cursor {
+    top: 20%;
+    left: 40%;
+    width: 200px;
+    height: 200px;
   }
 }
 </style>
