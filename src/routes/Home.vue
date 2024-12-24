@@ -22,10 +22,10 @@ const aiData = ref([
 ]);
 
 const threeDData = ref([
-  { src: "/images/home/3d-1.gif", alt: "/images/home/3d-1.gif" },
-  { src: "/images/home/3d-2.gif", alt: "/images/home/3d-2.gif" },
-  { src: "/images/home/3d-3.gif", alt: "/images/home/3d-3.gif" },
-  { src: "/images/home/3d-4.gif", alt: "/images/home/3d-4.gif" },
+  { src: "/videos/1.mp4", alt: "/videos/1.mp4" },
+  { src: "/videos/2.mp4", alt: "/videos/2.mp4" },
+  { src: "/videos/3.mp4", alt: "/videos/3.mp4" },
+  { src: "/videos/4.mp4", alt: "/videos/4.mp4" },
 ]);
 
 onMounted(() => {
@@ -63,7 +63,7 @@ onMounted(() => {
               </div>
             </template>
           </Marquee>
-          <Marquee id="threeDPhoto" :data="threeDData" href="/3d-photo">
+          <Marquee id="threeDPhoto" :data="threeDData" href="/3d-photo" video>
             <template #title>
               <div class="three-d-photo">
                 <img
