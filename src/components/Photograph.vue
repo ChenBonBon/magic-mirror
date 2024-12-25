@@ -6,25 +6,27 @@ const props = defineProps<{
   onClick: () => void;
 }>();
 
+const canClick = ref(true);
 const clicked = ref(false);
 const animation = ref(true);
 
 function handleClick() {
-  if (clicked.value) {
+  if (!canClick.value) {
     return;
   }
 
+  canClick.value = false;
   clicked.value = true;
   animation.value = false;
   props.onClick();
 
   setTimeout(() => {
-    clicked.value = false;
+    canClick.value = true;
   }, 1000);
 }
 
 onBeforeUnmount(() => {
-  clicked.value = false;
+  canClick.value = true;
 });
 </script>
 
@@ -35,11 +37,26 @@ onBeforeUnmount(() => {
     </div>
     <div class="photograph-text">
       <img
-        src="/images/photograph/text-en.png"
+        :src="
+          clicked
+            ? '/images/photograph/again.png'
+            : '/images/photograph/text-en.png'
+        "
         alt="Take photos"
         class="text-en"
       />
-      <img src="/images/photograph/text-cn.png" alt="拍照" class="text-cn" />
+      <img
+        v-if="clicked"
+        src="/images/photograph/again-cn.png"
+        alt="拍照"
+        class="again-cn"
+      />
+      <img
+        v-else
+        src="/images/photograph/text-cn.png"
+        alt="拍照"
+        class="text-cn"
+      />
     </div>
     <cursor v-show="animation" class="cursor" />
   </div>
@@ -77,6 +94,9 @@ onBeforeUnmount(() => {
     margin-left: -25px;
     .text-en {
       width: 96px;
+    }
+    .again-cn {
+      width: 120px;
     }
     .text-cn {
       width: 52px;
