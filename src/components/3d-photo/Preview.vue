@@ -149,14 +149,6 @@ onBeforeUnmount(() => {
     <img v-else :src="store.cuteImage" alt="3D模型" class="preview-image" />
   </div>
   <slot name="preview-tip" />
-  <div class="step-4-wrapper">
-    <img src="/images/q-photo/step-4.png" alt="4" class="step-4" />
-    <img
-      src="/images/q-photo/step-4-tip.png"
-      alt="第四步 预览历史生成形象 选择你喜欢的动作"
-      class="step-4-tip"
-    />
-  </div>
   <div class="records">
     <img
       v-if="store.threeDRecords[0]"
@@ -280,21 +272,6 @@ onBeforeUnmount(() => {
   .preview-image {
     width: 100%;
     height: 100%;
-  }
-}
-.step-4-wrapper {
-  position: absolute;
-  top: 396px;
-  left: 872px;
-  display: flex;
-  flex-direction: column;
-  gap: 9px;
-  .step-4 {
-    width: 26px;
-  }
-  .step-4-tip {
-    width: 115px;
-    margin-left: 3px;
   }
 }
 .records {

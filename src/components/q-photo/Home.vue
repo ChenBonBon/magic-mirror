@@ -142,22 +142,6 @@ onBeforeUnmount(() => {
       },
     ]"
   />
-  <div class="step-1-wrapper">
-    <img src="/images/q-photo/step-1.png" alt="1" class="step-1" />
-    <img
-      src="/images/q-photo/step-1-tip.png"
-      alt="第一步 按下拍照按钮 预览独属形象"
-      class="step-1-tip"
-    />
-  </div>
-  <div class="step-2-wrapper">
-    <img src="/images/q-photo/step-2.png" alt="2" class="step-2" />
-    <img
-      src="/images/q-photo/step-2-tip.png"
-      alt="第二步 确认基础形象 进入动作选择模式"
-      class="step-2-tip"
-    />
-  </div>
   <camera ref="camera" :time="time" :is-timing="isTiming" />
   <img
     src="/images/q-photo/sub-title-arrow.png"
@@ -180,30 +164,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style lang="less" scoped>
-.step-1 {
-  position: absolute;
-  top: 1306px;
-  left: 49px;
-  width: 26px;
-}
-.step-1-tip {
-  position: absolute;
-  top: 1341px;
-  left: 52px;
-  width: 86px;
-}
-.step-2 {
-  position: absolute;
-  top: 1192px;
-  left: 932px;
-  width: 26px;
-}
-.step-2-tip {
-  position: absolute;
-  top: 1226px;
-  left: 934px;
-  width: 115px;
-}
 .sub-title-arrow {
   width: 106px;
   position: absolute;
