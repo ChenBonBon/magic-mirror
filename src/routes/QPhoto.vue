@@ -52,9 +52,13 @@ async function handleCreatePrintOrder() {
   const res = await createOrder();
 
   if (res) {
-    qrcode.value = res.QRCode;
-    billNo.value = res.billNo;
-    handleNavigate(4);
+    if (res.skip) {
+      handleNavigate(6);
+    } else {
+      qrcode.value = res.QRCode;
+      billNo.value = res.billNo;
+      handleNavigate(4);
+    }
   }
 
   creating.value = false;
@@ -71,9 +75,13 @@ async function handleCreateGenerate3DOrder() {
   const res = await createOrder();
 
   if (res) {
-    qrcode.value = res.QRCode;
-    billNo.value = res.billNo;
-    handleNavigate(4);
+    if (res.skip) {
+      handleNavigate(6);
+    } else {
+      qrcode.value = res.QRCode;
+      billNo.value = res.billNo;
+      handleNavigate(4);
+    }
   }
 
   creating.value = false;

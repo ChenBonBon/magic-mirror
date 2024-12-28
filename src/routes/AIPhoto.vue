@@ -47,10 +47,14 @@ async function handleCreateOrder() {
   const res = await createOrder();
 
   if (res) {
-    qrcode.value = res.QRCode;
-    billNo.value = res.billNo;
+    if (res.skip) {
+      handleNavigate(6);
+    } else {
+      qrcode.value = res.QRCode;
+      billNo.value = res.billNo;
 
-    handleNavigate(4);
+      handleNavigate(4);
+    }
   }
 
   creating.value = false;
