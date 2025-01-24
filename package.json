@@ -1,7 +1,7 @@
 {
   "name": "magic-mirror",
   "private": true,
-  "version": "0.0.0",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,12 +9,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.5.13"
+    "@vueuse/core": "^12.4.0",
+    "axios": "^1.7.9",
+    "pinia": "^2.3.1",
+    "swiper": "^11.2.1",
+    "vant": "^4.9.16",
+    "vue": "^3.5.13",
+    "vue-qrcode": "^2.2.2",
+    "vue-router": "^4.5.0",
+    "vue-toast-notification": "^3"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "typescript": "~5.6.2",
+    "autoprefixer": "latest",
+    "less": "^4.2.1",
+    "postcss": "latest",
+    "tailwindcss": "latest",
     "vite": "^6.0.5",
     "vue-tsc": "^2.2.0"
   }
