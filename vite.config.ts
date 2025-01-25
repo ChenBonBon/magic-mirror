@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://8u43icje.dongtaiyuming.net",
+        target: "http://www.hfotion.cn:8088",
         changeOrigin: true,
       },
     },

@@ -63,7 +63,7 @@ const alpha = 5;
 const duration = 30;
 
 const qrcode = ref(
-  "http://39405ltbu701.vicp.fun:22836/preview?sessionId=" +
+  "http://www.hfotion.cn:3577/preview?sessionId=" +
     window.localStorage.getItem("magic-mirror-session")
 );
 const time = ref(duration);
