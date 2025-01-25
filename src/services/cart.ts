@@ -27,3 +27,9 @@ export async function deleteGoods(id: number) {
 
   return res;
 }
+
+export async function deleteGoodsAll() {
+  const res = await request.delete<CartItem[]>(`/cart/remove`);
+
+  return res;
+}

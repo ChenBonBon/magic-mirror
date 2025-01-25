@@ -4,7 +4,7 @@
       <div
         v-for="(item, index) in list"
         :key="index"
-        class="grid grid-cols-3 grid-rows-[389px] gap-[10px]"
+        class="grid grid-cols-3 grid-rows-[294px] gap-[10px]"
       >
         <div
           v-for="child in item.data"
@@ -55,7 +55,7 @@ const data = computed(() => {
 });
 
 const { list, containerProps, wrapperProps } = useVirtualList(data, {
-  itemHeight: 389,
+  itemHeight: 294,
 });
 
 function handleClick(styleId: string) {

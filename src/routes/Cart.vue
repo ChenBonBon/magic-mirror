@@ -123,7 +123,12 @@ import ItemCounter from "../components/cart/ItemCounter.vue";
 import Confirm from "../components/Confirm.vue";
 import type { CartItem } from "../models/cart";
 import type { PhotoFrame } from "../models/image";
-import { deleteGoods, getCart, updateCart } from "../services/cart";
+import {
+  deleteGoods,
+  deleteGoodsAll,
+  getCart,
+  updateCart,
+} from "../services/cart";
 import { combineImages, getPhotoFrames } from "../services/image";
 import { useStore } from "../store";
 
@@ -200,6 +205,10 @@ async function handleDelete() {
 
     if (res) {
       cartList.value = res.data;
+
+      if (activeIndex.value >= cartList.value.length) {
+        activeIndex.value = cartList.value.length - 1;
+      }
     }
   }
 }
@@ -236,8 +245,12 @@ function handleClick(swiper: Swiper) {
   activeIndex.value = swiper.clickedIndex;
 }
 
-function handleBack() {
-  router.push({ path: "/choose-photos", query: route.query });
+async function handleBack() {
+  const res = await deleteGoodsAll();
+
+  if (res) {
+    router.push({ path: "/choose-photos", query: route.query });
+  }
 }
 
 function handleSkip() {
