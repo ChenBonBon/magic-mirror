@@ -46,7 +46,8 @@
 
 <script setup lang="ts">
 import { useIntervalFn } from "@vueuse/core";
-import { computed, ref, watch } from "vue";
+import axios from "axios";
+import { computed, onMounted, ref, watch } from "vue";
 import VueQrcode from "vue-qrcode";
 import { useRouter } from "vue-router";
 import a from "../assets/images/print/a.png";
@@ -68,13 +69,19 @@ const qrcode = ref(
 );
 const time = ref(duration);
 
-const { pause, isActive } = useIntervalFn(() => {
-  if (time.value <= 0) {
-    pause();
-  } else {
-    time.value -= 1;
+const { resume, pause, isActive } = useIntervalFn(
+  () => {
+    if (time.value <= 0) {
+      pause();
+    } else {
+      time.value -= 1;
+    }
+  },
+  1000,
+  {
+    immediate: false,
   }
-}, 1000);
+);
 
 const percent = computed(() => {
   return Math.floor(
@@ -88,9 +95,21 @@ watch(isActive, (newVal, oldVal) => {
   }
 });
 
+async function print() {
+  const res = await axios.get("/print/api/v1/image-print");
+
+  if (res) {
+    resume();
+  }
+}
+
 function handleBack() {
   router.push("/");
 }
+
+onMounted(() => {
+  print();
+});
 </script>
 
 <style lang="less" scoped></style>
