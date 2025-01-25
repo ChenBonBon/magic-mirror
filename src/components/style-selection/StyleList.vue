@@ -21,6 +21,11 @@
             :checked="selectedStyle === child.style"
             class="absolute top-[4px] right-[4px] w-[53px]"
           />
+          <div
+            class="absolute bottom-0 left-0 w-full h-12 leading-[48px] bg-[#4c4949b3] text-[32px] text-center text-white rounded-b-[24px]"
+          >
+            {{ child.name }}
+          </div>
         </div>
       </div>
     </div>

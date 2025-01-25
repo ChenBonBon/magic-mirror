@@ -10,4 +10,5 @@ export interface Style {
   imageUrl: string;
   index: number;
   style: string;
+  name: string;
 }
