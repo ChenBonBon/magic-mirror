@@ -8,12 +8,12 @@
       />
       <div
         :style="'background-image: url(' + selectedFrame + ')'"
-        class="absolute top-[207px] left-[185px] bg-full bg-no-repeat w-[720px] h-[720px]"
+        class="absolute top-[207px] left-[265px] bg-full bg-no-repeat w-[540px] h-[720px]"
       >
         <img
           v-if="image"
           :src="image.itemUrl"
-          class="w-[520px] ml-[101px] mt-[104px]"
+          class="w-[425px] ml-[55px] mt-[55px]"
         />
       </div>
       <div

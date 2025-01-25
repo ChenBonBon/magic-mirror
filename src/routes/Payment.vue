@@ -16,9 +16,9 @@
         {{ store.count }}
       </div>
       <div
-        class="absolute w-[150px] h-full flex justify-center items-start left-[210px] -top-[50px] text-[96px] text-center"
+        class="absolute w-[150px] h-full flex justify-center items-start left-[210px] -top-[22px] text-[64px] text-center"
       >
-        {{ price / 100 }}
+        {{ (price / 100).toFixed(2) }}
       </div>
     </div>
     <img :src="tip1" class="absolute top-[735px] left-[424px] w-[232px]" />
