@@ -21,7 +21,7 @@ import ModeSelect from "../components/home/ModeSelect.vue";
 
 const router = useRouter();
 
-function handleModeChange(path: string) {}
+function handleModeChange() {}
 
 function handleConfirm() {
   router.push("/style-selection");
