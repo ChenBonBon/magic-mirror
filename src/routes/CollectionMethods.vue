@@ -45,7 +45,7 @@ import uploadPhotos from "../assets/images/collection-methods/upload-photos.png"
 import uploadTip from "../assets/images/collection-methods/upload-tip.png";
 import Back from "../components/Back.vue";
 import Cursor from "../components/Cursor.vue";
-import { getUploadImages } from "../services/image";
+import { getGenerateStatus } from "../services/image";
 import { getSessionId } from "../services/session";
 
 const qrcode = ref("http://www.hfotion.cn:3577/upload");
@@ -56,9 +56,9 @@ const route = useRoute();
 
 const { pause, resume } = useIntervalFn(
   async () => {
-    const res = await getUploadImages();
+    const res = await getGenerateStatus();
 
-    if (res.data.length > 0) {
+    if (res.data.status === "success") {
       pause();
       if (route.query.styleId) {
         router.push({

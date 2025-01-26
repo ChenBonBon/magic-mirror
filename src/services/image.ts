@@ -49,9 +49,3 @@ export async function combineImages(imageId: number, wrapperId: number) {
 
   return res;
 }
-
-export async function getUploadImages() {
-  const res = await request.get("/image/getImage");
-
-  return res;
-}
