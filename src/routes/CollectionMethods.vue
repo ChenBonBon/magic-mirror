@@ -61,7 +61,18 @@ async function handleUploadPhotos() {
 
   if (res) {
     const sessionId = res.data.sessionId;
-    qrcode.value = qrcode.value + "?sessionId=" + sessionId;
+
+    const styleId = route.query.styleId;
+
+    if (styleId && styleId.length > 0) {
+      qrcode.value =
+        qrcode.value +
+        "?sessionId=" +
+        sessionId +
+        "&styleId=" +
+        styleId +
+        "&from=collection-methods";
+    }
     window.localStorage.setItem("magic-mirror-session", sessionId);
     visible.value = true;
   }
