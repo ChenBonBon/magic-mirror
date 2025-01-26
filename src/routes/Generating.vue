@@ -75,7 +75,7 @@ const { pause } = useIntervalFn(async () => {
     const res = await getGenerateStatus();
 
     if (res) {
-      if (res.data.status === "pending") {
+      if (res.data.status === "generating") {
         remainingTime.value = 120;
 
         if (count.value < 1) {

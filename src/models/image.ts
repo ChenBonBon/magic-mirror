@@ -1,5 +1,5 @@
 export interface GenerateStatus {
-  status: "pending" | "success" | "failed";
+  status: "pending" | "generating" | "success" | "failed";
 }
 
 export interface GeneratedImage {

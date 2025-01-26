@@ -58,7 +58,7 @@ const { pause, resume } = useIntervalFn(
   async () => {
     const res = await getGenerateStatus();
 
-    if (res.data.status === "success") {
+    if (res.data.status === "generating") {
       pause();
       if (route.query.styleId) {
         router.push({
