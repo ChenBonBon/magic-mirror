@@ -5,12 +5,12 @@ import { defineConfig } from "vite";
 export default defineConfig({
   server: {
     proxy: {
-      "/api": {
-        target: "http://www.hfotion.cn:8088",
-        changeOrigin: true,
-      },
       "/print/api/v1": {
         target: "http://localhost:8081",
+        changeOrigin: true,
+      },
+      "/api": {
+        target: "http://www.hfotion.cn:8088",
         changeOrigin: true,
       },
     },
