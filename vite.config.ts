@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   server: {
     proxy: {
-      "/print/api/v1": {
+      "/print": {
         target: "http://localhost:8081",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/print/, ""),
