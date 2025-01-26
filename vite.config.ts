@@ -8,6 +8,7 @@ export default defineConfig({
       "/print/api/v1": {
         target: "http://localhost:8081",
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/print/, ""),
       },
       "/api": {
         target: "http://www.hfotion.cn:8088",
