@@ -35,6 +35,7 @@
 </template>
 
 <script setup lang="ts">
+import { useIntervalFn } from "@vueuse/core";
 import { ref } from "vue";
 import VueQrcode from "vue-qrcode";
 import { useRoute, useRouter } from "vue-router";
@@ -44,6 +45,7 @@ import uploadPhotos from "../assets/images/collection-methods/upload-photos.png"
 import uploadTip from "../assets/images/collection-methods/upload-tip.png";
 import Back from "../components/Back.vue";
 import Cursor from "../components/Cursor.vue";
+import { getUploadImages } from "../services/image";
 import { getSessionId } from "../services/session";
 
 const qrcode = ref("http://www.hfotion.cn:3577/upload");
@@ -51,6 +53,26 @@ const visible = ref(false);
 
 const router = useRouter();
 const route = useRoute();
+
+const { pause, resume } = useIntervalFn(
+  async () => {
+    const res = await getUploadImages();
+
+    if (res.data.length > 0) {
+      pause();
+      if (route.query.styleId) {
+        router.push({
+          path: "/generating",
+          query: { ...route.query, from: "/collection-methods" },
+        });
+      }
+    }
+  },
+  1000,
+  {
+    immediate: false,
+  }
+);
 
 function handleTakePhotos() {
   router.push({ path: "photo-collection", query: route.query });
@@ -75,6 +97,8 @@ async function handleUploadPhotos() {
     }
     window.localStorage.setItem("magic-mirror-session", sessionId);
     visible.value = true;
+
+    resume();
   }
 }
 
