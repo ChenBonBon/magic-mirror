@@ -96,10 +96,18 @@ watch(isActive, (newVal, oldVal) => {
 });
 
 async function print() {
-  const res = await axios.get("/print/api/v1/image-print");
+  const sessionId = window.localStorage.getItem("magic-mirror-session");
 
-  if (res) {
-    resume();
+  if (sessionId) {
+    const res = await axios.get("/print/api/v1/image-print", {
+      headers: {
+        "X-Session-ID": sessionId,
+      },
+    });
+
+    if (res) {
+      resume();
+    }
   }
 }
 
