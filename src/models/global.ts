@@ -11,4 +11,5 @@ export interface Style {
   index: number;
   style: string;
   name: string;
+  imgRefers: string[];
 }

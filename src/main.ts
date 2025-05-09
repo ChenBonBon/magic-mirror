@@ -3,6 +3,7 @@ import "swiper/swiper-bundle.css";
 import {
   ActionSheet,
   ConfigProvider,
+  Icon,
   Loading,
   Overlay,
   Progress,
@@ -105,4 +106,5 @@ createApp(App)
   .use(Loading)
   .use(ConfigProvider)
   .use(Progress)
+  .use(Icon)
   .mount("#app");

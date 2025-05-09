@@ -21,6 +21,20 @@
             :checked="selectedStyle === child.style"
             class="absolute top-[4px] right-[4px] w-[53px]"
           />
+          <van-icon
+            name="search"
+            color="white"
+            size="32"
+            class="absolute top-4 left-4"
+            @click.stop="activeIndex = child.index"
+          />
+          <div
+            class="grid grid-cols-6 gap-1 w-full mt-[10px] absolute bottom-0 bg-white p-1 z-10"
+            :class="activeIndex === child.index ? '' : 'hidden'"
+            @click.stop="activeIndex = -1"
+          >
+            <img v-for="img in child.imgRefers" :src="img" />
+          </div>
           <div
             class="absolute bottom-0 left-0 w-full h-12 leading-[48px] bg-[#4c4949b3] text-[32px] text-center text-white rounded-b-[24px]"
           >
@@ -45,6 +59,7 @@ const props = defineProps<{
 const emit = defineEmits<{ change: [styleId?: string] }>();
 
 const selectedStyle = ref<string>();
+const activeIndex = ref(-1);
 
 const data = computed(() => {
   // 将数组按长度为 3 进行分割
