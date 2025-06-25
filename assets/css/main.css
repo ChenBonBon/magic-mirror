@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  /* color */
+  --color-layout-default-bg: #fff8ee;
+
+  /* background size */
+  --layout-default-bg: 100% 100%;
+
+  /* width */
+  --width-logo: 794px;
+  --width-index-start-btn: 646px;
+  --width-index-process-tip: 557px;
+  --width-preview-title: 352px;
+  --width-preview-left-arrow-btn: 92px;
+  --width-preview-right-arrow-btn: 92px;
+  --width-preview-back-btn: 92px;
+
+  /* height */
+  --height-logo: 208px;
+  --height-index-start-btn: 120px;
+  --height-index-process-tip: 38px;
+  --height-preview-title: 91px;
+  --height-preview-left-arrow-btn: 92px;
+  --height-preview-right-arrow-btn: 92px;
+  --height-preview-back-btn: 92px;
+
+  /* position */
+  --top-logo: 95px;
+  --top-index-start-btn: 96px;
+  --top-index-process-tip: 56px;
+  --top-preview-title: 80px;
+  --left-preview-title: 365px;
+  --top-preview-left-arrow-btn: 824px;
+  --left-preview-left-arrow-btn: 54px;
+  --top-preview-right-arrow-btn: 824px;
+  --left-preview-right-arrow-btn: 934px;
+  --top-preview-back-btn: 965px;
+  --left-preview-back-btn: 54px;
+}
