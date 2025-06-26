@@ -1,25 +1,29 @@
 <template>
-  <NuxtLink to="/preview" class="block w-full h-full">
-    <div class="flex flex-col items-center">
-      <img
-        src="~/assets/img/index/logo.png"
-        alt="欢迎使用次元魔镜"
-        class="w-(--width-logo) h-(--height-logo) mt-(--top-logo)"
-      />
-      <img
-        src="~/assets/img/index/start-btn.png"
-        alt="点击屏幕开始体验"
-        class="w-(--width-index-start-btn) h-(--height-index-start-btn) mt-(--top-index-start-btn)"
-      />
-      <img
-        src="~/assets/img/index/process-tip.png"
-        alt="风格选择 > 照片拍摄 > 照片打印"
-        class="w-(--width-index-process-tip) h-(--height-index-process-tip) mt-(--top-index-process-tip)"
-      />
-    </div>
-  </NuxtLink>
+  <div class="flex h-full w-full flex-col items-center" @click="preview">
+    <img
+      src="~/assets/img/index/logo.png"
+      alt="欢迎使用次元魔镜"
+      class="mt-(--top-logo) h-(--height-logo) w-(--width-logo)"
+    />
+    <img
+      src="~/assets/img/index/start-btn.png"
+      alt="点击屏幕开始体验"
+      class="mt-(--top-index-start-btn) h-(--height-index-start-btn) w-(--width-index-start-btn)"
+    />
+    <img
+      src="~/assets/img/index/process-tip.png"
+      alt="风格选择 > 照片拍摄 > 照片打印"
+      class="mt-(--top-index-process-tip) h-(--height-index-process-tip) w-(--width-index-process-tip)"
+    />
+  </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const router = useRouter();
+
+function preview() {
+  router.push("/preview");
+}
+</script>
 
 <style lang="less" scoped></style>

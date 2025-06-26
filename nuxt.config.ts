@@ -9,4 +9,10 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
   css: ["~/assets/css/main.css"],
+  typescript: {
+    typeCheck: true,
+  },
+  app: {
+    pageTransition: { name: "page", mode: "out-in" },
+  },
 });

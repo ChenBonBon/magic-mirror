@@ -2,39 +2,154 @@
 
 @theme {
   /* color */
-  --color-layout-default-bg: #fff8ee;
+  --bg-layout-default: #fff8ee;
 
   /* background size */
-  --layout-default-bg: 100% 100%;
+  --bg-size-layout-default: 100% 100%;
 
   /* width */
   --width-logo: 794px;
+  /* index */
   --width-index-start-btn: 646px;
   --width-index-process-tip: 557px;
+  /* preview */
   --width-preview-title: 352px;
   --width-preview-left-arrow-btn: 92px;
   --width-preview-right-arrow-btn: 92px;
   --width-preview-back-btn: 92px;
+  /* mode selection */
+  --width-mode-selection-title: 264px;
+  --width-mode-selection-back-btn: 45px;
+  --width-mode-selection-ai-btn-default: 176px;
+  --width-mode-selection-ai-btn-selected: 222px;
+  --width-mode-selection-or-text: 49px;
+  --width-mode-selection-q-btn-default: 176px;
+  --width-mode-selection-q-btn-selected: 222px;
+  --width-mode-selection-confirm-btn: 212px;
+  --width-mode-selection-privacy-tip: 268px;
+  /* gender selection */
+  --width-gender-selection-title: 297px;
+  --width-gender-selection-back-btn: 45px;
+  --width-gender-selection-confirm-btn: 212px;
+  --width-gender-selection-gender-preview: 723px;
+  --width-gender-selection-gender-card-default: 246px;
+  --width-gender-selection-gender-card-selected: 246px;
+  --width-gender-selection-gender-card-text: 64px;
+  /* style selection */
+  --width-style-selection-title: 259px;
+  --width-style-selection-back-btn: 45px;
+  --width-style-selection-confirm-btn: 212px;
+  --width-style-selection-divide-line: 988px;
+  --width-style-selection-image-list: 988px;
+  --width-style-selection-swipe-tip: 434px;
+  --width-style-selection-gathering-method-title: 460px;
+  --width-style-selection-gathering-method-upload-btn-default: 294px;
+  --width-style-selection-gathering-method-upload-btn-selected: 330px;
+  --width-style-selection-gathering-method-or-text: 49px;
+  --width-style-selection-gathering-method-take-photo-btn-default: 294px;
+  --width-style-selection-gathering-method-take-photo-btn-selected: 330px;
+  --width-style-selection-gathering-method-back-btn: 92px;
+  --width-style-selection-gathering-method-confirm-btn: 212px;
 
   /* height */
   --height-logo: 208px;
+  /* index */
   --height-index-start-btn: 120px;
   --height-index-process-tip: 38px;
+  /* preview */
   --height-preview-title: 91px;
   --height-preview-left-arrow-btn: 92px;
   --height-preview-right-arrow-btn: 92px;
   --height-preview-back-btn: 92px;
+  /* mode selection */
+  --height-mode-selection-title: 114px;
+  --height-mode-selection-back-btn: 45px;
+  --height-mode-selection-mode-btn-group: 222px;
+  --height-mode-selection-ai-btn-default: 176px;
+  --height-mode-selection-ai-btn-selected: 222px;
+  --height-mode-selection-or-text: 24px;
+  --height-mode-selection-q-btn-default: 176px;
+  --height-mode-selection-q-btn-selected: 222px;
+  --height-mode-selection-confirm-btn: 120px;
+  --height-mode-selection-privacy-tip: 45px;
+  /* gender selection */
+  --height-gender-selection-title: 114px;
+  --height-gender-selection-back-btn: 45px;
+  --height-gender-selection-confirm-btn: 120px;
+  --height-gender-selection-gender-preview: 723px;
+  --height-gender-selection-gender-card-default: 246px;
+  --height-gender-selection-gender-card-selected: 260px;
+  --height-gender-selection-gender-card-text: 34px;
+  /* style selection */
+  --height-style-selection-title: 114px;
+  --height-style-selection-back-btn: 45px;
+  --height-style-selection-confirm-btn: 120px;
+  --height-style-selection-divide-line: 10px;
+  --height-style-selection-image-list: 1302px;
+  --height-style-selection-swipe-tip: 31px;
+  --height-style-selection-gathering-method-title: 66px;
+  --height-style-selection-gathering-method-upload-btn-default: 294px;
+  --height-style-selection-gathering-method-upload-btn-selected: 339px;
+  --height-style-selection-gathering-method-or-text: 24px;
+  --height-style-selection-gathering-method-take-photo-btn-default: 294px;
+  --height-style-selection-gathering-method-take-photo-btn-selected: 339px;
+  --height-style-selection-gathering-method-back-btn: 92px;
+  --height-style-selection-gathering-method-confirm-btn: 120px;
 
   /* position */
   --top-logo: 95px;
+  /* index */
   --top-index-start-btn: 96px;
   --top-index-process-tip: 56px;
+  /* preview */
   --top-preview-title: 80px;
-  --left-preview-title: 365px;
   --top-preview-left-arrow-btn: 824px;
-  --left-preview-left-arrow-btn: 54px;
   --top-preview-right-arrow-btn: 824px;
-  --left-preview-right-arrow-btn: 934px;
   --top-preview-back-btn: 965px;
+  --left-preview-title: 365px;
+  --left-preview-left-arrow-btn: 54px;
+  --left-preview-right-arrow-btn: 934px;
   --left-preview-back-btn: 54px;
+  /* mode selection */
+  --top-mode-selection-title: 132px;
+  --top-mode-selection-back-btn: 143px;
+  --top-mode-selection-mode-btn-group: 50px;
+  --top-mode-selection-confirm-btn: 1551px;
+  --top-mode-selection-privacy-tip: 104px;
+  --left-mode-selection-title: 408px;
+  --left-mode-selection-back-btn: 101px;
+  --left-mode-selection-ai-btn-default: 308px;
+  --left-mode-selection-ai-btn-selected: 264px;
+  --left-mode-selection-q-btn-default: 598px;
+  --left-mode-selection-q-btn-selected: 594px;
+  /* gender selection */
+  --top-gender-selection-title: 132px;
+  --top-gender-selection-back-btn: 143px;
+  --top-gender-selection-gender-preview: 64px;
+  --top-gender-selection-confirm-btn: 1551px;
+  --top-gender-selection-gender-group: 81px;
+  --left-gender-selection-back-btn: 101px;
+  /* style selection */
+  --top-style-selection-title: 132px;
+  --top-style-selection-back-btn: 143px;
+  --top-style-selection-confirm-btn: 1551px;
+  --top-style-selection-image-list: 66px;
+  --top-style-selection-swipe-tip: 105px;
+  --top-style-selection-gathering-method-title: 387px;
+  --top-style-selection-gathering-method-upload-btn-default: 139px;
+  --top-style-selection-gathering-method-upload-btn-selected: 94px;
+  --top-style-selection-gathering-method-or-text: 37px;
+  --top-style-selection-gathering-method-take-photo-btn-default: 37px;
+  --top-style-selection-gathering-method-take-photo-btn-selected: 28px;
+  --top-style-selection-gathering-method-confirm-btn: 1551px;
+  --top-style-selection-gathering-method-back-btn: 1567px;
+  --left-style-selection-back-btn: 101px;
+  --left-style-selection-gathering-method-back-btn: 48px;
+
+  /* grid */
+  --gap-x-gender-selection-gender-group: 66px;
+  --gap-y-gender-selection-gender-group: 46px;
+
+  /* border */
+  --border-gender-selection-gender-preview: #ebe0d3;
 }
